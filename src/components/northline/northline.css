@@ -867,6 +867,95 @@
   color: rgb(255 255 255 / 75%);
 }
 
+.nl-typewriter-text,
+.nl-typewriter-word,
+.nl-typewriter-space {
+  display: inline;
+}
+
+.nl-materials h2 .nl-typewriter-text,
+.nl-materials h2 .nl-typewriter-word,
+.nl-materials h2 .nl-typewriter-space {
+  display: inline;
+}
+
+.nl-typewriter-word {
+  white-space: nowrap;
+}
+
+.nl-typewriter-char {
+  display: inline-block;
+  opacity: 1;
+  filter: blur(0);
+  transform: translate3d(0, 0, 0);
+}
+
+.nl-materials h2 .nl-typewriter-char {
+  display: inline-block;
+}
+
+.nl-typewriter-panel.is-pending .nl-typewriter-char {
+  opacity: 0;
+  filter: blur(5px);
+  transform: translate3d(0, 0.12em, 0);
+}
+
+.nl-typewriter-panel.is-typing .nl-typewriter-char {
+  animation: nl-premium-typewriter 380ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--nl-char-index) * 17ms);
+}
+
+.nl-typewriter-panel.is-typing h2::after {
+  display: inline-block;
+  width: 0.045em;
+  height: 0.78em;
+  margin-left: 0.07em;
+  background: currentcolor;
+  content: "";
+  opacity: 0;
+  vertical-align: -0.04em;
+  animation:
+    nl-typewriter-caret 640ms steps(1, end) 5,
+    nl-typewriter-caret-exit 240ms ease 3.05s forwards;
+}
+
+@keyframes nl-premium-typewriter {
+  0% {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translate3d(0, 0.12em, 0);
+  }
+
+  58% {
+    opacity: 0.86;
+    filter: blur(1.5px);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes nl-typewriter-caret {
+  0%,
+  48% {
+    opacity: 0.78;
+  }
+
+  49%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes nl-typewriter-caret-exit {
+  to {
+    opacity: 0;
+  }
+}
+
 .nl-material-list {
   margin-top: 3rem;
   border-top: 1px solid rgb(255 255 255 / 24%);
@@ -2176,6 +2265,17 @@
   }
 
   .nl-film-sequence-canvas {
+    display: none !important;
+  }
+
+  .nl-typewriter-panel .nl-typewriter-char {
+    animation: none !important;
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+  }
+
+  .nl-typewriter-panel h2::after {
     display: none !important;
   }
 

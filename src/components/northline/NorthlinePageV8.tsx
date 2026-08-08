@@ -1,4 +1,11 @@
-import { startTransition, useDeferredValue, useEffect, useRef, useState } from "react";
+import {
+  startTransition,
+  type CSSProperties,
+  useDeferredValue,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { createPortal } from "react-dom";
 
 import "@/components/northline/northline.css";
@@ -28,6 +35,41 @@ type Product = {
   variantTitle?: string;
   images?: string[];
 };
+
+function PremiumTypewriterText({ text, startIndex }: { text: string; startIndex: number }) {
+  let characterIndex = startIndex;
+
+  return (
+    <span className="nl-typewriter-text" aria-hidden="true">
+      {text.split(/(\s+)/).map((part, partIndex) => {
+        const characters = Array.from(part).map((character) => {
+          const index = characterIndex;
+          characterIndex += 1;
+
+          return (
+            <span
+              className="nl-typewriter-char"
+              key={`${partIndex}-${index}`}
+              style={{ "--nl-char-index": index } as CSSProperties}
+            >
+              {character}
+            </span>
+          );
+        });
+
+        return part.trim() ? (
+          <span className="nl-typewriter-word" key={`${part}-${partIndex}`}>
+            {characters}
+          </span>
+        ) : (
+          <span className="nl-typewriter-space" key={`space-${partIndex}`}>
+            {characters}
+          </span>
+        );
+      })}
+    </span>
+  );
+}
 
 export function NorthlinePageV8({
   showHeader = true,
@@ -68,7 +110,9 @@ export function NorthlinePageV8({
   const materialsEdgeMotionRef = useRef<NorthlineEdgeMotion>({ progress: 0 });
   const systemEdgeMotionRef = useRef<NorthlineEdgeMotion>({ progress: 0 });
   const materialsVideoRef = useRef<HTMLVideoElement>(null);
+  const materialsCopyRef = useRef<HTMLDivElement>(null);
   const [materialsVideoBlocked, setMaterialsVideoBlocked] = useState(false);
+  const [materialsTypewriterActive, setMaterialsTypewriterActive] = useState(false);
 
   const materialsStory = {
     title: "Streetwear for",
@@ -90,6 +134,22 @@ export function NorthlinePageV8({
       },
     ],
   };
+  const materialsTextSegments = [
+    materialsStory.title,
+    materialsStory.titleAccent,
+    materialsStory.intro,
+    ...materialsStory.points.flatMap((point) => [point.title, point.body]),
+  ];
+  const materialsTextOffsets = materialsTextSegments.reduce<number[]>((offsets, segment, index) => {
+    if (index === 0) {
+      offsets.push(0);
+      return offsets;
+    }
+
+    const previousSegment = materialsTextSegments[index - 1];
+    offsets.push(offsets[index - 1] + Array.from(previousSegment).length + 7);
+    return offsets;
+  }, []);
 
   useEffect(() => {
     const video = materialsVideoRef.current;
@@ -129,6 +189,29 @@ export function NorthlinePageV8({
       video.pause();
     };
   }, [materialsVideoSrc]);
+
+  useEffect(() => {
+    const copy = materialsCopyRef.current;
+    if (!copy) return;
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (reducedMotion.matches || !("IntersectionObserver" in window)) {
+      setMaterialsTypewriterActive(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setMaterialsTypewriterActive(true);
+        observer.disconnect();
+      },
+      { threshold: 0.28 },
+    );
+
+    observer.observe(copy);
+    return () => observer.disconnect();
+  }, []);
 
   // Fetch real products from Shopify
   useEffect(() => {
@@ -663,17 +746,43 @@ export function NorthlinePageV8({
               />
             </figure>
           )}
-          <div className="nl-material-copy nl-reveal">
-            <h2>
-              {materialsStory.title}
-              <span>{materialsStory.titleAccent}</span>
+          <div
+            ref={materialsCopyRef}
+            className={`nl-material-copy nl-reveal nl-typewriter-panel${materialsTypewriterActive ? " is-typing" : " is-pending"}`}
+          >
+            <h2 aria-label={`${materialsStory.title} ${materialsStory.titleAccent}`}>
+              <PremiumTypewriterText
+                text={materialsStory.title}
+                startIndex={materialsTextOffsets[0]}
+              />
+              <span>
+                <PremiumTypewriterText
+                  text={materialsStory.titleAccent}
+                  startIndex={materialsTextOffsets[1]}
+                />
+              </span>
             </h2>
-            <p>{materialsStory.intro}</p>
+            <p aria-label={materialsStory.intro}>
+              <PremiumTypewriterText
+                text={materialsStory.intro}
+                startIndex={materialsTextOffsets[2]}
+              />
+            </p>
             <div className="nl-material-list">
-              {materialsStory.points.map((point) => (
+              {materialsStory.points.map((point, pointIndex) => (
                 <article key={point.title}>
-                  <h3>{point.title}</h3>
-                  <p>{point.body}</p>
+                  <h3 aria-label={point.title}>
+                    <PremiumTypewriterText
+                      text={point.title}
+                      startIndex={materialsTextOffsets[3 + pointIndex * 2]}
+                    />
+                  </h3>
+                  <p aria-label={point.body}>
+                    <PremiumTypewriterText
+                      text={point.body}
+                      startIndex={materialsTextOffsets[4 + pointIndex * 2]}
+                    />
+                  </p>
                 </article>
               ))}
             </div>
