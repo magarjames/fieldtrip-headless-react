@@ -74,6 +74,8 @@ const products: Product[] = [
 ];
 
 const filters = ["All", "Outer layers", "Bottoms", "Carry goods"] as const;
+const systemHeadline = "Move your way.";
+const systemHeadlineWords = ["MOVE", "YOUR", "WAY."];
 
 export function NorthlinePage({
   showHeader = true,
@@ -82,6 +84,9 @@ export function NorthlinePage({
   continuation = false,
   splitNavigation = false,
   risingEdge = false,
+  materialsVideoSrc,
+  materialsCopyVariant = "materials",
+  scrollSystemStory = false,
 }: {
   showHeader?: boolean;
   showHero?: boolean;
@@ -92,6 +97,12 @@ export function NorthlinePage({
   splitNavigation?: boolean;
   /** Lift a soft fabric-like edge over the previous scene as the collection arrives. */
   risingEdge?: boolean;
+  /** Optional full-bleed motion backdrop for the materials section. */
+  materialsVideoSrc?: string;
+  /** Switch the section story without changing the shared Northline routes. */
+  materialsCopyVariant?: "materials" | "streetwear";
+  /** Pin the outfit system and reveal its message word by word while scrolling. */
+  scrollSystemStory?: boolean;
 } = {}) {
   const [activeFilter, setActiveFilter] = useState<(typeof filters)[number]>("All");
   const deferredFilter = useDeferredValue(activeFilter);
@@ -106,6 +117,7 @@ export function NorthlinePage({
   const continuationNavRef = useRef<HTMLElement>(null);
   const edgeMotionRef = useRef<NorthlineEdgeMotion>({ progress: 0 });
   const materialsRef = useRef<HTMLElement>(null);
+  const materialsVideoRef = useRef<HTMLVideoElement>(null);
   const systemRef = useRef<HTMLElement>(null);
   const materialsEdgeMotionRef = useRef<NorthlineEdgeMotion>({ progress: 0 });
   const systemEdgeMotionRef = useRef<NorthlineEdgeMotion>({ progress: 0 });
@@ -113,6 +125,86 @@ export function NorthlinePage({
   const shownProducts = products.filter(
     (product) => deferredFilter === "All" || product.group === deferredFilter,
   );
+  const materialsStory =
+    materialsCopyVariant === "streetwear"
+      ? {
+          title: "Streetwear for",
+          titleAccent: "after dark.",
+          intro:
+            "Graphic layers, relaxed proportions, and finishing details that turn separate pieces into a complete look.",
+          points: [
+            {
+              title: "Graphic layers",
+              body: "Statement tees and outer layers that give the outfit its point of view.",
+            },
+            {
+              title: "Relaxed silhouettes",
+              body: "Loose lines and wide fits made for stacking without losing their shape.",
+            },
+            {
+              title: "Finish the look",
+              body: "Metal details and accessories that pull every layer in the same direction.",
+            },
+          ],
+        }
+      : {
+          title: "Fabric does",
+          titleAccent: "the talking.",
+          intro:
+            "The collection begins with texture, weight, and the small parts that stay useful after the first wear.",
+          points: [
+            {
+              title: "Dense cotton",
+              body: "Soft enough for a long day. Structured enough to keep its line.",
+            },
+            {
+              title: "Ripstop nylon",
+              body: "A lightweight answer for unpredictable weather and overpacked bags.",
+            },
+            {
+              title: "Plain hardware",
+              body: "Zips and closures that do their work without becoming the whole look.",
+            },
+          ],
+        };
+
+  useEffect(() => {
+    const video = materialsVideoRef.current;
+    if (!video || !materialsVideoSrc) return;
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let isVisible = false;
+
+    const syncPlayback = () => {
+      if (reducedMotion.matches || document.hidden || !isVisible) {
+        video.pause();
+        return;
+      }
+
+      void video.play().catch(() => {
+        // Muted autoplay can still be blocked until the visitor interacts.
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        syncPlayback();
+      },
+      { threshold: 0.08 },
+    );
+
+    observer.observe(video);
+    reducedMotion.addEventListener("change", syncPlayback);
+    document.addEventListener("visibilitychange", syncPlayback);
+
+    return () => {
+      observer.disconnect();
+      reducedMotion.removeEventListener("change", syncPlayback);
+      document.removeEventListener("visibilitychange", syncPlayback);
+      video.pause();
+    };
+  }, [materialsVideoSrc]);
 
   useEffect(() => {
     if (!activeProduct && !bagOpen && !mobileMenuOpen) return;
@@ -249,17 +341,20 @@ export function NorthlinePage({
       edges.forEach(({ section, motion }) => {
         if (!section) return;
         const edge = section.querySelector<HTMLElement>(".nl-section-edge");
-        if (!edge) return;
+        const videoFlow = section.querySelector<HTMLElement>(".nl-material-video");
+        if (!edge && !videoFlow) return;
 
         if (!desktop) {
           motion.current.progress = 0;
-          edge.style.removeProperty("transform");
+          edge?.style.removeProperty("transform");
+          videoFlow?.style.removeProperty("--nl-video-flow-offset");
           return;
         }
 
         if (reducedMotion.matches) {
           motion.current.progress = 1;
-          edge.style.transform = `translate3d(0, ${-edgeLift}px, 0)`;
+          if (edge) edge.style.transform = `translate3d(0, ${-edgeLift}px, 0)`;
+          videoFlow?.style.setProperty("--nl-video-flow-offset", `${-edgeLift}px`);
           return;
         }
 
@@ -267,7 +362,9 @@ export function NorthlinePage({
         const progress = Math.min(1, Math.max(0, (window.innerHeight - sectionTop) / edgeDistance));
         const easedProgress = 1 - Math.pow(1 - progress, 3);
         motion.current.progress = easedProgress;
-        edge.style.transform = `translate3d(0, ${(-edgeLift * easedProgress).toFixed(2)}px, 0)`;
+        const offset = (-edgeLift * easedProgress).toFixed(2);
+        if (edge) edge.style.transform = `translate3d(0, ${offset}px, 0)`;
+        videoFlow?.style.setProperty("--nl-video-flow-offset", `${offset}px`);
       });
     };
 
@@ -289,9 +386,118 @@ export function NorthlinePage({
       edges.forEach(({ section, motion }) => {
         motion.current.progress = 0;
         section?.querySelector<HTMLElement>(".nl-section-edge")?.style.removeProperty("transform");
+        section
+          ?.querySelector<HTMLElement>(".nl-material-video")
+          ?.style.removeProperty("--nl-video-flow-offset");
       });
     };
-  }, [risingEdge]);
+  }, [materialsVideoSrc, risingEdge]);
+
+  useEffect(() => {
+    if (!scrollSystemStory) return;
+
+    const section = systemRef.current;
+    if (!section) return;
+
+    const words = Array.from(section.querySelectorAll<HTMLElement>(".nl-system-word"));
+    const details = Array.from(section.querySelectorAll<HTMLElement>(".nl-system-details"));
+    const media = section.querySelector<HTMLElement>(".nl-system-media");
+    const visual = section.querySelector<HTMLElement>(".nl-system-visual img");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let animationFrame = 0;
+
+    const clamp = (value: number) => Math.min(1, Math.max(0, value));
+    const smoothstep = (start: number, end: number, value: number) => {
+      const progress = clamp((value - start) / (end - start));
+      return progress * progress * (3 - 2 * progress);
+    };
+
+    const resolveStory = () => {
+      words.forEach((word) => {
+        word.style.opacity = "1";
+        word.style.transform = "none";
+        word.style.filter = "none";
+      });
+      details.forEach((detail) => {
+        detail.style.opacity = "1";
+        detail.style.transform = "none";
+      });
+      if (media) {
+        media.style.opacity = "1";
+        media.style.transform = "none";
+        media.style.clipPath = "inset(0% 0% 0% 0%)";
+      }
+      if (visual) visual.style.transform = "none";
+    };
+
+    const updateStory = () => {
+      animationFrame = 0;
+
+      if (reducedMotion.matches) {
+        resolveStory();
+        return;
+      }
+
+      const travel = Math.max(1, section.offsetHeight - window.innerHeight);
+      const progress = clamp(-section.getBoundingClientRect().top / travel);
+
+      words.forEach((word, index) => {
+        const reveal = smoothstep(0.03 + index * 0.14, 0.2 + index * 0.14, progress);
+        word.style.opacity = reveal.toFixed(3);
+        word.style.transform = `translate3d(0, ${(0.82 * (1 - reveal)).toFixed(3)}em, 0)`;
+        word.style.filter = `blur(${(8 * (1 - reveal)).toFixed(2)}px)`;
+      });
+
+      details.forEach((detail, index) => {
+        const reveal = smoothstep(0.5 + index * 0.055, 0.69 + index * 0.055, progress);
+        detail.style.opacity = reveal.toFixed(3);
+        detail.style.transform = `translate3d(0, ${(28 * (1 - reveal)).toFixed(2)}px, 0)`;
+      });
+
+      const mediaReveal = smoothstep(0.12, 0.58, progress);
+      if (media) {
+        media.style.opacity = (0.12 + mediaReveal * 0.88).toFixed(3);
+        media.style.transform = `translate3d(${(44 * (1 - mediaReveal)).toFixed(2)}px, 0, 0) scale(${(1.08 - mediaReveal * 0.08).toFixed(4)})`;
+        media.style.clipPath = `inset(${(10 * (1 - mediaReveal)).toFixed(2)}% ${(7 * (1 - mediaReveal)).toFixed(2)}% ${(10 * (1 - mediaReveal)).toFixed(2)}% ${(18 * (1 - mediaReveal)).toFixed(2)}%)`;
+      }
+
+      if (visual) {
+        visual.style.transform = `scale(${(1.08 - progress * 0.08).toFixed(4)}) translate3d(0, ${(-18 * progress).toFixed(2)}px, 0)`;
+      }
+    };
+
+    const scheduleStoryUpdate = () => {
+      if (animationFrame) return;
+      animationFrame = window.requestAnimationFrame(updateStory);
+    };
+
+    section.classList.add("is-scroll-story-ready");
+    updateStory();
+    window.addEventListener("scroll", scheduleStoryUpdate, { passive: true });
+    window.addEventListener("resize", scheduleStoryUpdate);
+    reducedMotion.addEventListener("change", scheduleStoryUpdate);
+
+    return () => {
+      if (animationFrame) window.cancelAnimationFrame(animationFrame);
+      window.removeEventListener("scroll", scheduleStoryUpdate);
+      window.removeEventListener("resize", scheduleStoryUpdate);
+      reducedMotion.removeEventListener("change", scheduleStoryUpdate);
+      section.classList.remove("is-scroll-story-ready");
+      words.forEach((word) => {
+        word.style.removeProperty("opacity");
+        word.style.removeProperty("transform");
+        word.style.removeProperty("filter");
+      });
+      details.forEach((detail) => {
+        detail.style.removeProperty("opacity");
+        detail.style.removeProperty("transform");
+      });
+      media?.style.removeProperty("opacity");
+      media?.style.removeProperty("transform");
+      media?.style.removeProperty("clip-path");
+      visual?.style.removeProperty("transform");
+    };
+  }, [scrollSystemStory]);
 
   function openProduct(product: Product) {
     setActiveProduct(product);
@@ -481,8 +687,12 @@ export function NorthlinePage({
           </div>
         </section>
 
-        <section ref={materialsRef} id="materials" className="nl-materials">
-          {risingEdge && (
+        <section
+          ref={materialsRef}
+          id="materials"
+          className={`nl-materials${materialsVideoSrc ? " nl-materials--video" : ""}`}
+        >
+          {risingEdge && !materialsVideoSrc && (
             <NorthlineScrollEdge
               motion={materialsEdgeMotionRef}
               colour="#0f0f1c"
@@ -490,40 +700,60 @@ export function NorthlinePage({
               className="nl-section-edge nl-materials-edge"
             />
           )}
-          <figure className="nl-material-image nl-reveal">
-            <img
-              src={materials}
-              alt="Close textile study of cotton, ripstop, lime lining, and zipper hardware."
-              loading="lazy"
-            />
-          </figure>
+          {materialsVideoSrc ? (
+            <>
+              <svg className="nl-material-video-mask-defs" aria-hidden="true">
+                <defs>
+                  <clipPath id="nl-material-video-flow-clip" clipPathUnits="objectBoundingBox">
+                    <path
+                      className="nl-material-video-flow-path"
+                      d="M0 .068 C.07 .035 .12 .084 .19 .052 C.27 .022 .33 .088 .42 .049 C.51 .026 .58 .082 .67 .045 C.76 .02 .84 .075 .92 .041 C.96 .03 .98 .054 1 .05 L1 1 L0 1 Z"
+                    />
+                  </clipPath>
+                </defs>
+              </svg>
+              <div className="nl-material-video" aria-hidden="true">
+                <video
+                  ref={materialsVideoRef}
+                  src={materialsVideoSrc}
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                />
+              </div>
+            </>
+          ) : (
+            <figure className="nl-material-image nl-reveal">
+              <img
+                src={materials}
+                alt="Close textile study of cotton, ripstop, lime lining, and zipper hardware."
+                loading="lazy"
+              />
+            </figure>
+          )}
           <div className="nl-material-copy nl-reveal">
             <h2>
-              Fabric does
-              <span>the talking.</span>
+              {materialsStory.title}
+              <span>{materialsStory.titleAccent}</span>
             </h2>
-            <p>
-              The collection begins with texture, weight, and the small parts that stay useful after
-              the first wear.
-            </p>
+            <p>{materialsStory.intro}</p>
             <div className="nl-material-list">
-              <article>
-                <h3>Dense cotton</h3>
-                <p>Soft enough for a long day. Structured enough to keep its line.</p>
-              </article>
-              <article>
-                <h3>Ripstop nylon</h3>
-                <p>A lightweight answer for unpredictable weather and overpacked bags.</p>
-              </article>
-              <article>
-                <h3>Plain hardware</h3>
-                <p>Zips and closures that do their work without becoming the whole look.</p>
-              </article>
+              {materialsStory.points.map((point) => (
+                <article key={point.title}>
+                  <h3>{point.title}</h3>
+                  <p>{point.body}</p>
+                </article>
+              ))}
             </div>
           </div>
         </section>
 
-        <section ref={systemRef} className="nl-system">
+        <section
+          id="system"
+          ref={systemRef}
+          className={`nl-system${scrollSystemStory ? " nl-system--scroll-story" : ""}`}
+        >
           {risingEdge && (
             <NorthlineScrollEdge
               motion={systemEdgeMotionRef}
@@ -532,26 +762,74 @@ export function NorthlinePage({
               className="nl-section-edge nl-system-edge"
             />
           )}
-          <div className="nl-system-copy nl-reveal">
-            <h2>One less decision before the door.</h2>
-            <p>
-              A shell, a cargo, a smaller bag. Designed to work together without needing a uniform.
-            </p>
-            <button
-              className="nl-text-action"
-              type="button"
-              onClick={() => openProduct(products[0])}
-            >
-              Build the starting set
-            </button>
-          </div>
-          <figure className="nl-system-image nl-reveal">
-            <img
-              src={flatlay}
-              alt="Graphite outerwear, utility trousers, compact bag, and socks arranged as a complete outfit."
-              loading="lazy"
-            />
-          </figure>
+          {scrollSystemStory ? (
+            <div className="nl-system-stage">
+              <div className="nl-system-visual" aria-hidden="true">
+                <img src={flatlay} alt="" />
+              </div>
+              <h2 className="nl-system-title" aria-label={systemHeadline}>
+                {systemHeadlineWords.map((word, index) => (
+                  <span
+                    className={`nl-system-word nl-system-word-${index + 1}`}
+                    aria-hidden="true"
+                    key={word}
+                  >
+                    {word}
+                  </span>
+                ))}
+              </h2>
+              <div className="nl-system-intro nl-system-details">
+                <span>Northline / Look 01</span>
+                <p>
+                  After-dark layers for changing plans, late trains, and every version of the night.
+                </p>
+              </div>
+              <div className="nl-system-spec nl-system-details">
+                <span>Built around:</span>
+                <p>Graphic tees / Wide silhouettes</p>
+                <p>Metal details / Easy layers</p>
+              </div>
+              <p className="nl-system-manifesto nl-system-details">
+                No rulebook.<br />
+                No full look required.<br />
+                Just yours.
+              </p>
+              <figure className="nl-system-media" aria-hidden="true">
+                {materialsVideoSrc ? (
+                  <video src={materialsVideoSrc} autoPlay muted loop playsInline preload="metadata" />
+                ) : (
+                  <img src={detailBlue} alt="Dark technical sleeve with an acid-lime detail." />
+                )}
+                <figcaption>
+                  <span aria-hidden="true" /> Live fit / 001
+                </figcaption>
+              </figure>
+            </div>
+          ) : (
+            <div className="nl-system-frame">
+              <div className="nl-system-copy nl-reveal">
+                <h2>One less decision before the door.</h2>
+                <p>
+                  A shell, a cargo, a smaller bag. Designed to work together without needing a
+                  uniform.
+                </p>
+                <button
+                  className="nl-text-action"
+                  type="button"
+                  onClick={() => openProduct(products[0])}
+                >
+                  Build the starting set
+                </button>
+              </div>
+              <figure className="nl-system-image nl-reveal">
+                <img
+                  src={flatlay}
+                  alt="Graphite outerwear, utility trousers, compact bag, and socks arranged as a complete outfit."
+                  loading="lazy"
+                />
+              </figure>
+            </div>
+          )}
         </section>
 
         <NorthlineScrollFilm
