@@ -883,6 +883,10 @@
   white-space: nowrap;
 }
 
+.nl-typewriter-space {
+  white-space: pre;
+}
+
 .nl-typewriter-char {
   display: inline-block;
   opacity: 1;
