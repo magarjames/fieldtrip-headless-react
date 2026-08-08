@@ -25,6 +25,8 @@ type Product = {
   colors: string[];
   sizes: string[];
   shopifyVariantId?: string;
+  variants?: any[];
+  variantTitle?: string;
 };
 
 export function NorthlinePageV8({
@@ -83,9 +85,12 @@ export function NorthlinePageV8({
     image: sp.images?.[0]?.src || flatlay,
     alt: sp.title,
     description: sp.vendor || "A purposeful new addition to the line.",
-    colors: ["Default"],
-    sizes: ["One Size"],
-    shopifyVariantId: (sp.variants?.[0] as any)?.id
+    colors: sp.options?.find((o: any) => o.name.toLowerCase() === 'color' || o.name.toLowerCase() === 'colour')
+      ?.values.map((v: any) => typeof v === 'object' && v !== null ? v.value : v) || ["Default"],
+    sizes: sp.options?.find((o: any) => o.name.toLowerCase() === 'size')
+      ?.values.map((v: any) => typeof v === 'object' && v !== null ? v.value : v) || ["One Size"],
+    shopifyVariantId: (sp.variants?.[0] as any)?.id,
+    variants: sp.variants
   }));
 
   const dynamicFilters = ["All", ...Array.from(new Set(liveProducts.map(p => p.group).filter(Boolean)))];
@@ -300,8 +305,33 @@ export function NorthlinePageV8({
   }
 
   function addToBag(product: Product) {
+    let finalVariantId = product.shopifyVariantId;
+    
+    // Resolve the selected variant ID if we have variants and selections
+    if (product.variants && (selectedSize || selectedColor)) {
+      const matched = product.variants.find((v: any) => {
+        return v.selectedOptions?.every((opt: any) => {
+          const name = opt.name.toLowerCase();
+          if (name === 'size' && selectedSize) return opt.value === selectedSize;
+          if ((name === 'color' || name === 'colour') && selectedColor) return opt.value === selectedColor;
+          return true; // Ignore options we don't track
+        });
+      });
+      if (matched && matched.id) {
+        finalVariantId = matched.id;
+      }
+    }
+
+    let variantTitle = "";
+    if (product.variants && finalVariantId) {
+      const matched = product.variants.find((v: any) => v.id === finalVariantId);
+      if (matched && matched.title && matched.title !== "Default Title") {
+        variantTitle = matched.title;
+      }
+    }
+
     startTransition(() => {
-      setBag((current) => [...current, product]);
+      setBag((current) => [...current, { ...product, shopifyVariantId: finalVariantId, variantTitle }]);
       setBagOpen(true);
       setActiveProduct(null);
     });
@@ -757,6 +787,7 @@ export function NorthlinePageV8({
                       <img src={item.image} alt="" decoding="async" />
                       <div>
                         <h3>{item.name}</h3>
+                        {item.variantTitle && <p className="text-sm font-medium mb-1">{item.variantTitle}</p>}
                         <p>{item.price}</p>
                       </div>
                       <button type="button" onClick={() => removeFromBag(index)}>
