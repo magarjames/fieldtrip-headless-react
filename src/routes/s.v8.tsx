@@ -40,7 +40,6 @@ function FieldtripNorthlineV8Page() {
         continuation
         splitNavigation
         risingEdge
-        materialsVideoSrc="/northline/materials-motion.mp4"
       />
     </>
   );

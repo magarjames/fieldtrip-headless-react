@@ -36,8 +36,6 @@ export function NorthlinePageV8({
   continuation = false,
   splitNavigation = false,
   risingEdge = false,
-  materialsCopyVariant = "utility",
-  materialsVideoSrc,
 }: {
   showHeader?: boolean;
   showHero?: boolean;
@@ -48,9 +46,8 @@ export function NorthlinePageV8({
   splitNavigation?: boolean;
   /** Lift a soft fabric-like edge over the previous scene as the collection arrives. */
   risingEdge?: boolean;
-  materialsCopyVariant?: "utility" | "streetwear";
-  materialsVideoSrc?: string;
 } = {}) {
+  const materialsVideoSrc = "/northline/materials-motion.mp4";
   const [activeFilter, setActiveFilter] = useState<string>("All");
   const deferredFilter = useDeferredValue(activeFilter);
   const [activeProduct, setActiveProduct] = useState<Product | null>(null);
@@ -73,48 +70,26 @@ export function NorthlinePageV8({
   const materialsVideoRef = useRef<HTMLVideoElement>(null);
   const [materialsVideoBlocked, setMaterialsVideoBlocked] = useState(false);
 
-  const materialsStory =
-    materialsCopyVariant === "streetwear"
-      ? {
-          title: "Streetwear for",
-          titleAccent: "after dark.",
-          intro:
-            "Graphic layers, relaxed proportions, and finishing details that turn separate pieces into a complete look.",
-          points: [
-            {
-              title: "Graphic layers",
-              body: "Statement tees and outer layers that give the outfit its point of view.",
-            },
-            {
-              title: "Relaxed silhouettes",
-              body: "Loose lines and wide fits made for stacking without losing their shape.",
-            },
-            {
-              title: "Finish the look",
-              body: "Metal details and accessories that pull every layer in the same direction.",
-            },
-          ],
-        }
-      : {
-          title: "Fabric does",
-          titleAccent: "the talking.",
-          intro:
-            "The collection begins with texture, weight, and the small parts that stay useful after the first wear.",
-          points: [
-            {
-              title: "Dense cotton",
-              body: "Soft enough for a long day. Structured enough to keep its line.",
-            },
-            {
-              title: "Ripstop nylon",
-              body: "A lightweight answer for unpredictable weather and overpacked bags.",
-            },
-            {
-              title: "Plain hardware",
-              body: "Zips and closures that do their work without becoming the whole look.",
-            },
-          ],
-        };
+  const materialsStory = {
+    title: "Streetwear for",
+    titleAccent: "after dark.",
+    intro:
+      "Graphic layers, relaxed proportions, and finishing details that turn separate pieces into a complete look.",
+    points: [
+      {
+        title: "Graphic layers",
+        body: "Statement tees and outer layers that give the outfit its point of view.",
+      },
+      {
+        title: "Relaxed silhouettes",
+        body: "Loose lines and wide fits made for stacking without losing their shape.",
+      },
+      {
+        title: "Finish the look",
+        body: "Metal details and accessories that pull every layer in the same direction.",
+      },
+    ],
+  };
 
   useEffect(() => {
     const video = materialsVideoRef.current;
@@ -685,7 +660,6 @@ export function NorthlinePageV8({
                 src={materials}
                 alt="Close textile study of cotton, ripstop, lime lining, and zipper hardware."
                 loading="lazy"
-                decoding="async"
               />
             </figure>
           )}
