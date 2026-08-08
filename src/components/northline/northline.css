@@ -452,8 +452,9 @@
   }
 
   .northline--continuation.northline--split-navigation .nl-collection-intro {
-    transform: translate3d(clamp(-11rem, -7.5vw, -5.5rem), 0, 0);
-    will-change: transform;
+    transform: none;
+    margin-left: max(17.5rem, 25vw);
+    margin-right: auto;
   }
 
   .northline--continuation.northline--split-navigation .nl-filter-row,
