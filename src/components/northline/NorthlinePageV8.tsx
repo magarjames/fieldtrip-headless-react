@@ -740,28 +740,11 @@ export function NorthlinePageV8({
             role="dialog"
             aria-modal="true"
             aria-labelledby="bag-title"
-            style={{
-              background: "rgba(255, 255, 255, 0.15)",
-              backdropFilter: "blur(24px) saturate(150%)",
-              WebkitBackdropFilter: "blur(24px) saturate(150%)",
-              borderLeft: "1px solid rgba(255, 255, 255, 0.4)",
-              borderTopLeftRadius: "24px",
-              borderBottomLeftRadius: "24px",
-              boxShadow: "-10px 0 40px rgba(0, 0, 0, 0.3)",
-              color: "var(--nl-white)"
-            }}
           >
             <button
               className="nl-dialog-close"
               type="button"
               onClick={() => setBagOpen(false)}
-              style={{
-                background: "rgba(255, 255, 255, 0.1)",
-                backdropFilter: "blur(12px)",
-                WebkitBackdropFilter: "blur(12px)",
-                borderColor: "rgba(255, 255, 255, 0.4)",
-                color: "var(--nl-white)"
-              }}
             >
               Close
             </button>

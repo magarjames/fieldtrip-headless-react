@@ -1153,13 +1153,29 @@
   background: rgb(0 13 16 / 68%);
 }
 
-.nl-product-dialog,
+.nl-product-dialog {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+  color: var(--nl-white);
+  border-radius: 24px;
+  overflow: hidden;
+}
+
 .nl-bag-drawer {
   position: relative;
   z-index: 1;
-  border: 1px solid var(--nl-pebble);
-  background: var(--nl-white);
-  color: var(--nl-ink);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  border-left: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.3);
+  color: var(--nl-white);
+  border-radius: 24px 0 0 24px;
 }
 
 .nl-product-dialog {
@@ -1180,14 +1196,16 @@
 .nl-dialog-close {
   position: absolute;
   z-index: 2;
-  top: 1rem;
-  right: 1rem;
+  top: 1.25rem;
+  right: 1.25rem;
   min-height: 2.55rem;
   padding: 0.58rem 0.86rem;
-  border: 1px solid var(--nl-ink);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 1000px;
-  background: var(--nl-white);
-  color: var(--nl-ink);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--nl-white);
   font-size: 0.9rem;
   font-weight: 700;
   line-height: 1;
@@ -1197,7 +1215,7 @@
 }
 
 .nl-dialog-close:hover {
-  background: var(--nl-ink);
+  background: rgba(255, 255, 255, 0.5);
   color: var(--nl-white);
 }
 
@@ -1220,7 +1238,7 @@
 
 .nl-dialog-description {
   margin: 1.35rem 0 0;
-  color: var(--nl-ash);
+  color: rgba(255, 255, 255, 0.75);
   font-size: 1rem;
 }
 
@@ -1246,10 +1264,10 @@
 .nl-option-row button {
   min-height: 2.45rem;
   padding: 0.5rem 0.8rem;
-  border: 1px solid var(--nl-pebble);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 1000px;
-  background: var(--nl-white);
-  color: var(--nl-ink);
+  background: transparent;
+  color: var(--nl-white);
   font-size: 0.88rem;
   font-weight: 700;
   line-height: 1;
@@ -1257,14 +1275,19 @@
 
 .nl-option-row button.is-selected,
 .nl-option-row button:hover {
-  border-color: var(--nl-ink);
-  background: var(--nl-ink);
-  color: var(--nl-white);
+  border-color: var(--nl-white);
+  background: var(--nl-white);
+  color: var(--nl-ink);
 }
 
 .nl-dialog-add {
   width: 100%;
   margin-top: 2rem;
+  background: var(--nl-white) !important;
+  color: var(--nl-ink) !important;
+}
+.nl-dialog-add:hover {
+  background: rgba(255, 255, 255, 0.85) !important;
 }
 
 .nl-bag-drawer {
@@ -1343,6 +1366,11 @@
 
 .nl-bag-checkout {
   width: 100%;
+  background: var(--nl-white) !important;
+  color: var(--nl-ink) !important;
+}
+.nl-bag-checkout:hover {
+  background: rgba(255, 255, 255, 0.85) !important;
 }
 
 .nl-empty-bag {
