@@ -1,0 +1,296 @@
+/* ============================================================================
+   NORTHLINE — design tokens
+
+   System architecture taken from the supplied DESIGN.md (Hyer Aviation):
+   token naming, a full type scale with negative tracking that tightens as
+   size grows, a literal spacing scale, pills reserved for actions, hairline
+   dividers, no shadows, one accent used sparingly.
+
+   Direction taken from the brief: near-black ground, off-white type, muted
+   editorial collage hues. Where the two conflicted the brief won, because it
+   is the more specific instruction: DESIGN.md is a light aviation brand and
+   this is a dark fashion one.
+
+   Scoped to .nl so nothing leaks into the other routes.
+   ========================================================================== */
+
+.nl {
+  /* -- colour ------------------------------------------------------------ */
+  --nl-void: #050505; /* page ground, per the brief */
+  --nl-ink: #f5f3ee; /* off-white type, per the brief */
+  --nl-band: #0b0b0b; /* alternating band, the oscillation DESIGN.md asks for */
+  --nl-panel: #101010; /* raised surface: drawers, quick view */
+  --nl-hair: #1e1e1e; /* hairline dividers, visible only at edges */
+  --nl-hair-lit: #2e2e2e; /* hairline on a raised surface */
+  --nl-ash: #8b877e; /* secondary copy. The only neutral that recedes */
+
+  /* the muted collage palette. Rust is the accent; the rest are image and
+     trim tints only, never a second CTA colour. */
+  --nl-rust: #b4543a;
+  --nl-olive: #6b6a4b;
+  --nl-stone: #a8a196;
+  --nl-smoke: #5b6b78;
+
+  /* -- type -------------------------------------------------------------- */
+  /* Brief: expressive modern grotesk, italic serif for emphasis only.
+     EB Garamond is the serif because it is on the sanctioned rotation and is
+     not one of the two display serifs every generated page reaches for. */
+  --nl-grotesk: Archivo, "Neue Haas Grotesk Display", "Helvetica Neue", sans-serif;
+  --nl-serif: "EB Garamond", Georgia, serif;
+
+  /* Scale ratios lifted from DESIGN.md: tracking tightens as size grows, and
+     display line-height collapses toward 0.8. Sizes are fluid here because
+     that sheet was measured at one desktop width. */
+  --nl-hero: clamp(3.4rem, 11.6vw, 11.7rem); /* their 187px ceiling */
+  --nl-display-xl: clamp(2.8rem, 8.2vw, 8.2rem); /* 131px */
+  --nl-display: clamp(2.2rem, 4.6vw, 3.94rem); /* 63px */
+  --nl-heading-lg: clamp(1.9rem, 3.4vw, 3.25rem); /* 52px */
+  --nl-heading: clamp(1.6rem, 2.4vw, 2.31rem); /* 37px */
+  --nl-subheading: 1.44rem; /* 23px */
+  --nl-body: 1.125rem; /* 18px — their floor, and a Don't */
+  --nl-caption: 1.0625rem; /* 17px */
+
+  --nl-track-hero: -0.02em;
+  --nl-track-display: -0.02em;
+  --nl-track-heading: -0.01em;
+  --nl-track-body: 0;
+
+  --nl-leading-display: 0.82;
+  --nl-leading-heading: 1;
+  --nl-leading-body: 1.61; /* their signature 18/29 */
+
+  /* -- space ------------------------------------------------------------- */
+  --nl-unit: 4px;
+  --nl-13: 13px;
+  --nl-16: 16px;
+  --nl-22: 22px;
+  --nl-31: 31px;
+  --nl-38: 38px;
+  --nl-52: 52px;
+  --nl-68: 68px;
+  --nl-119: 119px;
+
+  --nl-shell: 1680px;
+  --nl-gutter: clamp(1.1rem, 4vw, 3.4rem);
+  --nl-section: clamp(4rem, 9vw, 8rem);
+  --nl-rail: 264px;
+
+  /* -- shape ------------------------------------------------------------- */
+  /* DESIGN.md makes the pill the action shape. The brief narrows it further:
+     the pill is the ONLY rounded thing on the page. */
+  --nl-radius-pill: 1000px;
+  --nl-radius-panel: 0px;
+
+  background: var(--nl-void);
+  color: var(--nl-ink);
+  font-family: var(--nl-grotesk);
+  font-size: var(--nl-body);
+  line-height: var(--nl-leading-body);
+}
+
+/* ------------------------------------------------------------------ base */
+
+.nl *,
+.nl *::before,
+.nl *::after {
+  box-sizing: border-box;
+}
+
+.nl h1,
+.nl h2,
+.nl h3,
+.nl h4 {
+  margin: 0;
+  font-weight: 700; /* DESIGN.md: weight 700 is non-negotiable from 23px up */
+  line-height: var(--nl-leading-heading);
+}
+
+.nl p {
+  margin: 0 0 1rem;
+}
+
+/* the italic serif is for emphasis only, never for a whole heading */
+.nl em,
+.nl .nl-em {
+  font-family: var(--nl-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.nl a {
+  color: inherit;
+}
+
+/* visible focus, required by the brief */
+.nl :focus-visible {
+  outline: 2px solid var(--nl-ink);
+  outline-offset: 3px;
+}
+
+.nl-skip {
+  position: absolute;
+  left: -9999px;
+  z-index: 200;
+  background: var(--nl-ink);
+  color: var(--nl-void);
+  padding: 0.8rem 1.2rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.nl-skip:focus {
+  left: 1rem;
+  top: 1rem;
+}
+
+/* ---------------------------------------------------------------- layout */
+
+.nl-shell {
+  width: 100%;
+  max-width: var(--nl-shell);
+  margin-inline: auto;
+  padding-inline: var(--nl-gutter);
+}
+
+.nl-band {
+  background: var(--nl-band);
+}
+
+/* hairline rules, the only divider in the system. No shadows anywhere. */
+.nl-rule {
+  border: 0;
+  border-top: 1px solid var(--nl-hair);
+  margin: 0;
+}
+
+/* the architectural grid the brief asks for: hairline charcoal, drawn not
+   decorated, and always behind content */
+.nl-grid-lines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(90deg, var(--nl-hair) 0 1px, transparent 1px 12.5%),
+    repeating-linear-gradient(0deg, var(--nl-hair) 0 1px, transparent 1px 25%);
+  opacity: 0.55;
+}
+
+/* ---------------------------------------------------------------- type */
+
+.nl-hero-type {
+  font-size: var(--nl-hero);
+  letter-spacing: var(--nl-track-hero);
+  line-height: var(--nl-leading-display);
+  text-transform: uppercase;
+}
+.nl-display {
+  font-size: var(--nl-display);
+  letter-spacing: var(--nl-track-display);
+  line-height: var(--nl-leading-display);
+}
+.nl-display-xl {
+  font-size: var(--nl-display-xl);
+  letter-spacing: var(--nl-track-display);
+  line-height: var(--nl-leading-display);
+}
+.nl-heading-lg {
+  font-size: var(--nl-heading-lg);
+  letter-spacing: var(--nl-track-heading);
+}
+.nl-heading {
+  font-size: var(--nl-heading);
+  letter-spacing: var(--nl-track-heading);
+}
+.nl-sub {
+  font-size: var(--nl-subheading);
+  letter-spacing: -0.01em;
+}
+.nl-body {
+  font-size: var(--nl-body);
+  line-height: var(--nl-leading-body);
+  color: var(--nl-ash);
+  max-width: 62ch;
+}
+.nl-caption {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--nl-ash);
+}
+
+/* -------------------------------------------------------------- actions */
+/* the pill is the action shape and the only rounded thing on the page */
+
+.nl-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 15px var(--nl-22) 16px;
+  border: 1px solid var(--nl-ink);
+  border-radius: var(--nl-radius-pill);
+  background: var(--nl-ink);
+  color: var(--nl-void);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.nl-pill--ghost {
+  background: transparent;
+  color: var(--nl-ink);
+}
+.nl-pill--rust {
+  background: var(--nl-rust);
+  border-color: var(--nl-rust);
+  color: var(--nl-ink);
+}
+.nl-pill[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* everything that is not a CTA stays hard-edged */
+.nl-square {
+  border-radius: var(--nl-radius-panel);
+}
+
+/* ---------------------------------------------------------------- media */
+
+.nl-media {
+  position: relative;
+  overflow: hidden;
+  background: var(--nl-band);
+  border-radius: 0;
+}
+.nl-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---------------------------------------------------------------- forms */
+
+.nl-field {
+  min-height: 48px;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background: transparent;
+  border: 1px solid var(--nl-hair-lit);
+  border-radius: 0;
+  color: var(--nl-ink);
+  font-family: inherit;
+  font-size: 1rem;
+}
+.nl-field::placeholder {
+  color: var(--nl-ash);
+}
+.nl-field:focus {
+  outline: none;
+  border-color: var(--nl-ink);
+}

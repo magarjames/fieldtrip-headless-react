@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Every site in this project</title>
+<style>
+  :root{
+    --bg:#0c0c0d; --fg:#f2f0eb; --dim:#9d9a94; --hair:rgba(242,240,235,0.14);
+    --accent:#b4543a; --live:#5c8a4a;
+  }
+  *{ box-sizing:border-box }
+  body{
+    margin:0; background:var(--bg); color:var(--fg);
+    font-family:Archivo,"Helvetica Neue",system-ui,sans-serif;
+    line-height:1.55; padding:clamp(1.25rem,4vw,3rem);
+  }
+  .shell{ max-width:1180px; margin-inline:auto }
+  h1{ font-size:clamp(1.9rem,5vw,3.2rem); line-height:1; letter-spacing:-0.04em; margin:0 0 .6rem }
+  h2{ font-size:1.05rem; letter-spacing:.02em; margin:2.6rem 0 .2rem }
+  .sub{ color:var(--dim); max-width:70ch; margin:0 0 .4rem }
+  .lbl{ font-family:"JetBrains Mono",ui-monospace,monospace; font-size:.66rem;
+        text-transform:uppercase; letter-spacing:.14em; color:var(--dim) }
+  table{ width:100%; border-collapse:collapse; margin-top:.9rem }
+  th{ text-align:left; font-weight:600; font-size:.72rem; text-transform:uppercase;
+      letter-spacing:.1em; color:var(--dim); border-bottom:1px solid var(--hair);
+      padding:.5rem .8rem .5rem 0 }
+  td{ border-bottom:1px solid var(--hair); padding:.62rem .8rem .62rem 0; vertical-align:top }
+  td:last-child, th:last-child{ padding-right:0 }
+  a{ color:var(--fg) }
+  a:hover{ color:var(--accent) }
+  code{ font-family:"JetBrains Mono",ui-monospace,monospace; font-size:.82em; color:var(--dim) }
+  .n{ font-family:"JetBrains Mono",ui-monospace,monospace; font-size:.72rem; color:var(--dim); white-space:nowrap }
+  .pill{ display:inline-block; font-family:"JetBrains Mono",ui-monospace,monospace;
+         font-size:.6rem; text-transform:uppercase; letter-spacing:.12em;
+         padding:.2rem .5rem; border-radius:999px; white-space:nowrap }
+  .live{ background:rgba(92,138,74,.18); color:#9ccf82 }
+  .off{ background:rgba(242,240,235,.08); color:var(--dim) }
+  .note{ border-left:2px solid var(--accent); padding-left:1rem; margin:2rem 0;
+         color:var(--dim); max-width:74ch }
+  footer{ margin-top:3.5rem; padding-top:1.2rem; border-top:1px solid var(--hair) }
+  @media (max-width:640px){
+    th:nth-child(3), td:nth-child(3){ display:none }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <p class="lbl">Project directory</p>
+  <h1>Every site in this project</h1>
+  <p class="sub">
+    31 routes served by the React app on this host, plus 30 standalone HTML sites
+    sitting in the project folder that this server does not serve. Everything in
+    the first four tables is a live link.
+  </p>
+
+  <h2>The two things called “v6”</h2>
+  <p class="sub">Worth disambiguating, since both exist:</p>
+  <table>
+    <tr>
+      <td class="n">v6 &nbsp;a</td>
+      <td><a href="/nl/hyer"><strong>/nl/hyer</strong></a> — version <strong>06 of the NORTHLINE set</strong>. DESIGN.md applied literally: pale sky hero, one clay card, terminal footer.</td>
+      <td><span class="pill live">live</span></td>
+    </tr>
+    <tr>
+      <td class="n">v6 &nbsp;b</td>
+      <td><a href="/s/v6"><strong>/s/v6</strong></a> — “<strong>Fieldtrip x Northline</strong>”, version 6 of the FIELDTRIP set. Titled <em>Dress for the long way home</em>.</td>
+      <td><span class="pill live">live</span></td>
+    </tr>
+  </table>
+
+  <h2>NORTHLINE — seven design systems</h2>
+  <p class="sub">One catalogue, seven design languages. Index at <a href="/nl">/nl</a>.</p>
+  <table>
+    <tr><th>No.</th><th>Route</th><th>What it is</th></tr>
+    <tr><td class="n">01</td><td><a href="/nl/flight">/nl/flight</a></td><td>scroll-world + R3F depth layer</td></tr>
+    <tr><td class="n">02</td><td><a href="/nl/impeccable">/nl/impeccable</a></td><td>impeccable — the edition as a bill of materials</td></tr>
+    <tr><td class="n">03</td><td><a href="/nl/taste">/nl/taste</a></td><td>design-taste-frontend — cobalt and cream, dual theme</td></tr>
+    <tr><td class="n">04</td><td><a href="/nl/brutalist">/nl/brutalist</a></td><td>industrial-brutalist-ui — Swiss industrial print</td></tr>
+    <tr><td class="n">05</td><td><a href="/nl/minimal">/nl/minimal</a></td><td>minimalist-ui + high-end-visual-design</td></tr>
+    <tr><td class="n">06</td><td><a href="/nl/hyer">/nl/hyer</a></td><td>DESIGN.md applied literally — light aviation system</td></tr>
+    <tr><td class="n">07</td><td><a href="/nl/gallery">/nl/gallery</a></td><td>Structured reference — Renaissance gallery on putty</td></tr>
+  </table>
+
+  <h2>The GL set — ten rendering techniques</h2>
+  <p class="sub">Same catalogue, ten ways of making the pixels. Index at <a href="/w">/w</a>.</p>
+  <table>
+    <tr><th>No.</th><th>Route</th><th>Technique</th></tr>
+    <tr><td class="n">01</td><td><a href="/w/drift">/w/drift</a></td><td>shadergradient waterPlane</td></tr>
+    <tr><td class="n">02</td><td><a href="/w/cloth">/w/cloth</a></td><td>custom GLSL cloth, weave in the fragment stage</td></tr>
+    <tr><td class="n">03</td><td><a href="/w/vitrine">/w/vitrine</a></td><td>R3F plates in an arc, camera pushes through</td></tr>
+    <tr><td class="n">04</td><td><a href="/w/fold">/w/fold</a></td><td>GLSL fold over a real photograph</td></tr>
+    <tr><td class="n">05</td><td><a href="/w/kiln">/w/kiln</a></td><td>volumetric fbm slabs, one moving light</td></tr>
+    <tr><td class="n">06</td><td><a href="/w/weave">/w/weave</a></td><td>600 instanced threads, one draw call</td></tr>
+    <tr><td class="n">07</td><td><a href="/w/corridor">/w/corridor</a></td><td>scroll-world, stills mode</td></tr>
+    <tr><td class="n">08</td><td><a href="/w/bloom">/w/bloom</a></td><td>12,000-point cloud on a torus knot</td></tr>
+    <tr><td class="n">09</td><td><a href="/w/atlas">/w/atlas</a></td><td>the catalogue as one wall</td></tr>
+    <tr><td class="n">10</td><td><a href="/w/tide">/w/tide</a></td><td>shadergradient sphere + scroll-world scrub</td></tr>
+  </table>
+
+  <h2>FIELDTRIP — the bright streetwear build</h2>
+  <p class="sub">Built from the real product direction. The chibi hero lives on <a href="/s">/s</a>.</p>
+  <table>
+    <tr><th>No.</th><th>Route</th><th>Title</th></tr>
+    <tr><td class="n">v1</td><td><a href="/s">/s</a></td><td>Drop 04 — fits-first, interactive chibi</td></tr>
+    <tr><td class="n">v2</td><td><a href="/s/v2">/s/v2</a></td><td>The Figure Shop</td></tr>
+    <tr><td class="n">v3</td><td><a href="/s/v3">/s/v3</a></td><td>The Figure Shop (VRM)</td></tr>
+    <tr><td class="n">v4</td><td><a href="/s/v4">/s/v4</a></td><td>The Figure Shop (Fold)</td></tr>
+    <tr><td class="n">v5</td><td><a href="/s/v5">/s/v5</a></td><td>Drop 04 After Dark</td></tr>
+    <tr><td class="n">v6</td><td><a href="/s/v6">/s/v6</a></td><td>Fieldtrip x Northline</td></tr>
+    <tr><td class="n">v7</td><td><a href="/s/v7">/s/v7</a></td><td>Fieldtrip x Northline V7</td></tr>
+  </table>
+
+  <h2>Other live routes</h2>
+  <table>
+    <tr><td><a href="/">/</a></td><td>Count Club — stock &amp; waste, the original app</td></tr>
+    <tr><td><a href="/northline">/northline</a></td><td>the first NORTHLINE storefront</td></tr>
+    <tr><td><a href="/northline-world">/northline-world</a></td><td>Northline World — a field study</td></tr>
+    <tr><td><a href="/editions">/editions</a></td><td>SECOND PRESS — the First Edition</td></tr>
+  </table>
+
+  <h2>Standalone HTML — in the folder, not on this server</h2>
+  <p class="sub">
+    These are plain files under <code>Downloads/project-folder/</code>. They are not
+    served here, so the paths below are for opening locally.
+  </p>
+  <table>
+    <tr><th>Path</th><th>What it is</th><th></th></tr>
+    <tr><td><code>shopfront-preview/</code></td><td>Count Club shopfront — <code>index.html</code> (desktop) + <code>mobile.html</code></td><td><span class="pill off">local</span></td></tr>
+    <tr><td><code>11-concepts/</code></td><td>10 restaurant landing concepts: impeccable 1–5, taste 1–5, plus an index</td><td><span class="pill off">local</span></td></tr>
+    <tr><td><code>11-concepts.backup-…/</code></td><td>the colour redesign backup — the only copy of that work</td><td><span class="pill off">local</span></td></tr>
+    <tr><td><code>website/</code></td><td>5 pages: index, about, contact, modules, pricing</td><td><span class="pill off">local</span></td></tr>
+    <tr><td><code>dropship-preview/</code></td><td>dropship landing + a taste variant</td><td><span class="pill off">local</span></td></tr>
+    <tr><td><code>clothing-dropship-store/</code></td><td>the first clothing store interpretation</td><td><span class="pill off">local</span></td></tr>
+    <tr><td><code>10-landing/</code></td><td>an earlier landing page</td><td><span class="pill off">local</span></td></tr>
+    <tr><td><code>07-pitch-landing-page.html</code></td><td>pitch landing page</td><td><span class="pill off">local</span></td></tr>
+    <tr><td><code>site-directory.html</code></td><td>an earlier directory page</td><td><span class="pill off">local</span></td></tr>
+  </table>
+
+  <div class="note">
+    <strong>This link dies when the session does.</strong> Cloudflare quick tunnels mint
+    a new hostname on every restart, so any URL from an earlier session is already dead.
+    A Vercel deploy would give an address that survives restarts.
+  </div>
+
+  <footer>
+    <p class="lbl">
+      All imagery is placeholder unless noted. Original brand copy and invented product
+      names throughout. No real brand, garment or person is depicted.
+    </p>
+  </footer>
+
+</div>
+</body>
+</html>

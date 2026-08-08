@@ -1,0 +1,59 @@
+<!-- Glass Cart Drawer Overlay -->
+<div id="GlassCartOverlay" class="glass-layer">
+  <!-- Backdrop to close drawer when clicked -->
+  <button id="GlassCartBackdrop" class="glass-layer-backdrop" aria-label="Close bag"></button>
+  
+  <!-- The Glass Drawer -->
+  <aside id="GlassCartDrawer" class="glass-bag-drawer" role="dialog" aria-modal="true" aria-labelledby="bag-title">
+    <button id="GlassCartClose" class="glass-dialog-close" type="button">
+      Close
+    </button>
+    
+    <h2 id="bag-title">Your bag</h2>
+    
+    {% if cart.item_count > 0 %}
+      <ul class="glass-bag-list">
+        {% for item in cart.items %}
+          <li>
+            <img src="{{ item.image | img_url: 'medium' }}" alt="{{ item.title | escape }}">
+            <div class="item-details">
+              <h3>{{ item.product.title }}</h3>
+              <p>{{ item.price | money }}</p>
+            </div>
+            <a href="{{ item.url_to_remove }}" class="remove-btn">Remove</a>
+          </li>
+        {% endfor %}
+      </ul>
+      <div class="glass-bag-footer">
+        <p class="subtotal">Subtotal: {{ cart.total_price | money }}</p>
+        <form action="/cart" method="post" id="cart-form">
+          <button type="submit" name="checkout" class="glass-checkout-btn">Checkout</button>
+        </form>
+      </div>
+    {% else %}
+      <p class="glass-empty-bag">Your bag is ready when you are.</p>
+    {% endif %}
+  </aside>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtn = document.getElementById('GlassCartToggle');
+    const overlay = document.getElementById('GlassCartOverlay');
+    const closeBtn = document.getElementById('GlassCartClose');
+    const backdrop = document.getElementById('GlassCartBackdrop');
+
+    const openDrawer = () => overlay.classList.add('is-open');
+    const closeDrawer = () => overlay.classList.remove('is-open');
+
+    // Attach events
+    if(toggleBtn) toggleBtn.addEventListener('click', openDrawer);
+    if(closeBtn) closeBtn.addEventListener('click', closeDrawer);
+    if(backdrop) backdrop.addEventListener('click', closeDrawer);
+    
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDrawer();
+    });
+  });
+</script>

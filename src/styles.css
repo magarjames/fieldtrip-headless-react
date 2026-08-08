@@ -1,0 +1,107 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--paper);
+  --color-foreground: var(--ink);
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-ink: var(--ink);
+  --color-coral: var(--coral);
+  --color-hotpink: var(--hotpink);
+  --color-cobalt: var(--cobalt);
+  --color-yellow: var(--yellow);
+  --color-leaf: var(--leaf);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--ink);
+  --font-display: "Archivo Black", "Helvetica Neue", sans-serif;
+  --font-sans: "Inter", "Helvetica Neue", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+:root {
+  --paper: oklch(0.958 0.02 86);
+  --paper-2: oklch(0.928 0.022 86);
+  --ink: oklch(0.16 0.01 60);
+  --coral: oklch(0.72 0.17 30);
+  --hotpink: oklch(0.78 0.14 358);
+  --cobalt: oklch(0.55 0.16 258);
+  --yellow: oklch(0.90 0.14 96);
+  --leaf: oklch(0.80 0.12 150);
+  --muted-foreground: oklch(0.44 0.02 86);
+}
+
+@layer base {
+  html, body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+  }
+  /* Paper grain */
+  body {
+    background-image:
+      radial-gradient(oklch(0.14 0 0 / 0.07) 1px, transparent 1.2px),
+      radial-gradient(oklch(0.14 0 0 / 0.04) 1px, transparent 1.2px),
+      radial-gradient(oklch(0.14 0 0 / 0.03) 1px, transparent 1.2px);
+    background-size: 3px 3px, 7px 7px, 13px 13px;
+    background-position: 0 0, 1px 2px, 3px 5px;
+  }
+  ::selection { background: var(--hotpink); color: var(--paper); }
+  h1, h2, h3 { font-family: var(--font-display); }
+}
+
+@utility ink-rule {
+  border: 2px solid var(--ink);
+}
+@utility ink-rule-thick {
+  border: 3px solid var(--ink);
+}
+@utility label-tech {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+@utility halftone-dark {
+  background-image: radial-gradient(oklch(0.14 0 0 / 0.85) 1.2px, transparent 1.6px);
+  background-size: 6px 6px;
+}
+@utility halftone-light {
+  background-image: radial-gradient(oklch(1 0 0 / 0.5) 1.2px, transparent 1.6px);
+  background-size: 6px 6px;
+}
+@utility grain-overlay {
+  position: relative;
+}
+@utility overprint-coral {
+  color: var(--ink);
+  text-shadow:
+    3px 3px 0 var(--coral),
+    3px 3px 0 var(--coral);
+}
+@utility overprint-cobalt {
+  color: var(--ink);
+  text-shadow: 4px 4px 0 var(--cobalt);
+}
+@utility overprint-pink {
+  color: var(--ink);
+  text-shadow: 4px 4px 0 var(--hotpink);
+}
+
+/* Continuous marquee, static under reduced-motion */
+@keyframes cc-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.cc-marquee-track {
+  animation: cc-marquee 32s linear infinite;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cc-marquee-track { animation: none; }
+}
+

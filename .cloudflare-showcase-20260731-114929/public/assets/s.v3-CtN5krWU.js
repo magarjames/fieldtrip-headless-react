@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-DUAcabCT.js";import{t}from"./FigureShop-BFoDm5Wh.js";var n=e(),r=[`/fieldtrip/v3/euro.vrm`,`/fieldtrip/v3/corner.vrm`,`/fieldtrip/v3/rest.vrm`];function i(){return(0,n.jsx)(t,{version:`v3 · vrm`,vrmUrls:r,note:`Replica build — rigged VRM figures take over each slot as they are exported.`})}export{i as component};

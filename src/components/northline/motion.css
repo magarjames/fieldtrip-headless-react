@@ -1,0 +1,278 @@
+/* ============================================================================
+   NORTHLINE — motion system
+
+   Per the motion brief:
+     entrances       cubic-bezier(0.16, 1, 0.3, 1)
+     feedback        100-150ms
+     hover           150-300ms
+     overlays        300-500ms
+     hero sequence   700-900ms total
+     no bounce, no elastic, no floating decoration, no repeated fade-ups
+   ========================================================================== */
+
+.nl {
+  --nl-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --nl-feedback: 130ms;
+  --nl-hover: 200ms;
+  --nl-overlay: 360ms;
+}
+
+/* ============================================================ hero sequence
+   One authored sequence, 700-900ms end to end. Each step is offset so the
+   whole thing resolves at ~880ms:
+
+     0ms    artwork unmasks via clip-path
+     140ms  grid + frame strokes draw in
+     300ms  headline words rise through vertical masks
+     620ms  subtitle, links, CTA stagger in
+*/
+
+.nl-hero-art {
+  clip-path: inset(0 0 100% 0);
+  animation: nl-unmask 760ms var(--nl-enter) forwards;
+}
+@keyframes nl-unmask {
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* the frame and grid draw rather than fade */
+.nl-frame {
+  clip-path: inset(0 100% 0 0);
+  animation: nl-draw-x 520ms var(--nl-enter) 140ms forwards;
+}
+.nl-hero .nl-grid-lines {
+  clip-path: inset(0 0 100% 0);
+  animation: nl-unmask 640ms var(--nl-enter) 140ms forwards;
+}
+@keyframes nl-draw-x {
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* word-by-word vertical masks. The mask is the parent; the word moves. */
+.nl-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.nl-word > span {
+  display: inline-block;
+  translate: 0 105%;
+  animation: nl-rise 620ms var(--nl-enter) forwards;
+  animation-delay: calc(300ms + var(--w, 0) * 90ms);
+}
+@keyframes nl-rise {
+  to {
+    translate: 0 0;
+  }
+}
+/* the italic word drifts horizontally as it rises */
+.nl-word--em > span {
+  animation-name: nl-rise-drift;
+}
+@keyframes nl-rise-drift {
+  from {
+    translate: -0.14em 105%;
+  }
+  to {
+    translate: 0 0;
+  }
+}
+
+.nl-stagger > * {
+  opacity: 0;
+  translate: 0 10px;
+  animation: nl-in 420ms var(--nl-enter) forwards;
+  animation-delay: calc(620ms + var(--i, 0) * 60ms);
+}
+@keyframes nl-in {
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* ======================================================== section reveals
+   Headings come through a clip-path mask, not a fade-up. Bodies get opacity
+   only, so nothing shifts layout.
+*/
+
+.nl-mask {
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 620ms var(--nl-enter);
+}
+.nl-mask.in {
+  clip-path: inset(0 0 0 0);
+}
+
+.nl-soft {
+  opacity: 0;
+  transition: opacity 520ms var(--nl-enter);
+}
+.nl-soft.in {
+  opacity: 1;
+}
+
+/* the one layered campaign moment: the image crops open as it enters */
+.nl-crop img {
+  scale: 1.12;
+  transition: scale 900ms var(--nl-enter);
+}
+.nl-crop.in img {
+  scale: 1;
+}
+
+/* ================================================================ header */
+
+.nl-header {
+  transition:
+    background-color var(--nl-hover) var(--nl-enter),
+    backdrop-filter var(--nl-hover) var(--nl-enter),
+    border-color var(--nl-hover) var(--nl-enter);
+}
+.nl-header[data-scrolled="true"] {
+  background: rgb(5 5 5 / 0.72);
+  backdrop-filter: blur(14px);
+  border-bottom-color: var(--nl-hair);
+}
+
+/* thin underline sweep, not a colour change */
+.nl-link {
+  position: relative;
+  text-decoration: none;
+}
+.nl-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  scale: 0 1;
+  transform-origin: left;
+  transition: scale var(--nl-hover) var(--nl-enter);
+}
+.nl-link:hover::after,
+.nl-link:focus-visible::after,
+.nl-link[aria-current="true"]::after {
+  scale: 1 1;
+}
+
+/* ================================================================ cards */
+/* 2-4px shift only. The movement is in the image crop, not in elevation. */
+
+.nl-card {
+  transition: translate var(--nl-hover) var(--nl-enter);
+}
+.nl-card:hover,
+.nl-card:focus-within {
+  translate: 0 -3px;
+}
+.nl-card .nl-media img {
+  transition: scale 320ms var(--nl-enter);
+}
+.nl-card:hover .nl-media img,
+.nl-card:focus-within .nl-media img {
+  scale: 1.03;
+}
+
+/* =============================================================== filters */
+
+.nl-filter {
+  transition:
+    background-color 170ms var(--nl-enter),
+    color 170ms var(--nl-enter),
+    border-color 170ms var(--nl-enter);
+}
+
+/* =============================================================== drawers */
+
+.nl-scrim {
+  opacity: 0;
+  transition: opacity var(--nl-overlay) var(--nl-enter);
+}
+.nl-scrim[data-open="true"] {
+  opacity: 1;
+}
+
+.nl-drawer {
+  translate: 100% 0;
+  transition: translate var(--nl-overlay) var(--nl-enter);
+}
+.nl-drawer[data-open="true"] {
+  translate: 0 0;
+}
+.nl-drawer--left {
+  translate: -100% 0;
+}
+.nl-drawer--left[data-open="true"] {
+  translate: 0 0;
+}
+.nl-drawer--top {
+  translate: 0 -100%;
+}
+.nl-drawer--top[data-open="true"] {
+  translate: 0 0;
+}
+
+/* =============================================================== feedback */
+
+.nl-size {
+  transition:
+    background-color var(--nl-feedback) var(--nl-enter),
+    color var(--nl-feedback) var(--nl-enter),
+    border-color var(--nl-feedback) var(--nl-enter);
+}
+
+/* bag count pulses once when it changes */
+.nl-count[data-pulse="true"] {
+  animation: nl-pulse 320ms var(--nl-enter);
+}
+@keyframes nl-pulse {
+  40% {
+    scale: 1.32;
+  }
+  to {
+    scale: 1;
+  }
+}
+
+/* add to bag confirms immediately, then settles */
+.nl-confirm {
+  transition:
+    background-color var(--nl-feedback) var(--nl-enter),
+    color var(--nl-feedback) var(--nl-enter);
+}
+
+/* ========================================================= reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  .nl *,
+  .nl *::before,
+  .nl *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .nl .nl-hero-art,
+  .nl .nl-frame,
+  .nl .nl-grid-lines,
+  .nl .nl-mask {
+    clip-path: none !important;
+  }
+  .nl .nl-word > span,
+  .nl .nl-stagger > * {
+    translate: none !important;
+    opacity: 1 !important;
+  }
+  .nl .nl-soft {
+    opacity: 1 !important;
+  }
+  .nl .nl-crop img {
+    scale: 1 !important;
+  }
+}

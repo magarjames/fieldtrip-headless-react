@@ -1,0 +1,84 @@
+<section id="grid" class="shell pt-20 pb-32" style="max-width: 1560px; margin-inline: auto; padding-inline: clamp(1rem,4vw,2.25rem);">
+  <header class="flex flex-col gap-6 md:flex-row md:items-end justify-between border-b-2 pb-6" style="border-color: var(--ink);">
+    <div>
+      <h2 class="text-4xl md:text-6xl font-black uppercase tracking-tight m-0" style="font-family: 'Archivo Black', Archivo, sans-serif;">
+        {{ section.settings.grid_title }}
+      </h2>
+      <p class="mt-2 text-lg" style="color: var(--dim);">{{ section.settings.grid_subtitle }}</p>
+    </div>
+    
+    <!-- Filter Chips (Static for Shopify unless using JS filtering) -->
+    <div class="flex flex-wrap gap-2" role="group" aria-label="Filter pieces by category">
+      <button class="chip" aria-pressed="true" style="background: var(--ink); color: var(--paper);">Everything</button>
+      {% for collection in collections %}
+        {% if collection.handle != 'frontpage' %}
+          <a href="{{ collection.url }}" class="chip">{{ collection.title }}</a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </header>
+
+  <div class="mt-12 grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+    {% assign display_collection = collections[section.settings.collection] %}
+    
+    {% for product in display_collection.products %}
+      {% assign hue = product.metafields.custom.hover_color | default: '#ff4400' %}
+      
+      <a href="{{ product.url }}" class="card block group" style="--hue: {{ hue }};">
+        <div class="plate aspect-[4/5] w-full overflow-hidden rounded-2xl transition-colors duration-300 group-hover:bg-[var(--hue)] flex items-center justify-center">
+          <img 
+            src="{{ product.featured_image | img_url: '600x' }}" 
+            alt="{{ product.title | escape }}"
+            loading="lazy"
+            class="h-[90%] w-auto object-contain drop-shadow-xl transition-transform duration-500 group-hover:scale-105 group-hover:-rotate-1"
+          >
+        </div>
+        <div class="mt-4 flex items-baseline justify-between px-1">
+          <div>
+            <h3 class="text-sm font-bold uppercase tracking-tight m-0">{{ product.title }}</h3>
+            <p class="text-xs mt-1" style="color: var(--dim);">
+              {% if product.metafields.custom.drop %}
+                {{ product.metafields.custom.drop }}
+              {% else %}
+                Fieldtrip
+              {% endif %}
+            </p>
+          </div>
+          <span class="text-sm font-bold">{{ product.price | money_without_trailing_zeros }}</span>
+        </div>
+      </a>
+    {% else %}
+      <p>No products found in this collection. Please select a collection in the theme customizer.</p>
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Fieldtrip Product Grid",
+  "settings": [
+    {
+      "type": "text",
+      "id": "grid_title",
+      "label": "Grid Title",
+      "default": "THE PIECES"
+    },
+    {
+      "type": "text",
+      "id": "grid_subtitle",
+      "label": "Grid Subtitle",
+      "default": "Everything from Drop 04, laid out flat."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection to display"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Fieldtrip Product Grid"
+    }
+  ]
+}
+{% endschema %}

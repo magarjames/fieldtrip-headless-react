@@ -1,0 +1,288 @@
+/* ============================================================================
+   MOTION
+   Values measured from the reference's own stylesheet rather than guessed:
+   cdn.shopify.com/oxygen-v2/.../assets/tailwind-*.css
+
+   Their tokens, carried over exactly:
+     --stagger-slide-delay    20ms     per-index list stagger
+     --scroll-state-duration  .6s
+     --scroll-state-easing    cubic-bezier(.41,.19,.13,.95)
+     --fade-out-duration      .52s
+     --fade-out-easing        cubic-bezier(.25,.46,.45,.94)
+     --fade-initial-delay     .2s
+     hover easing             cubic-bezier(.215,.61,.355,1)
+     media entrance           .3s forwards
+     nav item in              1s cubic-bezier(.13,.46,.15,.92)
+
+   Their dominant transition duration across the whole sheet is .3s, and the
+   one spring they use is cubic-bezier(.34,1.56,.64,1). Both are here.
+   ========================================================================== */
+
+.ed {
+  --stagger-slide-delay: 20ms;
+  --scroll-state-duration: 0.6s;
+  --scroll-state-easing: cubic-bezier(0.41, 0.19, 0.13, 0.95);
+  --fade-out-duration: 0.52s;
+  --fade-out-easing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --fade-initial-delay: 0.2s;
+  --hover-interaction-duration: 0.52s;
+  --hover-easing: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --base-duration: 0.3s;
+
+  /* their container is 105rem, not the 82.5rem I had guessed */
+  --shell: 105rem;
+}
+
+/* ------------------------------------------------------------ the title */
+/*
+   The reference splits its title into three words and slides the middle one
+   in from -898px, then on hover slides the outer two away to leave it. The
+   joke is that "Renaissance" contains "AI".
+
+   The same mechanic here on a word that means something for this business:
+   READYMADE, where READY leaves and MADE stays. Nothing in this shop is
+   ready made; it is made after you order it.
+
+   Distances are scaled to the viewport rather than the reference's fixed
+   -465px / -898px, because those were measured against their type size.
+*/
+
+.title-link {
+  display: inline-block;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.title__word {
+  display: inline-block;
+  transform-box: fill-box;
+  transform-origin: 50%;
+}
+
+/* MADE is set apart the way the reference sets "ai" apart, so the hidden word
+   is visible before you hover. The reveal then confirms what you spotted
+   rather than surprising you with it. */
+.title__word--made {
+  font-family: "Imperial Script", cursive;
+  font-weight: 400;
+  font-size: 1.34em;
+  line-height: 0.8;
+  letter-spacing: 0;
+  color: var(--ed-accent);
+  padding-inline: 0.04em;
+  animation: ed-slide var(--fade-out-duration) var(--fade-initial-delay)
+    var(--fade-out-easing) both;
+}
+.title__word--ready {
+  animation: ed-fade-in var(--fade-out-duration) var(--fade-out-easing) both
+    calc(var(--fade-initial-delay) + 0.1s);
+}
+
+@keyframes ed-slide {
+  0% {
+    transform: translateX(-0.6em);
+    opacity: 0;
+  }
+}
+@keyframes ed-fade-in {
+  0% {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* hover: READY clears out and MADE takes exactly its place.
+   --ready-w is measured from the live element rather than guessed, so MADE
+   lands where READY started at any font size. The previous -3.05em was a
+   magic number and never landed correctly. */
+.title-link .title__word {
+  transition-property: opacity, translate;
+  transition-duration: var(--hover-interaction-duration);
+  transition-timing-function: var(--hover-easing);
+}
+.title-link:is(:hover, :focus-visible) .title__word--ready {
+  translate: calc(var(--ready-w, 3em) * -0.28) 0;
+  opacity: 0;
+  transition-delay: 0s;
+}
+.title-link:is(:hover, :focus-visible) .title__word--made {
+  translate: calc(var(--ready-w, 3em) * -1) 0;
+  transition-timing-function: var(--fade-out-easing);
+}
+
+/* ------------------------------------------------------- list staggering */
+/*
+   Theirs applies animation to each <li> with
+   transition-delay: calc(var(--index) * var(--stagger-slide-delay)).
+   Same here: set --index on the element and it falls into sequence.
+*/
+
+.ed-stagger > * {
+  opacity: 0;
+  animation: ed-fade-in var(--scroll-state-duration) var(--scroll-state-easing)
+    both;
+  animation-delay: calc(var(--index, 0) * var(--stagger-slide-delay));
+}
+.ed-stagger.in > * {
+  opacity: 1;
+}
+
+/* --------------------------------------------------------- media entrance */
+/* theirs is a flat .3s forwards opacity ramp on images and video */
+
+.ed-media {
+  animation: ed-fade-in var(--base-duration) forwards;
+}
+
+/* ------------------------------------------------------------ nav item in */
+/* 1s cubic-bezier(.13,.46,.15,.92), translateY(-100%) to translateY(100%) */
+
+@keyframes ed-nav-item-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.ed-navitem {
+  animation: ed-nav-item-in 1s cubic-bezier(0.13, 0.46, 0.15, 0.92) forwards;
+}
+
+/* ------------------------------------------------------------- the reel */
+/* theirs is x mandatory with snap-align center, not proximity/start */
+
+.ed-reel {
+  scroll-snap-type: x mandatory;
+}
+.ed-reel > * {
+  scroll-snap-align: center;
+}
+
+/* -------------------------------------------------------- reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  .ed *,
+  .ed *::before,
+  .ed *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .ed .ed-stagger > *,
+  .ed .title__word {
+    opacity: 1;
+    translate: none;
+  }
+  .ed-reel {
+    scroll-snap-type: none;
+  }
+}
+
+/* ============================================================================
+   SCROLL
+   Their timeline-start keyframe, measured from the reference stylesheet:
+
+     0%  { opacity:0; translate:0 75cqw; rotate:x -90deg; scale:1.5 }
+     to  { opacity:1; translate:0;       rotate:x 0deg;   scale:1   }
+
+   It uses container-query units, so the fall distance scales with the element
+   rather than the viewport. That needs container-type on the parent, which is
+   why .ed-stage exists.
+
+   Driven by animation-timeline: view() where the browser supports it, so the
+   entrance is genuinely tied to scroll position rather than fired once by an
+   observer. The IntersectionObserver path stays as the fallback.
+   ========================================================================== */
+
+.ed-stage {
+  container-type: inline-size;
+  perspective: 1200px;
+}
+
+@keyframes ed-timeline-start {
+  0% {
+    opacity: 0;
+    translate: 0 75cqw;
+    rotate: x -90deg;
+    scale: 1.5;
+  }
+  to {
+    opacity: 1;
+    translate: 0;
+    rotate: x 0deg;
+    scale: 1;
+  }
+}
+
+/* Fallback first: observer adds .in, the element eases up. */
+.ed-lift {
+  opacity: 0;
+  transform-origin: 50% 100%;
+  transition:
+    opacity var(--scroll-state-duration) var(--scroll-state-easing),
+    translate var(--scroll-state-duration) var(--scroll-state-easing),
+    rotate var(--scroll-state-duration) var(--scroll-state-easing),
+    scale var(--scroll-state-duration) var(--scroll-state-easing);
+  translate: 0 18cqw;
+  rotate: x -32deg;
+  scale: 1.12;
+}
+.ed-lift.in {
+  opacity: 1;
+  translate: 0;
+  rotate: x 0deg;
+  scale: 1;
+}
+
+/* Where the browser can drive it from scroll position, do that instead: the
+   card is tied to where it sits in the viewport, not to a one-shot trigger. */
+@supports (animation-timeline: view()) {
+  .ed-lift {
+    opacity: 1;
+    translate: none;
+    rotate: none;
+    scale: none;
+    transition: none;
+    animation: ed-timeline-start linear both;
+    animation-timeline: view();
+    animation-range: entry 5% cover 34%;
+  }
+}
+
+/* the reel cards get a shorter, flatter version so the rail stays readable
+   while it is being dragged */
+@supports (animation-timeline: view(inline)) {
+  .ed-reel > * {
+    animation: ed-card-in linear both;
+    animation-timeline: view(inline);
+    animation-range: entry 0% cover 26%;
+  }
+  @keyframes ed-card-in {
+    0% {
+      opacity: 0.15;
+      scale: 0.92;
+    }
+    to {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ed .ed-lift,
+  .ed .ed-reel > * {
+    opacity: 1 !important;
+    translate: none !important;
+    rotate: none !important;
+    scale: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}

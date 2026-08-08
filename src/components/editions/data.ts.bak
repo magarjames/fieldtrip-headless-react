@@ -1,0 +1,227 @@
+/**
+ * The release data behind the page.
+ *
+ * The reference organises a release as: an edition, a set of categories, and
+ * expandable subsections beneath each. Same shape here, with a clothing drop
+ * in place of product updates.
+ *
+ * PLACEHOLDER CONTENT. No prices, no stock counts, no reviews, no press.
+ * The brand name lives in BRAND, once.
+ */
+
+export const BRAND = "SECOND PRESS";
+
+export type Sub = {
+  id: string;
+  title: string;
+  note: string;
+  body: string;
+  spec: Record<string, string>;
+  img: string;
+};
+
+export type Category = {
+  id: string;
+  name: string;
+  count: string;
+  blurb: string;
+  tint: string;
+  subs: Sub[];
+};
+
+export type Edition = {
+  id: string;
+  label: string;
+  name: string;
+  status: "Open" | "Closed" | "Planned";
+  headline: string;
+  standfirst: string;
+  cats: Category[];
+};
+
+const t = {
+  moss: "from-[#1d2b24] to-[#131a16]",
+  clay: "from-[#2b211f] to-[#181312]",
+  steel: "from-[#1b2530] to-[#121820]",
+  ochre: "from-[#2a2418] to-[#181510]",
+};
+
+function sub(
+  id: string,
+  title: string,
+  note: string,
+  body: string,
+  spec: Record<string, string>,
+  img: string,
+): Sub {
+  return { id, title, note, body, spec, img };
+}
+
+export const EDITIONS: Edition[] = [
+  {
+    id: "e1",
+    label: "Edition I",
+    name: "The First",
+    status: "Open",
+    headline: "The First Edition",
+    standfirst:
+      "Twelve pieces across four groups. Each one is made after you order it and shipped direct, so nothing sits in a warehouse waiting to be marked down.",
+    cats: [
+      {
+        id: "outerwear",
+        name: "Outerwear",
+        count: "3 pieces",
+        tint: t.moss,
+        blurb: "Three layers cut to sit over everything else in the run.",
+        subs: [
+          sub("overshirt", "The Overshirt", "Heavyweight cotton, worn open",
+            "Cut boxy so it sits over the tee without pulling at the shoulder. The first piece most people buy, and the one the rest of the run is drawn against.",
+            { Fabric: "340gsm cotton", Fit: "Boxy, size down for close", Made: "10 to 14 days" },
+            "heavyweight-cotton-overshirt-flatlay"),
+          sub("utility", "The Utility Jacket", "Waxed cotton, four pockets",
+            "Waxed rather than coated, so it takes rain and improves with it. Four patch pockets, no lining, no branding on the outside.",
+            { Fabric: "Waxed cotton", Fit: "True to size over a knit", Made: "14 to 21 days" },
+            "waxed-cotton-utility-jacket-flatlay"),
+          sub("chore", "The Chore Coat", "Unlined, shoulder season",
+            "The lightest of the three. Unlined cotton for the weeks either side of winter when the utility jacket is too much.",
+            { Fabric: "280gsm cotton", Fit: "Relaxed", Made: "14 to 21 days" },
+            "unlined-cotton-chore-coat-flatlay"),
+        ],
+      },
+      {
+        id: "knitwear",
+        name: "Knitwear",
+        count: "2 pieces",
+        tint: t.clay,
+        blurb: "Two weights, chosen because they are the ones that actually get worn indoors.",
+        subs: [
+          sub("vest", "The Knit Vest", "Lambswool blend",
+            "Thin enough to wear under the utility jacket without bulk, warm enough to work over the tee on its own.",
+            { Fabric: "Lambswool blend", Fit: "Close through the body", Made: "10 to 14 days" },
+            "lambswool-knit-vest-flatlay"),
+          sub("crew", "The Crew Knit", "Full weight, dropped shoulder",
+            "The heavy one. Dropped shoulder so it layers over the overshirt rather than fighting it.",
+            { Fabric: "Lambswool", Fit: "Dropped shoulder, relaxed", Made: "14 to 18 days" },
+            "heavy-lambswool-crew-knit-flatlay"),
+        ],
+      },
+      {
+        id: "shirting",
+        name: "Shirting and tees",
+        count: "3 pieces",
+        tint: t.steel,
+        blurb: "The layer everything else is built on top of.",
+        subs: [
+          sub("boxytee", "The Boxy Tee", "Combed jersey",
+            "Short in the body on purpose. The proportion is drawn against the wide trouser, not against a slim one.",
+            { Fabric: "220gsm combed jersey", Fit: "Boxy", Made: "7 to 10 days" },
+            "combed-jersey-boxy-tee-flatlay"),
+          sub("longsleeve", "The Long Sleeve", "Fine jersey, set-in sleeve",
+            "Set-in rather than raglan, so it reads as a shirt under the overshirt instead of as a sweatshirt.",
+            { Fabric: "160gsm jersey", Fit: "Regular", Made: "7 to 10 days" },
+            "fine-jersey-long-sleeve-flatlay"),
+          sub("oxford", "The Oxford Shirt", "Washed, unstructured collar",
+            "Washed before it ships so it arrives soft. Unstructured collar that sits flat without a stay.",
+            { Fabric: "Washed oxford cotton", Fit: "Relaxed", Made: "12 to 16 days" },
+            "washed-oxford-shirt-flatlay"),
+        ],
+      },
+      {
+        id: "trousers",
+        name: "Trousers and carry",
+        count: "4 pieces",
+        tint: t.ochre,
+        blurb: "Two cuts, two things to carry it all in.",
+        subs: [
+          sub("wide", "The Wide Trouser", "Cotton twill, no taper",
+            "Full through the leg with no taper at all. Unhemmed, because the right length depends on your shoe.",
+            { Fabric: "Cotton twill", Fit: "Wide, unhemmed", Made: "10 to 14 days" },
+            "cotton-twill-wide-trouser-flatlay"),
+          sub("pleated", "The Pleated Trouser", "Single pleat, cotton linen",
+            "One pleat, not two. Cotton linen so it creases honestly rather than pretending not to.",
+            { Fabric: "Cotton linen", Fit: "Wide, single pleat", Made: "10 to 14 days" },
+            "cotton-linen-pleated-trouser-flatlay"),
+          sub("tote", "The Canvas Tote", "16oz, unlined",
+            "Sixteen ounce canvas, unlined, no hardware. It gets a shape after about a month and keeps it.",
+            { Fabric: "16oz canvas", Fit: "One size", Made: "7 to 10 days" },
+            "heavy-canvas-tote-flatlay"),
+          sub("scarf", "The Wool Scarf", "Brushed, long enough to double",
+            "Long enough to loop twice, which is the only way it sits flat under the overshirt collar.",
+            { Fabric: "Brushed lambswool", Fit: "One size", Made: "7 to 10 days" },
+            "brushed-lambswool-scarf-detail"),
+        ],
+      },
+    ],
+  },
+  {
+    id: "e2",
+    label: "Edition II",
+    name: "The Second",
+    status: "Planned",
+    headline: "The Second Edition",
+    standfirst:
+      "Lighter cloth, same rule. Four pieces, opening when the first edition closes.",
+    cats: [
+      {
+        id: "outerwear",
+        name: "Outerwear",
+        count: "1 piece",
+        tint: t.moss,
+        blurb: "One layer, cut for the weeks the heavy coat is too much.",
+        subs: [
+          sub("chore2", "The Chore Coat", "Carried over, new cloth",
+            "The same pattern as the first edition in a lighter, undyed cotton.",
+            { Fabric: "Undyed cotton", Fit: "Relaxed", Made: "14 to 21 days" },
+            "undyed-cotton-chore-coat-flatlay"),
+        ],
+      },
+      {
+        id: "shirting",
+        name: "Shirting and tees",
+        count: "2 pieces",
+        tint: t.steel,
+        blurb: "The same two shapes, in cloth that suits a warmer month.",
+        subs: [
+          sub("ss", "The Short Sleeve", "Open collar, camp cut",
+            "Camp collar that sits open without gaping. Cut straight so it wears untucked.",
+            { Fabric: "Cotton linen", Fit: "Boxy", Made: "10 to 14 days" },
+            "cotton-linen-camp-collar-shirt-flatlay"),
+          sub("tee2", "The Boxy Tee", "Carried over",
+            "Unchanged from the first edition, because it was the piece that worked.",
+            { Fabric: "220gsm combed jersey", Fit: "Boxy", Made: "7 to 10 days" },
+            "combed-jersey-boxy-tee-flatlay"),
+        ],
+      },
+      {
+        id: "trousers",
+        name: "Trousers and carry",
+        count: "1 piece",
+        tint: t.ochre,
+        blurb: "One cut, unchanged.",
+        subs: [
+          sub("tote2", "The Canvas Tote", "Carried over",
+            "Sixteen ounce canvas again. It has no season.",
+            { Fabric: "16oz canvas", Fit: "One size", Made: "7 to 10 days" },
+            "heavy-canvas-tote-flatlay"),
+        ],
+      },
+    ],
+  },
+];
+
+/** The horizontal card rail, after the reference's skill carousel. */
+export const NOTES = [
+  { tag: "Layer 01", title: "Overshirt over tee", body: "Cut boxy so it sits over the tee without pulling at the shoulder." },
+  { tag: "Layer 02", title: "Vest under jacket", body: "Thin enough to go under the utility jacket without adding bulk." },
+  { tag: "Proportion", title: "Short top, wide leg", body: "The tee is short in the body on purpose, drawn against the wide trouser." },
+  { tag: "Finish", title: "Scarf doubled", body: "Long enough to loop twice, the only way it sits flat under a collar." },
+  { tag: "Sizing", title: "Size down for close", body: "Everything is cut relaxed. For a fitted look, take one size down." },
+  { tag: "Care", title: "Wash cold, dry flat", body: "Every piece in the run is finished to survive it. None of them like a tumble dryer." },
+];
+
+export const PLAIN = [
+  "Delivery takes longer than a warehouse brand. The piece is made after you order it.",
+  "Sizing follows the maker's chart, not a house standard. Measure something you own and compare.",
+  "Returns are possible but slower, for the same reason as delivery.",
+  "When an edition closes, that piece does not come back.",
+];

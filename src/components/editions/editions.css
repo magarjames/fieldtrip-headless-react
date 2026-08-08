@@ -1,0 +1,74 @@
+/* ============================================================================
+   EDITIONS PALETTE
+   Ported back from the static taste build at
+   project-folder/dropship-preview/taste/style.css, which is the palette that
+   was preferred: cobalt accent rather than sand, four flat section tints
+   rather than gradients, and a full light mode.
+
+   Scoped to .ed so it cannot leak into the Count Club route on /.
+   ========================================================================== */
+
+.ed {
+  --ed-ground: #0f1310;
+  --ed-raised: #171d18;
+  --ed-panel: #1e251f;
+  --ed-ink: #e9e6dc;
+  --ed-muted: #a0a897;
+  --ed-line: #2b332b;
+  --ed-accent: #7aa5dd;
+  --ed-accent-ink: #0f1310;
+
+  /* section colour-coding, flat rather than gradient */
+  --ed-tint-1: #243328;
+  --ed-tint-2: #33262a;
+  --ed-tint-3: #22303a;
+  --ed-tint-4: #333020;
+
+  /* derived, so borders and dim text track the theme instead of using
+     white/10 which vanishes on a light ground */
+  --ed-hair: color-mix(in srgb, var(--ed-ink) 12%, transparent);
+  --ed-hair-strong: color-mix(in srgb, var(--ed-ink) 22%, transparent);
+  --ed-wash: color-mix(in srgb, var(--ed-ink) 4%, transparent);
+
+  background: var(--ed-ground);
+  color: var(--ed-ink);
+}
+
+@media (prefers-color-scheme: light) {
+  .ed {
+    --ed-ground: #f4f2ec;
+    --ed-raised: #eae7de;
+    --ed-panel: #ffffff;
+    --ed-ink: #161a15;
+    --ed-muted: #5d6459;
+    --ed-line: #d7d3c8;
+    --ed-accent: #2f5c96;
+    --ed-accent-ink: #ffffff;
+
+    --ed-tint-1: #e2e9dd;
+    --ed-tint-2: #eee0e0;
+    --ed-tint-3: #dee7ec;
+    --ed-tint-4: #eeead7;
+  }
+}
+
+/* scroll reveals, kept with the palette so the route file stays about layout */
+.ed .rv {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ed .rv.in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ed .rv {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

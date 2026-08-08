@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-DUAcabCT.js";import{t}from"./FigureShop-BFoDm5Wh.js";var n=e();function r(){return(0,n.jsx)(t,{version:`v2`})}export{r as component};

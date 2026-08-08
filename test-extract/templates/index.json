@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "fieldtrip-hero"
+    },
+    "grid": {
+      "type": "fieldtrip-grid"
+    }
+  },
+  "order": [
+    "main",
+    "grid"
+  ]
+}

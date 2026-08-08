@@ -1,0 +1,48 @@
+<header class="shell flex items-center gap-4 py-4" style="max-width: 1560px; margin-inline: auto; padding-inline: clamp(1rem,4vw,2.25rem);">
+  <span class="text-[1.15rem] font-black tracking-[-0.05em]">{{ section.settings.brand_name }}</span>
+  <span class="lbl hidden sm:inline" style="color: var(--dim); font-family: 'JetBrains Mono', monospace; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.14em;">
+    {{ section.settings.drop_text }}
+  </span>
+  <span class="flex-1"></span>
+  
+  <div class="absolute right-4 top-4 z-50 sm:right-6 lg:right-8">
+    <button id="GlassCartToggle" class="btn" aria-label="Open Cart" style="
+      background: color-mix(in srgb, var(--ink) 10%, transparent);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+      color: var(--ink);
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 0 1.4rem;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      transition: transform .2s cubic-bezier(.16,1,.3,1);
+    ">
+      <i data-lucide="shopping-cart" style="width: 20px; height: 20px;"></i>
+      <span style="margin-left: 6px;">{{ cart.item_count }}</span>
+    </button>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Fieldtrip Header",
+  "settings": [
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand Name",
+      "default": "FIELDTRIP"
+    },
+    {
+      "type": "text",
+      "id": "drop_text",
+      "label": "Drop Text",
+      "default": "DROP 04"
+    }
+  ]
+}
+{% endschema %}

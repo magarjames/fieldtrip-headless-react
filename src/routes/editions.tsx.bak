@@ -1,0 +1,492 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ShaderBackdrop } from "@/components/editions/ShaderBackdrop";
+import { BRAND, EDITIONS, NOTES, PLAIN, type Edition } from "@/components/editions/data";
+
+export const Route = createFileRoute("/editions")({
+  component: EditionsPage,
+  head: () => ({
+    meta: [
+      { title: `The First Edition · ${BRAND}` },
+      {
+        name: "description",
+        content:
+          "A numbered clothing drop. Made to order, shipped direct, closed when it closes.",
+      },
+    ],
+  }),
+});
+
+/* ---------------------------------------------------------------- helpers */
+
+function useActiveSection(ids: string[]) {
+  const [active, setActive] = useState(ids[0] ?? "");
+  useEffect(() => {
+    if (!ids.length) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActive(e.target.id);
+        });
+      },
+      { rootMargin: "-25% 0px -65% 0px" },
+    );
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) io.observe(el);
+    });
+    return () => io.disconnect();
+  }, [ids.join("|")]);
+  return active;
+}
+
+function useReveal() {
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.querySelectorAll(".rv").forEach((n) => n.classList.add("in"));
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("in");
+            io.unobserve(e.target);
+          }
+        }),
+      { threshold: 0.12 },
+    );
+    document.querySelectorAll(".rv").forEach((n) => io.observe(n));
+    return () => io.disconnect();
+  });
+}
+
+/* ------------------------------------------------------------ the picker */
+
+function EditionPicker({
+  editions,
+  current,
+  onPick,
+}: {
+  editions: Edition[];
+  current: Edition;
+  onPick: (id: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const wrap = useRef<HTMLDivElement>(null);
+  const btn = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const onDoc = (e: MouseEvent) => {
+      if (wrap.current && !wrap.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("click", onDoc);
+    return () => document.removeEventListener("click", onDoc);
+  }, []);
+
+  return (
+    <div className="relative" ref={wrap}>
+      <button
+        ref={btn}
+        onClick={() => setOpen((o) => !o)}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowDown") {
+            e.preventDefault();
+            setOpen(true);
+          }
+          if (e.key === "Escape") setOpen(false);
+        }}
+        aria-expanded={open}
+        aria-haspopup="listbox"
+        className="inline-flex min-h-11 items-center gap-2 border border-white/20 bg-white/5 px-3 py-2 font-mono text-[0.66rem] uppercase tracking-[0.14em] text-[#e9e6dc] transition-colors hover:border-white/50"
+      >
+        <span className="hidden sm:inline opacity-60">Edition</span>
+        <b className="font-semibold">{current.label}</b>
+        <span
+          className={`inline-block h-1.5 w-1.5 border-b border-r border-current transition-transform ${open ? "-rotate-135 translate-y-px" : "rotate-45 -translate-y-px"}`}
+        />
+      </button>
+
+      {open && (
+        <ul
+          role="listbox"
+          aria-label="Choose an edition"
+          className="absolute right-0 top-[calc(100%+0.5rem)] z-50 min-w-[280px] border border-white/15 bg-[#161c18] p-1 shadow-[0_18px_44px_-20px_rgba(0,0,0,0.8)]"
+          onKeyDown={(e) => {
+            const opts = Array.from(
+              e.currentTarget.querySelectorAll<HTMLButtonElement>("button"),
+            );
+            const i = opts.indexOf(document.activeElement as HTMLButtonElement);
+            if (e.key === "Escape") {
+              e.preventDefault();
+              setOpen(false);
+              btn.current?.focus();
+            }
+            if (e.key === "ArrowDown") {
+              e.preventDefault();
+              opts[(i + 1) % opts.length]?.focus();
+            }
+            if (e.key === "ArrowUp") {
+              e.preventDefault();
+              opts[(i - 1 + opts.length) % opts.length]?.focus();
+            }
+          }}
+        >
+          {editions.map((ed) => {
+            const on = ed.id === current.id;
+            return (
+              <li key={ed.id}>
+                <button
+                  role="option"
+                  aria-selected={on}
+                  onClick={() => {
+                    onPick(ed.id);
+                    setOpen(false);
+                    btn.current?.focus();
+                  }}
+                  className={`flex min-h-11 w-full items-center justify-between gap-4 px-3 py-2 text-left text-sm transition-colors hover:bg-white/5 ${on ? "text-[#c2a582]" : "text-[#e9e6dc]"}`}
+                >
+                  <span>{ed.label}</span>
+                  <small className="font-mono text-[0.6rem] uppercase tracking-[0.14em] opacity-60">
+                    {ed.name} · {ed.status}
+                  </small>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------- accordion */
+
+function Sub({ s }: { s: import("@/components/editions/data").Sub }) {
+  const [open, setOpen] = useState(false);
+  const pid = `p-${s.id}`;
+  return (
+    <div className="border-b border-white/10">
+      <h4 className="m-0">
+        <button
+          aria-expanded={open}
+          aria-controls={pid}
+          onClick={() => setOpen((o) => !o)}
+          className="flex min-h-14 w-full items-center gap-4 py-4 text-left transition-colors hover:text-[#c2a582]"
+        >
+          <span className="flex-1 text-base font-semibold tracking-tight">{s.title}</span>
+          <span className="hidden font-mono text-[0.62rem] uppercase tracking-[0.14em] opacity-50 sm:inline">
+            {s.note}
+          </span>
+          <span className="relative h-3.5 w-3.5 shrink-0">
+            <span className="absolute inset-x-0 top-1.5 h-0.5 bg-current" />
+            <span
+              className={`absolute inset-y-0 left-1.5 w-0.5 bg-current transition-transform ${open ? "scale-y-0" : ""}`}
+            />
+          </span>
+        </button>
+      </h4>
+      <div
+        id={pid}
+        hidden={!open}
+        className="grid gap-6 pb-6 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]"
+      >
+        <div>
+          <p className="max-w-[60ch] text-sm leading-relaxed text-white/60">{s.body}</p>
+          <dl className="mt-4 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 font-mono text-[0.68rem]">
+            {Object.entries(s.spec).map(([k, v]) => (
+              <div key={k} className="contents">
+                <dt className="uppercase tracking-[0.12em] text-white/40">{k}</dt>
+                <dd className="m-0 text-white/80">{v}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+        <figure className="m-0 overflow-hidden border border-white/10">
+          {/* PLACEHOLDER: swap for real product photography. */}
+          <img
+            src={`https://picsum.photos/seed/${s.img}/720/540`}
+            alt={`${s.title}, photographed flat.`}
+            width={720}
+            height={540}
+            loading="lazy"
+            className="aspect-[4/3] w-full object-cover"
+          />
+        </figure>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------- the page */
+
+function EditionsPage() {
+  const [edId, setEdId] = useState(EDITIONS[0].id);
+  const ed = useMemo(() => EDITIONS.find((e) => e.id === edId) ?? EDITIONS[0], [edId]);
+  const [q, setQ] = useState("");
+
+  const cats = useMemo(() => {
+    const needle = q.trim().toLowerCase();
+    if (!needle) return ed.cats;
+    return ed.cats
+      .map((c) => ({
+        ...c,
+        subs: c.subs.filter((s) =>
+          (s.title + " " + s.note + " " + s.body).toLowerCase().includes(needle),
+        ),
+      }))
+      .filter((c) => c.subs.length);
+  }, [ed, q]);
+
+  const ids = useMemo(() => cats.map((c) => c.id), [cats]);
+  const active = useActiveSection(ids);
+  useReveal();
+
+  const shown = cats.reduce((n, c) => n + c.subs.length, 0);
+  const total = ed.cats.reduce((n, c) => n + c.subs.length, 0);
+
+  return (
+    <div className="min-h-dvh bg-[#0f1310] text-[#e9e6dc] [scroll-padding-top:5rem] [&_.rv]:translate-y-4 [&_.rv]:opacity-0 [&_.rv]:transition-[opacity,transform] [&_.rv]:duration-700 [&_.rv.in]:translate-y-0 [&_.rv.in]:opacity-100">
+      <a
+        href="#main"
+        className="absolute left-[-9999px] z-[99] bg-[#c2a582] px-4 py-2 font-mono text-xs uppercase tracking-[0.14em] text-[#0f1310] focus:left-4 focus:top-4"
+      >
+        Skip to content
+      </a>
+
+      {/* sticky masthead, after the reference */}
+      <header className="sticky top-0 z-40 flex h-[72px] items-center gap-3 border-b border-white/10 bg-[#0f1310]/85 px-4 backdrop-blur-md sm:px-8">
+        <a href="#main" className="shrink-0 font-semibold tracking-tight">
+          {BRAND}
+        </a>
+        <span className="flex-1" />
+        <EditionPicker editions={EDITIONS} current={ed} onPick={setEdId} />
+        <a
+          href="#drop"
+          className="inline-flex min-h-11 items-center border border-[#c2a582] bg-[#c2a582] px-4 font-mono text-[0.66rem] uppercase tracking-[0.16em] text-[#0f1310] transition-[filter] hover:brightness-110"
+        >
+          Get the drop
+        </a>
+      </header>
+
+      <main id="main">
+        {/* masthead over the live gradient */}
+        <section className="relative overflow-hidden border-b border-white/10">
+          <ShaderBackdrop />
+          <div className="relative z-10 mx-auto max-w-[1320px] px-4 pb-16 pt-20 sm:px-8 sm:pb-24 sm:pt-28">
+            <div className="flex flex-wrap gap-5 font-mono text-[0.64rem] uppercase tracking-[0.2em] text-white/55">
+              <span>{ed.label}</span>
+              <span>{total} pieces</span>
+              <span>Made to order</span>
+              <span>{ed.status}</span>
+            </div>
+            <h1 className="mt-5 max-w-[15ch] text-[clamp(2.2rem,1rem+5.4vw,5rem)] font-bold leading-[1.04] tracking-[-0.03em]">
+              {ed.name}{" "}
+              <em className="not-italic font-normal text-[#c2a582] [font-family:'Imperial_Script',cursive] text-[1.3em] leading-none">
+                Edition
+              </em>
+            </h1>
+            <p className="mt-5 max-w-[46ch] text-lg leading-relaxed text-white/80">
+              {ed.standfirst}
+            </p>
+            <div className="mt-8 flex flex-wrap gap-2">
+              <a
+                href="#drop"
+                className="inline-flex min-h-11 items-center border border-[#c2a582] bg-[#c2a582] px-5 font-mono text-[0.66rem] uppercase tracking-[0.16em] text-[#0f1310] transition-[filter] hover:brightness-110"
+              >
+                Get the drop
+              </a>
+              <a
+                href={`#${ed.cats[0].id}`}
+                className="inline-flex min-h-11 items-center border border-white/40 px-5 font-mono text-[0.66rem] uppercase tracking-[0.16em] transition-colors hover:bg-white hover:text-[#0f1310]"
+              >
+                See the run
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <div className="mx-auto grid max-w-[1320px] items-start lg:grid-cols-[230px_minmax(0,1fr)]">
+          {/* anchored rail with live tracking */}
+          <nav
+            aria-label="Categories"
+            className="top-[72px] px-4 pt-8 sm:px-8 lg:sticky lg:max-h-[calc(100dvh-72px)] lg:overflow-y-auto lg:pb-12"
+          >
+            <p className="mb-3 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-white/40">
+              In this edition
+            </p>
+            <ol className="m-0 flex list-none gap-1 overflow-x-auto p-0 lg:grid lg:overflow-visible">
+              {cats.map((c, i) => (
+                <li key={c.id} className="shrink-0">
+                  <a
+                    href={`#${c.id}`}
+                    className={`flex min-h-10 items-center gap-2 whitespace-nowrap px-2 py-1 text-sm no-underline transition-colors lg:border-l-2 ${
+                      active === c.id
+                        ? "border-[#c2a582] bg-white/5 text-[#e9e6dc] lg:border-l-[#c2a582]"
+                        : "border-transparent text-white/50 hover:bg-white/5 hover:text-white"
+                    }`}
+                  >
+                    <i className="not-italic font-mono text-[0.6rem] opacity-60">
+                      {String(i + 1).padStart(2, "0")}
+                    </i>
+                    {c.name}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+
+          <div className="min-w-0 px-4 pb-20 pt-8 sm:px-8">
+            {/* search */}
+            <div className="mb-8 flex flex-wrap items-center gap-3">
+              <label htmlFor="q" className="w-full font-mono text-[0.62rem] uppercase tracking-[0.2em] text-white/40">
+                Find a piece
+              </label>
+              <input
+                id="q"
+                type="search"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="cotton, trouser, wool"
+                autoComplete="off"
+                className="min-h-11 flex-1 border border-white/15 bg-white/5 px-4 font-mono text-sm text-[#e9e6dc] outline-none placeholder:text-white/30 focus:border-[#c2a582]"
+              />
+              <span role="status" aria-live="polite" className="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-white/40">
+                {q ? `${shown} of ${total}` : `${total} pieces`}
+              </span>
+            </div>
+
+            {cats.map((c) => (
+              <section key={c.id} id={c.id} tabIndex={-1} className="rv border-t border-white/10 py-10 first:border-t-0 first:pt-0">
+                <div className="mb-5 flex flex-wrap items-baseline gap-3">
+                  <h2 className="text-[clamp(1.5rem,1.1rem+1.6vw,2.2rem)] font-bold tracking-tight">
+                    {c.name}
+                  </h2>
+                  <span className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-white/40">
+                    {c.count}
+                  </span>
+                </div>
+                {/* the reference colour-codes each section */}
+                <div className={`-mx-4 mb-7 border-y border-white/10 bg-gradient-to-br px-4 py-6 sm:-mx-8 sm:px-8 ${c.tint}`}>
+                  <p className="m-0 max-w-[60ch] text-white/70">{c.blurb}</p>
+                </div>
+                <div className="border-t border-white/10">
+                  {c.subs.map((s) => (
+                    <Sub key={s.id} s={s} />
+                  ))}
+                </div>
+              </section>
+            ))}
+
+            {cats.length === 0 && (
+              <p className="py-16 text-center text-white/50">
+                Nothing in this edition matches “{q}”.
+              </p>
+            )}
+
+            {/* horizontal card rail */}
+            <section className="rv border-t border-white/10 pt-10">
+              <h2 className="text-[clamp(1.4rem,1.1rem+1.4vw,2rem)] font-bold tracking-tight">
+                How to wear the run
+              </h2>
+              <p className="mt-2 max-w-[60ch] text-white/60">
+                Drag, or use the arrow keys.
+              </p>
+              <div
+                tabIndex={0}
+                aria-label="Styling notes, scrollable"
+                onKeyDown={(e) => {
+                  if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+                  e.preventDefault();
+                  e.currentTarget.scrollBy({
+                    left: e.key === "ArrowRight" ? 270 : -270,
+                    behavior: "smooth",
+                  });
+                }}
+                className="-mx-4 mt-5 flex snap-x snap-proximity gap-3 overflow-x-auto px-4 pb-5 [scrollbar-width:none] sm:-mx-8 sm:px-8 [&::-webkit-scrollbar]:hidden"
+              >
+                {NOTES.map((n) => (
+                  <article
+                    key={n.title}
+                    className="flex w-[clamp(210px,60vw,260px)] shrink-0 snap-start flex-col gap-2 border border-white/10 bg-white/[0.03] p-4 transition-[transform,border-color] hover:-translate-y-1 hover:border-[#c2a582]"
+                  >
+                    <span className="font-mono text-[0.6rem] uppercase tracking-[0.14em] text-[#c2a582]">
+                      {n.tag}
+                    </span>
+                    <h3 className="text-base font-semibold tracking-tight">{n.title}</h3>
+                    <p className="m-0 text-sm leading-relaxed text-white/55">{n.body}</p>
+                  </article>
+                ))}
+              </div>
+            </section>
+
+            {/* the honest block */}
+            <section className="rv mt-10 border border-white/10 p-6">
+              <p className="m-0 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-white/40">
+                Before you order
+              </p>
+              <ul className="mt-4 grid list-none gap-2.5 p-0 text-sm text-white/60">
+                {PLAIN.map((line) => (
+                  <li key={line} className="relative pl-5">
+                    <span className="absolute left-0 top-2 h-1.5 w-1.5 bg-[#c2a582]" />
+                    {line}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-5 text-sm text-white/50">
+                If you want it tomorrow, buy it somewhere else. Better said here than in an
+                email afterwards.
+              </p>
+            </section>
+
+            {/* signup */}
+            <section id="drop" className="rv mt-10 border-t border-white/10 pt-10">
+              <h2 className="text-[clamp(1.4rem,1.1rem+1.4vw,2rem)] font-bold tracking-tight">
+                Get told when it opens
+              </h2>
+              <p className="mt-2 max-w-[56ch] text-white/60">
+                One message when the edition opens, one when it is closing. Nothing else.
+              </p>
+              <form
+                className="mt-6 flex max-w-[520px] flex-wrap gap-2"
+                onSubmit={(e) => e.preventDefault()}
+              >
+                <label htmlFor="email" className="w-full font-mono text-[0.62rem] uppercase tracking-[0.2em] text-white/40">
+                  Email address
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  placeholder="you@example.com"
+                  required
+                  className="min-h-11 flex-1 border border-white/15 bg-white/5 px-4 font-mono text-sm text-[#e9e6dc] outline-none placeholder:text-white/30 focus:border-[#c2a582]"
+                />
+                <button
+                  type="submit"
+                  className="inline-flex min-h-11 items-center border border-[#c2a582] bg-[#c2a582] px-5 font-mono text-[0.66rem] uppercase tracking-[0.16em] text-[#0f1310] transition-[filter] hover:brightness-110"
+                >
+                  Join the list
+                </button>
+              </form>
+              {/* PLACEHOLDER: wire to your email provider. */}
+              <p className="mt-4 text-sm text-white/40">
+                Not wired up yet. Point the form at your provider before this goes live.
+              </p>
+            </section>
+          </div>
+        </div>
+      </main>
+
+      <footer className="border-t border-white/10 px-4 py-10 sm:px-8">
+        <div className="mx-auto max-w-[1320px]">
+          <b className="block tracking-tight">{BRAND}</b>
+          <p className="mt-1.5 font-mono text-[0.62rem] uppercase tracking-[0.16em] text-white/40">
+            Made to order · shipped direct · no restock
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
+}

@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-29T16:48:00.000Z",
+  "title": "Design System: Northline Dawn Editorial",
+  "extensions": {
+    "colorMeta": {
+      "deep-ink": {
+        "role": "primary",
+        "displayName": "Deep Ink",
+        "canonical": "#000d10",
+        "tonalRamp": [
+          "#000d10",
+          "#172326",
+          "#3e484a",
+          "#747d7f",
+          "#aab0b1",
+          "#d5d3d4",
+          "#f3f3f0",
+          "#ffffff"
+        ]
+      },
+      "pure-white": {
+        "role": "neutral",
+        "displayName": "Pure White",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#ffffff",
+          "#fafaf8",
+          "#f3f3f0",
+          "#e7e6e2",
+          "#d5d3d4",
+          "#bbbabc",
+          "#8e8e95",
+          "#65656b"
+        ]
+      },
+      "midnight-hull": {
+        "role": "surface",
+        "displayName": "Midnight Hull",
+        "canonical": "#0f0f1c",
+        "tonalRamp": [
+          "#0f0f1c",
+          "#151623",
+          "#292a38",
+          "#4a4b58",
+          "#747481",
+          "#9d9da6",
+          "#ccccd1",
+          "#f2f2f4"
+        ]
+      },
+      "clay-ember": {
+        "role": "accent",
+        "displayName": "Clay Ember",
+        "canonical": "#bc7155",
+        "tonalRamp": [
+          "#4a2118",
+          "#733b2c",
+          "#94503d",
+          "#bc7155",
+          "#d69176",
+          "#e7b29e",
+          "#f3d4c7",
+          "#fbebe4"
+        ]
+      },
+      "dawn-sky": {
+        "role": "atmosphere",
+        "displayName": "Dawn Sky",
+        "canonical": "#d7eafa",
+        "tonalRamp": ["#d7eafa", "#eff6f7", "#fbf7ef", "#f3f3f0", "#ffffff"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Compressed Sans Display",
+        "purpose": "Architectural hero wordmark and major campaign statements."
+      },
+      "body": {
+        "displayName": "Editorial Sans",
+        "purpose": "Navigation, product detail, controls, and 18px supporting copy."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "hero-arrival",
+        "value": "760ms to 900ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Introduce the hero image and type as one measured campaign reveal."
+      },
+      {
+        "name": "product-hover",
+        "value": "620ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Give product media a small, deliberate zoom response."
+      },
+      {
+        "name": "campaign-scroll-film",
+        "value": "30-frame WebP sprites stepped by a native CSS view timeline over each 175vh scene",
+        "purpose": "Scrub original campaign motion and scene copy into a three-movement journal without a JavaScript scroll listener; retain poster fallbacks and matching 30fps GIF previews."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "0.01ms override under prefers-reduced-motion",
+        "purpose": "Keep all content and controls immediately available."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "tablet",
+        "value": "920px"
+      },
+      {
+        "name": "mobile",
+        "value": "640px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Pill Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "A deep-ink conversion action used on light surfaces and the product dialog.",
+      "html": "<button class=\"ds-btn-primary\">SHOP THE COLLECTION</button>",
+      "css": ".ds-btn-primary { min-height: 51px; padding: 14px 20px; border: 1px solid #000d10; border-radius: 1000px; background: #000d10; color: #ffffff; font-family: Helvetica Neue, Arial Nova, sans-serif; font-size: 17px; font-weight: 700; cursor: pointer; } .ds-btn-primary:hover { background: #bc7155; border-color: #bc7155; }"
+    },
+    {
+      "name": "Quiet Pill Button",
+      "kind": "button",
+      "refersTo": "button-quiet",
+      "description": "A secondary action with a white field and ink hairline.",
+      "html": "<button class=\"ds-btn-quiet\">SEE THE MATERIAL</button>",
+      "css": ".ds-btn-quiet { min-height: 51px; padding: 14px 20px; border: 1px solid #000d10; border-radius: 1000px; background: rgba(255,255,255,.56); color: #000d10; font-family: Helvetica Neue, Arial Nova, sans-serif; font-size: 17px; font-weight: 700; cursor: pointer; } .ds-btn-quiet:hover { color: #bc7155; border-color: #bc7155; }"
+    },
+    {
+      "name": "Collection Filter",
+      "kind": "chip",
+      "refersTo": "collection-filter",
+      "description": "A compact, full-pill category control for a small catalog.",
+      "html": "<button class=\"ds-filter\" aria-pressed=\"true\">OUTER LAYERS</button>",
+      "css": ".ds-filter { min-height: 44px; padding: 10px 15px; border: 1px solid #d5d3d4; border-radius: 1000px; background: #ffffff; color: #000d10; font-family: Helvetica Neue, Arial Nova, sans-serif; font-size: 17px; font-weight: 700; cursor: pointer; } .ds-filter[aria-pressed=\"true\"] { background: #000d10; border-color: #000d10; color: #ffffff; }"
+    },
+    {
+      "name": "Email Field",
+      "kind": "input",
+      "refersTo": "email-input",
+      "description": "A white-on-midnight email field paired with a direct join action.",
+      "html": "<input class=\"ds-email\" type=\"email\" placeholder=\"you@example.com\" aria-label=\"Email address\">",
+      "css": ".ds-email { min-height: 54px; width: 100%; padding: 13px 16px; border: 1px solid rgba(255,255,255,.48); border-radius: 1000px; background: transparent; color: #ffffff; font-family: Helvetica Neue, Arial Nova, sans-serif; font-size: 18px; } .ds-email:focus-visible { outline: 2px solid #bc7155; outline-offset: 4px; }"
+    },
+    {
+      "name": "Editorial Navigation",
+      "kind": "nav",
+      "refersTo": "northline-header",
+      "description": "A sticky white navigation line with a single dark bag action.",
+      "html": "<nav class=\"ds-nav\"><a href=\"#\">NORTHLINE</a><a href=\"#\">SHOP</a><button>BAG 0</button></nav>",
+      "css": ".ds-nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 72px; padding: 0 40px; border-bottom: 1px solid rgba(0,13,16,.12); background: rgba(255,255,255,.88); color: #000d10; font-family: Helvetica Neue, Arial Nova, sans-serif; } .ds-nav button { min-height: 42px; padding: 10px 15px; border: 1px solid #000d10; border-radius: 1000px; background: #000d10; color: #ffffff; font-weight: 700; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Dawn Transit Editorial",
+    "overview": "Northline is a light, image-led utility storefront. It uses a pale dawn sky, oversized deep-ink typography, a white editorial canvas, dark terminal sections, one clay feature block, and a three-movement scroll film to make practical clothing feel considered rather than technical.",
+    "keyCharacteristics": [
+      "A pale sky-to-cream hero with a single original campaign silhouette.",
+      "Three original campaign stills arranged as a native CSS scroll-driven journal: dawn departure, material study, and terminal arrival.",
+      "Oversized compressed sans typography with tight tracking and direct punctuation.",
+      "White content bands, midnight support bands, and one hard-edged clay feature surface.",
+      "Full-pill actions and filters paired with otherwise hard-edged media and panels.",
+      "No drop shadows; hierarchy comes from color, spacing, photography, and hairlines."
+    ],
+    "rules": [
+      {
+        "name": "Clay Allocation Rule",
+        "body": "Use Clay Ember for one dedicated featured system block. Do not turn it into a second CTA color or a decorative accent.",
+        "section": "colors"
+      },
+      {
+        "name": "Ink Structure Rule",
+        "body": "Use Deep Ink for headings, dark primary actions, icon strokes, and the footer. It is the structural color of the system.",
+        "section": "colors"
+      },
+      {
+        "name": "Pill Action Rule",
+        "body": "All actions, filters, option buttons, and form controls use a 1000px radius. Editorial panels and media remain square.",
+        "section": "shapes"
+      },
+      {
+        "name": "Image Carries Depth Rule",
+        "body": "Use original campaign imagery and grayscale product photography for depth. Do not add card shadows or decorative gradients to replace real media.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep desktop hero statements to two intentional lines where the canvas allows.",
+      "Do use 18px body copy with generous leading so the editorial canvas breathes.",
+      "Do maintain real filter, quick-view, bag, and signup feedback states.",
+      "Do collapse the hero to a clean wordmark, image, statement, copy, and actions on mobile."
+    ],
+    "donts": [
+      "Do not reintroduce lime, route blue, or a second accent color.",
+      "Do not add soft cards, drop shadows, or rounded editorial panels.",
+      "Do not use the clay surface more than once per page.",
+      "Do not present sample catalog data or checkout as a connected commerce backend."
+    ]
+  }
+}

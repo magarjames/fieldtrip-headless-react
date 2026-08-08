@@ -1,0 +1,39 @@
+import{i as e,t}from"./jsx-runtime-DUAcabCT.js";import{T as n,a as r,i,n as a,o,r as s,s as c,t as l,u}from"./index-Ccrte07v.js";import{n as d,r as f,t as p}from"./Chibi-C6b84XRg.js";var m=e(n()),h=t();function g(){u();let[e,t]=(0,m.useState)(`all`),n=e===`all`?r:r.filter(t=>t.cat===e),g=e=>r.find(t=>t.id===e);return(0,h.jsxs)(`div`,{className:`ft min-h-dvh`,children:[(0,h.jsx)(`style`,{children:`
+        .ft{
+          --paper:#FBF7EF; --ink:#141317; --dim:#565462; --hair:rgba(20,19,23,0.16);
+          --pop:#F5C518; --pop-ink:#141317;
+          background:var(--paper); color:var(--ink);
+          font-family:Archivo,"Helvetica Neue",sans-serif;
+        }
+        .ft h1,.ft h2,.ft h3{ font-family:"Archivo Black",Archivo,sans-serif; margin:0;
+          letter-spacing:-0.045em; line-height:0.9; text-transform:uppercase }
+        .ft p{ margin:0; line-height:1.55 }
+        .ft a{ color:inherit; text-decoration:none }
+        .ft :focus-visible{ outline:3px solid var(--ink); outline-offset:2px }
+        .ft .lbl{ font-family:"JetBrains Mono",monospace; font-size:0.66rem;
+          text-transform:uppercase; letter-spacing:0.14em }
+        .ft .shell{ max-width:1560px; margin-inline:auto; padding-inline:clamp(1rem,4vw,2.25rem) }
+        .ft .btn{ display:inline-flex; align-items:center; min-height:44px; padding:0 1.4rem;
+          border-radius:999px; background:var(--ink); color:var(--paper);
+          font-weight:700; font-size:0.85rem; letter-spacing:-0.01em;
+          transition:transform .2s cubic-bezier(.16,1,.3,1) }
+        .ft .btn:active{ transform:scale(.97) }
+        .ft .chip{ display:inline-flex; align-items:center; min-height:44px; padding:0 1.05rem;
+          border-radius:999px; border:2px solid var(--ink); font-weight:700; font-size:0.82rem;
+          background:transparent; transition:background .18s, color .18s }
+        .ft .chip[aria-pressed="true"]{ background:var(--ink); color:var(--paper) }
+        /* the per-piece hue only paints on intent, so the grid is calm at rest */
+        .ft .card .plate{ transition:background .3s cubic-bezier(.16,1,.3,1) }
+        .ft .card:hover .plate,.ft .card:focus-within .plate{ background:var(--hue) }
+        .ft .card img{ transition:transform .5s cubic-bezier(.16,1,.3,1) }
+        .ft .card:hover img,.ft .card:focus-within img{ transform:scale(1.04) rotate(-1deg) }
+        .ft .rv{ opacity:0; transform:translateY(18px);
+          transition:opacity .6s cubic-bezier(.16,1,.3,1), transform .6s cubic-bezier(.16,1,.3,1) }
+        .ft .rv.in{ opacity:1; transform:none }
+        .ft .ticker{ display:flex; gap:2.5rem; white-space:nowrap; animation:ft-roll 26s linear infinite }
+        @keyframes ft-roll{ to{ transform:translateX(-50%) } }
+        @media (prefers-reduced-motion:reduce){
+          .ft *{ animation:none !important; transition-duration:.01ms !important }
+          .ft .rv{ opacity:1; transform:none }
+        }
+      `}),(0,h.jsx)(`a`,{href:`#fits`,className:`btn absolute left-[-9999px] z-50 focus:left-4 focus:top-4`,children:`Skip to the fits`}),(0,h.jsxs)(`header`,{className:`shell flex items-center gap-4 py-4`,children:[(0,h.jsx)(`span`,{className:`text-[1.15rem] font-black tracking-[-0.05em]`,children:l}),(0,h.jsx)(`span`,{className:`lbl hidden sm:inline`,style:{color:`var(--dim)`},children:s}),(0,h.jsx)(`span`,{className:`flex-1`}),(0,h.jsxs)(`a`,{href:`#grid`,className:`btn`,children:[`Shop `,18]})]}),(0,h.jsxs)(`section`,{className:`shell grid items-end gap-8 pb-10 pt-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]`,children:[(0,h.jsxs)(`div`,{className:`min-w-0`,children:[(0,h.jsx)(`h1`,{className:`text-[clamp(2.9rem,7.5vw,10rem)]`,children:o}),(0,h.jsxs)(`p`,{className:`mt-6 max-w-[46ch] text-[1.05rem]`,style:{color:`var(--dim)`},children:[18,` pieces built to be layered, not admired one at a time. Wide bottoms, boxy tops, and enough colour to ruin a capsule wardrobe.`]}),(0,h.jsxs)(`div`,{className:`mt-7 flex flex-wrap gap-2.5`,children:[(0,h.jsx)(`a`,{href:`#fits`,className:`btn`,children:`See the fits`}),(0,h.jsx)(`a`,{href:`#grid`,className:`chip`,children:`Every piece`})]})]}),(0,h.jsx)(p,{fallbackSrc:d(`ft-hero`,900,1200)})]}),(0,h.jsx)(`div`,{className:`overflow-hidden border-y-2 py-2.5`,style:{borderColor:`var(--ink)`,background:`var(--pop)`},children:(0,h.jsx)(`div`,{className:`ticker lbl`,"aria-hidden":!0,children:Array.from({length:2}).flatMap((e,t)=>[`Free returns for 30 days`,`Ships worldwide`,`${s} out now`,`Nothing restocked`,`Cut wide on purpose`].map(e=>(0,h.jsxs)(`span`,{children:[e,` ✱`]},`${t}-${e}`)))})}),(0,h.jsxs)(`section`,{id:`fits`,className:`shell py-16 sm:py-24`,children:[(0,h.jsx)(`h2`,{className:`max-w-[16ch] text-[clamp(1.9rem,5.4vw,4rem)]`,children:`Three fits, eighteen pieces`}),(0,h.jsx)(`div`,{className:`mt-10 grid gap-8 lg:grid-cols-3`,children:i.map((e,t)=>(0,h.jsxs)(`article`,{className:`rv`,style:{"--index":t},children:[(0,h.jsxs)(`div`,{className:`relative overflow-hidden border-2`,style:{borderColor:`var(--ink)`},children:[(0,h.jsx)(`img`,{src:f({img:e.img,name:e.name,hue:g(e.pieces[0])?.hue},800,1420),alt:`${e.name}: ${e.note}`,width:800,height:1420,loading:`lazy`,className:`aspect-[9/16] w-full object-cover`}),(0,h.jsx)(`span`,{className:`lbl absolute left-0 top-0 px-2.5 py-1.5 font-bold`,style:{background:`var(--ink)`,color:`var(--paper)`},children:e.place})]}),(0,h.jsx)(`h3`,{className:`mt-4 text-[1.6rem]`,children:e.name}),(0,h.jsx)(`p`,{className:`mt-2 text-[0.95rem]`,style:{color:`var(--dim)`},children:e.note}),(0,h.jsx)(`ul`,{className:`mt-3 flex list-none flex-wrap gap-1.5 p-0`,children:e.pieces.map(e=>{let t=g(e);return t?(0,h.jsx)(`li`,{children:(0,h.jsxs)(`a`,{href:`#grid`,className:`lbl inline-flex min-h-11 items-center rounded-full border px-3`,style:{borderColor:`var(--hair)`},children:[t.name,` · `,c(t.price)]})},e):null})})]},e.id))})]}),(0,h.jsxs)(`section`,{id:`grid`,className:`shell pb-24`,children:[(0,h.jsxs)(`div`,{className:`flex flex-wrap items-baseline justify-between gap-4`,children:[(0,h.jsx)(`h2`,{className:`text-[clamp(1.9rem,5.4vw,4rem)]`,children:`Everything`}),(0,h.jsxs)(`p`,{className:`lbl`,style:{color:`var(--dim)`},children:[n.length,` shown`]})]}),(0,h.jsx)(`div`,{className:`mt-6 flex flex-wrap gap-2`,role:`group`,"aria-label":`Filter by category`,children:[`all`,...a.map(e=>e.id)].map(n=>(0,h.jsx)(`button`,{className:`chip`,"aria-pressed":e===n,onClick:()=>t(n),children:n===`all`?`Everything`:a.find(e=>e.id===n).label},n))}),(0,h.jsx)(`div`,{className:`mt-10 grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-3 lg:grid-cols-4`,children:n.map(e=>(0,h.jsx)(`article`,{className:`card rv`,style:{"--hue":e.hue},children:(0,h.jsxs)(`a`,{href:`#grid`,className:`block`,children:[(0,h.jsx)(`div`,{className:`plate overflow-hidden border-2 p-2`,style:{borderColor:`var(--ink)`},children:(0,h.jsx)(`img`,{src:f(e,800,e.crop===`reel`?1420:800),alt:e.name,width:800,height:e.crop===`reel`?1420:800,loading:`lazy`,className:`w-full object-cover ${e.crop===`reel`?`aspect-[9/16]`:`aspect-square`}`})}),(0,h.jsxs)(`div`,{className:`mt-3 flex items-baseline justify-between gap-3`,children:[(0,h.jsx)(`h3`,{className:`text-[1rem]`,children:e.name}),(0,h.jsx)(`span`,{className:`lbl`,style:{fontVariantNumeric:`tabular-nums`},children:c(e.price)})]}),(0,h.jsx)(`p`,{className:`mt-1.5 text-[0.88rem]`,style:{color:`var(--dim)`},children:e.line})]})},e.id))})]}),(0,h.jsx)(`footer`,{className:`border-t-2`,style:{borderColor:`var(--ink)`},children:(0,h.jsxs)(`div`,{className:`shell py-14`,children:[(0,h.jsx)(`p`,{className:`text-[clamp(3rem,17vw,14rem)] font-black uppercase leading-[0.8] tracking-[-0.06em]`,children:l}),(0,h.jsx)(`p`,{className:`lbl mt-6 max-w-[70ch]`,style:{color:`var(--dim)`},children:`Bright build · fits before garments · 9:16 crops · colour carried per piece. All imagery generated original. No third-party photography or likeness.`})]})})]})}export{g as component};
