@@ -1150,20 +1150,46 @@
   position: absolute;
   inset: 0;
   border: 0;
-  background: rgb(0 13 16 / 68%);
+  background: rgb(0 13 16 / 40%);
+}
+
+.nl-layer.is-immersive {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: clamp(2rem, 5vw, 5rem);
+}
+
+.nl-layer-backdrop-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
+  animation: nl-scale-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes nl-scale-in {
+  from { transform: scale(1.05); opacity: 0; filter: blur(10px); }
+  to { transform: scale(1); opacity: 1; filter: blur(0px); }
 }
 
 .nl-product-dialog {
   position: relative;
   z-index: 1;
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(24px) saturate(150%);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(32px) saturate(180%);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 16px 64px rgba(0, 0, 0, 0.15);
   color: var(--nl-ink);
   border-radius: 24px;
   overflow: hidden;
+  width: min(100%, 55rem);
+  max-height: calc(100dvh - 4rem);
+  display: flex;
+  flex-direction: column;
 }
 
 .nl-bag-drawer {
@@ -1178,19 +1204,88 @@
   border-radius: 24px 0 0 24px;
 }
 
-.nl-product-dialog {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(19rem, 0.85fr);
-  width: min(100%, 68rem);
-  max-height: calc(100dvh - 2rem);
-  overflow: auto;
+.nl-dialog-glass-content {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
 }
 
-.nl-product-dialog > img {
+@media (min-width: 800px) {
+  .nl-dialog-glass-content {
+    flex-direction: row;
+  }
+}
+
+.nl-dialog-glass-left {
+  flex: 1;
+  padding: 3rem 2.5rem 1rem;
+}
+
+.nl-dialog-glass-right {
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.nl-dialog-sideable-images {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  scrollbar-width: none;
   width: 100%;
-  min-height: 100%;
+}
+.nl-dialog-sideable-images::-webkit-scrollbar {
+  display: none;
+}
+
+.nl-dialog-sideable-images img {
+  scroll-snap-align: center;
+  width: min(100%, 18rem);
+  aspect-ratio: 3/4;
   object-fit: cover;
-  filter: contrast(1.05);
+  border-radius: 12px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.nl-dialog-divider {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.1);
+  margin: 1.5rem 0;
+}
+
+.nl-dialog-option-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+  border: 0;
+  padding: 0;
+}
+
+.nl-dialog-option-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--nl-ash);
+  margin-bottom: 0.75rem;
+}
+
+.nl-dialog-option-value {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.nl-dialog-glass-add {
+  margin: 0;
+  border-radius: 0;
+  padding: 1.5rem;
+  font-size: 1.1rem;
 }
 
 .nl-dialog-close {
@@ -1220,39 +1315,19 @@
 }
 
 .nl-dialog-copy {
-  padding: clamp(4.75rem, 6vw, 5.75rem) clamp(1.4rem, 3.7vw, 3.5rem) 2rem;
+  padding: clamp(2rem, 4vw, 3rem) clamp(1.4rem, 3.7vw, 3.5rem) 2rem;
 }
 
-.nl-dialog-copy h2 {
+.nl-dialog-glass-left h2 {
   margin-top: 0.5rem;
-  font-size: clamp(2.4rem, 4vw, 4.25rem);
+  font-size: clamp(2rem, 3vw, 3.25rem);
   line-height: 0.9;
 }
 
-.nl-dialog-copy > span {
-  display: block;
-  margin-top: 1rem;
-  font-size: 1rem;
-  font-weight: 700;
-}
-
 .nl-dialog-description {
-  margin: 1.35rem 0 0;
+  margin: 0 0 1.5rem;
   color: var(--nl-ash);
   font-size: 1rem;
-}
-
-.nl-dialog-copy fieldset {
-  min-width: 0;
-  margin: 1.8rem 0 0;
-  padding: 0;
-  border: 0;
-}
-
-.nl-dialog-copy legend {
-  margin-bottom: 0.65rem;
-  font-size: 0.94rem;
-  font-weight: 700;
 }
 
 .nl-option-row {
@@ -1280,15 +1355,7 @@
   color: var(--nl-white);
 }
 
-.nl-dialog-add {
-  width: 100%;
-  margin-top: 2rem;
-  background: var(--nl-ink) !important;
-  color: var(--nl-white) !important;
-}
-.nl-dialog-add:hover {
-  background: var(--nl-clay) !important;
-}
+
 
 .nl-bag-drawer {
   justify-self: end;

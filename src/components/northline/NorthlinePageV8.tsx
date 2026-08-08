@@ -23,10 +23,10 @@ type Product = {
   alt: string;
   description: string;
   colors: string[];
-  sizes: string[];
   shopifyVariantId?: string;
   variants?: any[];
   variantTitle?: string;
+  images?: string[];
 };
 
 export function NorthlinePageV8({
@@ -90,7 +90,8 @@ export function NorthlinePageV8({
     sizes: sp.options?.find((o: any) => o.name.toLowerCase() === 'size')
       ?.values.map((v: any) => typeof v === 'object' && v !== null ? v.value : v) || ["One Size"],
     shopifyVariantId: (sp.variants?.[0] as any)?.id,
-    variants: sp.variants
+    variants: sp.variants,
+    images: sp.images?.map((img: any) => img.src) || [sp.images?.[0]?.src || flatlay]
   }));
 
   const dynamicFilters = ["All", ...Array.from(new Set(liveProducts.map(p => p.group).filter(Boolean)))];
@@ -689,7 +690,11 @@ export function NorthlinePageV8({
       </footer>
 
       {activeProduct && typeof document !== "undefined" && createPortal(
-        <div className="nl-layer">
+        <div className="nl-layer is-immersive">
+          <div 
+            className="nl-layer-backdrop-image"
+            style={{ backgroundImage: `url(${activeProduct.image})` }}
+          />
           <button
             className="nl-layer-backdrop"
             type="button"
@@ -709,50 +714,64 @@ export function NorthlinePageV8({
             >
               Close
             </button>
-            <img src={activeProduct.image} alt={activeProduct.alt} decoding="async" />
-            <div className="nl-dialog-copy">
-              <p>{activeProduct.group}</p>
-              <h2 id="northline-product-title">{activeProduct.name}</h2>
-              <span>{activeProduct.price}</span>
-              <p className="nl-dialog-description">{activeProduct.description}</p>
-              <fieldset>
-                <legend>Color</legend>
-                <div className="nl-option-row">
-                  {activeProduct.colors.map((color) => (
-                    <button
-                      key={color}
-                      type="button"
-                      className={selectedColor === color ? "is-selected" : ""}
-                      onClick={() => setSelectedColor(color)}
-                    >
-                      {color}
-                    </button>
+            <div className="nl-dialog-glass-content">
+              <div className="nl-dialog-glass-left">
+                <p className="nl-dialog-group">{activeProduct.group}</p>
+                <h2 id="northline-product-title">{activeProduct.name}</h2>
+                <div className="nl-dialog-divider"></div>
+                <div className="nl-dialog-logistics">
+                  <div className="nl-dialog-option-group">
+                    <span className="nl-dialog-option-label">PRICE</span>
+                    <span className="nl-dialog-option-value">{activeProduct.price}</span>
+                  </div>
+                  <p className="nl-dialog-description">{activeProduct.description}</p>
+                  <fieldset>
+                    <legend className="nl-dialog-option-label">COLOR</legend>
+                    <div className="nl-option-row">
+                      {activeProduct.colors.map((color) => (
+                        <button
+                          key={color}
+                          type="button"
+                          className={selectedColor === color ? "is-selected" : ""}
+                          onClick={() => setSelectedColor(color)}
+                        >
+                          {color}
+                        </button>
+                      ))}
+                    </div>
+                  </fieldset>
+                  <fieldset>
+                    <legend className="nl-dialog-option-label">SIZE</legend>
+                    <div className="nl-option-row">
+                      {activeProduct.sizes.map((size) => (
+                        <button
+                          key={size}
+                          type="button"
+                          className={selectedSize === size ? "is-selected" : ""}
+                          onClick={() => setSelectedSize(size)}
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+              <div className="nl-dialog-glass-right">
+                <div className="nl-dialog-sideable-images">
+                  {activeProduct.images?.map((img, i) => (
+                    <img key={i} src={img} alt={`${activeProduct.alt} view ${i + 1}`} loading="lazy" />
                   ))}
                 </div>
-              </fieldset>
-              <fieldset>
-                <legend>Size</legend>
-                <div className="nl-option-row">
-                  {activeProduct.sizes.map((size) => (
-                    <button
-                      key={size}
-                      type="button"
-                      className={selectedSize === size ? "is-selected" : ""}
-                      onClick={() => setSelectedSize(size)}
-                    >
-                      {size}
-                    </button>
-                  ))}
-                </div>
-              </fieldset>
-              <button
-                className="nl-button nl-button-primary nl-dialog-add"
-                type="button"
-                onClick={() => addToBag(activeProduct)}
-              >
-                Add {activeProduct.name} to bag
-              </button>
+              </div>
             </div>
+            <button
+              className="nl-button nl-button-primary nl-dialog-add"
+              type="button"
+              onClick={() => addToBag(activeProduct)}
+            >
+              Add to cart
+            </button>
           </section>
         </div>, document.body
       )}
