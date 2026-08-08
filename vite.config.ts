@@ -13,6 +13,9 @@ export default defineConfig({
   // that one domain rather than turning the protection off with `true`.
   vite: {
     server: { allowedHosts: [".trycloudflare.com"] },
+    build: {
+      chunkSizeWarningLimit: 2000,
+    },
   },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
