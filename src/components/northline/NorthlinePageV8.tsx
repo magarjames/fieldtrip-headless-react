@@ -830,15 +830,17 @@ export function NorthlinePageV8({
                     </li>
                   ))}
                 </ul>
-                <button 
-                  className="nl-button nl-button-primary nl-bag-checkout" 
-                  type="button"
-                  onClick={checkout}
-                  disabled={isCheckingOut}
-                  style={{ opacity: isCheckingOut ? 0.7 : 1 }}
-                >
-                  {isCheckingOut ? "Loading checkout..." : "Checkout via Shopify"}
-                </button>
+                <div className="nl-bag-footer">
+                  <button 
+                    className="nl-button nl-button-primary nl-bag-checkout" 
+                    type="button"
+                    onClick={checkout}
+                    disabled={isCheckingOut}
+                    style={{ opacity: isCheckingOut ? 0.7 : 1 }}
+                  >
+                    {isCheckingOut ? "Loading checkout..." : "Checkout via Shopify"}
+                  </button>
+                </div>
               </>
             ) : (
               <p className="nl-empty-bag">Your bag is ready when you are.</p>

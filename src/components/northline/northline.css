@@ -1202,13 +1202,20 @@
 .nl-bag-drawer {
   position: relative;
   z-index: 1;
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(24px) saturate(150%);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
-  border-left: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.15);
-  color: var(--nl-ink);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.06) 100%
+  ), rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(45px) saturate(210%) brightness(1.05);
+  -webkit-backdrop-filter: blur(45px) saturate(210%) brightness(1.05);
+  border-left: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: -10px 0 60px rgba(0, 0, 0, 0.35), inset 1px 0 0 rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
   border-radius: 24px 0 0 24px;
+  display: flex;
+  flex-direction: column;
 }
 
 .nl-dialog-glass-content {
@@ -1440,6 +1447,7 @@
 .nl-bag-drawer h2 {
   font-size: clamp(2.7rem, 4vw, 4.25rem);
   line-height: 0.9;
+  color: var(--nl-white);
 }
 
 .nl-bag-list {
@@ -1456,13 +1464,17 @@
   align-items: center;
   gap: 0.8rem;
   padding-top: 1rem;
-  border-top: 1px solid var(--nl-pebble);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .nl-bag-list img {
   width: 4.8rem;
   aspect-ratio: 1;
   object-fit: cover;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 0.3rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .nl-bag-list h3,
@@ -1475,11 +1487,12 @@
   font-weight: 700;
   letter-spacing: -0.025em;
   line-height: 1.1;
+  color: var(--nl-white);
 }
 
 .nl-bag-list p {
   margin-top: 0.3rem;
-  color: var(--nl-ash);
+  color: rgba(255, 255, 255, 0.7);
   font-size: 0.9rem;
   line-height: 1;
 }
@@ -1487,7 +1500,40 @@
 .nl-bag-list button {
   min-height: 2.3rem;
   padding: 0.4rem 0.68rem;
-  border: 1px solid var(--nl-pebble);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 1000px;
+  background: transparent;
+  color: var(--nl-white);
+  transition: all 0.2s ease;
+}
+
+.nl-bag-list button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: var(--nl-white);
+}
+
+.nl-bag-footer {
+  margin-top: auto;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.nl-bag-checkout {
+  width: 100%;
+  padding: 1.1rem 2rem;
+  border-radius: 1000px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  background: var(--nl-white) !important;
+  color: var(--nl-ink) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s ease;
+}
+
+.nl-bag-checkout:hover {
+  background: rgba(255, 255, 255, 0.9) !important;
+  transform: translateY(-1px);
+}
   border-radius: 1000px;
   background: transparent;
   color: var(--nl-ink);
