@@ -9,7 +9,7 @@ export const Route = createFileRoute("/s/v6")({
   head: () =>
     pageMeta(
       "Fieldtrip x Northline | Dress for the long way home",
-      "Aesthetic streetwear shaped through graphic layers, relaxed silhouettes, and after-dark styling.",
+      "A playful Fieldtrip fitting room opening into Northline utility layers, materials, and motion.",
     ),
 });
 
@@ -33,9 +33,6 @@ function FieldtripNorthlinePage() {
         continuation
         splitNavigation
         risingEdge
-        scrollSystemStory
-        materialsVideoSrc="/northline/materials-motion.mp4"
-        materialsCopyVariant="streetwear"
       />
     </>
   );

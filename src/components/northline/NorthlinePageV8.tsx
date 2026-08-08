@@ -136,8 +136,13 @@ export function NorthlinePageV8({
     let cachedLinkWidths: number[] | null = null;
 
     const clearMotionStyles = () => {
+      nav.classList.remove("is-scroll-motion-ready");
+      nav.classList.remove("is-docked");
+      nav.style.removeProperty("--nl-nav-progress");
+      intro.style.removeProperty("transform");
       edge?.style.removeProperty("transform");
       edgeMotionRef.current.progress = 0;
+      links.forEach((link) => link.style.removeProperty("transform"));
     };
 
     const updateNavigation = () => {
@@ -148,7 +153,13 @@ export function NorthlinePageV8({
         return;
       }
 
+      nav.classList.add("is-scroll-motion-ready");
+
       const collectionTop = collection.getBoundingClientRect().top;
+      const collectionBottom = collection.getBoundingClientRect().bottom;
+      const motionDistance = Math.min(window.innerHeight * 0.52, 420);
+      const progress = Math.min(1, Math.max(0, (motionDistance - collectionTop) / motionDistance));
+      const easedProgress = 1 - Math.pow(1 - progress, 3);
       const edgeDistance = Math.min(window.innerHeight * 0.58, 520);
       const edgeProgress = Math.min(
         1,
@@ -156,12 +167,46 @@ export function NorthlinePageV8({
       );
       const easedEdgeProgress = 1 - Math.pow(1 - edgeProgress, 3);
       const edgeLift = Math.min(126, Math.max(82, window.innerWidth * 0.064));
+      if (cachedLinkWidths === null) {
+        cachedLinkWidths = links.map((link) => link.getBoundingClientRect().width);
+      }
+      const linkWidths = cachedLinkWidths;
+      const horizontalGap = Math.min(38, Math.max(22, window.innerWidth * 0.022));
+      const totalWidth =
+        linkWidths.reduce((total, width) => total + width, 0) + horizontalGap * (links.length - 1);
+      const initialLeft = Math.max(20, (window.innerWidth - totalWidth) / 2);
+      const railLeft = Math.min(80, Math.max(20, window.innerWidth * 0.05));
+      const entryTop = Math.min(54, Math.max(42, window.innerHeight * 0.052));
+      const railTop = Math.min(176, Math.max(112, window.innerWidth * 0.11));
+      const railBottom = railTop + links.length * 58;
+      
+      if (cachedIntroBaseLeft === null) {
+        const introTransform = new DOMMatrixReadOnly(window.getComputedStyle(intro).transform);
+        cachedIntroBaseLeft = intro.getBoundingClientRect().left - introTransform.m41;
+      }
+      const introTargetLeft = Math.max(280, window.innerWidth * 0.25);
+      const textTravel = Math.max(0, cachedIntroBaseLeft - introTargetLeft);
 
+      nav.classList.toggle("is-docked", collectionTop <= 0 && collectionBottom > railBottom);
       edgeMotionRef.current.progress = easedEdgeProgress;
       edge?.style.setProperty(
         "transform",
         `translate3d(0, ${(-edgeLift * easedEdgeProgress).toFixed(2)}px, 0)`,
       );
+      intro.style.transform = `translate3d(${(-textTravel * easedProgress).toFixed(2)}px, 0, 0)`;
+
+      let horizontalOffset = 0;
+      links.forEach((link, index) => {
+        const startX = initialLeft + horizontalOffset;
+        const endY = railTop + index * 58;
+        const x = startX + (railLeft - startX) * easedProgress;
+        const y = entryTop + (endY - entryTop) * easedProgress;
+
+        link.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
+        horizontalOffset += linkWidths[index] + horizontalGap;
+      });
+
+      nav.style.setProperty("--nl-nav-progress", progress.toFixed(3));
     };
 
     const scheduleNavigationUpdate = () => {
@@ -435,17 +480,15 @@ export function NorthlinePageV8({
         <section id="collection" className="nl-collection">
           {risingEdge && <NorthlineScrollEdge motion={edgeMotionRef} />}
           {continuation && (
-            <div className="nl-continuation-nav-wrapper">
-              <nav
-                ref={continuationNavRef}
-                className="nl-continuation-nav"
-                aria-label="Collection navigation"
-              >
-                <a href="#collection">Shop</a>
-                <a href="#materials">Materials</a>
-                <a href="#journal">Journal</a>
-              </nav>
-            </div>
+            <nav
+              ref={continuationNavRef}
+              className="nl-continuation-nav"
+              aria-label="Collection navigation"
+            >
+              <a href="#collection">Shop</a>
+              <a href="#materials">Materials</a>
+              <a href="#journal">Journal</a>
+            </nav>
           )}
           <div className="nl-collection-intro nl-reveal">
             <div>
