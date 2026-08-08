@@ -75,7 +75,8 @@ export function FieldtripPageV8({
   });
 
   // Merge Shopify real data into our local PIECES catalog where names match
-  const livePieces = PIECES.map(piece => {
+  // AND append any Shopify products that don't match our catalog!
+  const livePieces = [...PIECES.map(piece => {
     const sp = shopifyProducts.find(p => p.title.toLowerCase() === piece.name.toLowerCase());
     if (sp && sp.variants && sp.variants.length > 0) {
       return { 
@@ -85,6 +86,36 @@ export function FieldtripPageV8({
       };
     }
     return piece;
+  })];
+
+  // Append any new Shopify products that aren't hardcoded in PIECES
+  shopifyProducts.forEach(sp => {
+    const isMatched = PIECES.some(piece => piece.name.toLowerCase() === sp.title.toLowerCase());
+    if (!isMatched) {
+      const variantId = sp.variants?.[0]?.id;
+      const price = sp.variants?.[0]?.price?.amount ? parseFloat(sp.variants[0].price.amount) : 0;
+      
+      // Generate a stable, bright fallback hover hue based on the product title
+      let hash = 0;
+      for (let i = 0; i < sp.title.length; i++) hash = sp.title.charCodeAt(i) + ((hash << 5) - hash);
+      let colour = '#';
+      for (let i = 0; i < 3; i++) {
+        const val = Math.max(150, (hash >> (i * 8)) & 0xFF); // keep it bright
+        colour += ('00' + val.toString(16)).slice(-2);
+      }
+
+      livePieces.push({
+        id: sp.id.toString(),
+        name: sp.title,
+        cat: (sp.productType?.toLowerCase() || "tops") as any,
+        line: sp.vendor || "New Arrival",
+        price,
+        shopifyVariantId: variantId,
+        hue: colour,
+        crop: "square",
+        externalImage: sp.images?.[0]?.src || ""
+      } as any);
+    }
   });
 
   const shown = cat === "all" ? livePieces : livePieces.filter((p) => p.cat === cat);
@@ -417,7 +448,7 @@ export function FieldtripPageV8({
                       style={{ borderColor: "var(--ink)" }}
                     >
                       <img
-                        src={shotFor(p, 800, p.crop === "reel" ? 1420 : 800)}
+                        src={(p as any).externalImage || shotFor(p, 800, p.crop === "reel" ? 1420 : 800)}
                         alt={p.name}
                         width={800}
                         height={p.crop === "reel" ? 1420 : 800}
