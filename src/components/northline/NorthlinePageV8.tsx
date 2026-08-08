@@ -728,16 +728,29 @@ export function NorthlinePageV8({
                   <fieldset>
                     <legend className="nl-dialog-option-label">COLOR</legend>
                     <div className="nl-option-row">
-                      {activeProduct.colors.map((color) => (
-                        <button
-                          key={color}
-                          type="button"
-                          className={selectedColor === color ? "is-selected" : ""}
-                          onClick={() => setSelectedColor(color)}
-                        >
-                          {color}
-                        </button>
-                      ))}
+                      {activeProduct.colors.map((color) => {
+                        const isDefault = color.toLowerCase() === 'default';
+                        return isDefault ? (
+                          <button
+                            key={color}
+                            type="button"
+                            className={selectedColor === color ? "is-selected" : ""}
+                            onClick={() => setSelectedColor(color)}
+                          >
+                            {color}
+                          </button>
+                        ) : (
+                          <button
+                            key={color}
+                            type="button"
+                            className={`nl-color-swatch ${selectedColor === color ? "is-selected" : ""}`}
+                            onClick={() => setSelectedColor(color)}
+                            style={{ backgroundColor: color.toLowerCase().replace(/\s/g, '') }}
+                            aria-label={color}
+                            title={color}
+                          />
+                        );
+                      })}
                     </div>
                   </fieldset>
                   <fieldset>

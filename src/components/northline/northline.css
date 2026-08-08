@@ -1353,7 +1353,7 @@
   gap: 0.5rem;
 }
 
-.nl-option-row button {
+.nl-option-row button:not(.nl-color-swatch) {
   min-height: 2.45rem;
   padding: 0.5rem 0.8rem;
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -1366,15 +1366,38 @@
   transition: all 0.2s ease;
 }
 
-.nl-option-row button.is-selected,
-.nl-option-row button:hover {
+.nl-option-row button:not(.nl-color-swatch).is-selected,
+.nl-option-row button:not(.nl-color-swatch):hover {
   border-color: var(--nl-white);
   background: var(--nl-white);
   color: var(--nl-ink);
 }
-.nl-option-row button.is-selected {
+.nl-option-row button:not(.nl-color-swatch).is-selected {
   transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+}
+
+.nl-color-swatch {
+  width: 2.2rem;
+  height: 2.2rem;
+  min-height: 0 !important;
+  border-radius: 50% !important;
+  padding: 0 !important;
+  border: 2px solid transparent !important;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.nl-color-swatch:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+
+.nl-color-swatch.is-selected {
+  transform: scale(1.15);
+  box-shadow: 0 0 0 2px var(--nl-white);
+  border-color: rgba(0, 0, 0, 0.2) !important; /* Inner dark ring */
 }
 
 
