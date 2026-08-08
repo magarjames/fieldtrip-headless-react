@@ -36,6 +36,8 @@ export function NorthlinePageV8({
   continuation = false,
   splitNavigation = false,
   risingEdge = false,
+  materialsCopyVariant = "utility",
+  materialsVideoSrc,
 }: {
   showHeader?: boolean;
   showHero?: boolean;
