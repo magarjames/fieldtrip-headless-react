@@ -725,7 +725,7 @@ export function NorthlinePageV8({
                     <span className="nl-dialog-option-value">{activeProduct.price}</span>
                   </div>
                   <p className="nl-dialog-description">{activeProduct.description}</p>
-                  <fieldset>
+                  <fieldset className="nl-dialog-option-fieldset">
                     <legend className="nl-dialog-option-label">COLOR</legend>
                     <div className="nl-option-row">
                       {activeProduct.colors.map((color) => {
@@ -753,7 +753,7 @@ export function NorthlinePageV8({
                       })}
                     </div>
                   </fieldset>
-                  <fieldset>
+                  <fieldset className="nl-dialog-option-fieldset">
                     <legend className="nl-dialog-option-label">SIZE</legend>
                     <div className="nl-option-row">
                       {activeProduct.sizes.map((size) => (
@@ -778,13 +778,15 @@ export function NorthlinePageV8({
                 </div>
               </div>
             </div>
-            <button
-              className="nl-button nl-button-primary nl-dialog-add"
-              type="button"
-              onClick={() => addToBag(activeProduct)}
-            >
-              Add to cart
-            </button>
+            <div className="nl-dialog-glass-footer">
+              <button
+                className="nl-button nl-button-primary nl-dialog-glass-add"
+                type="button"
+                onClick={() => addToBag(activeProduct)}
+              >
+                Add to cart
+              </button>
+            </div>
           </section>
         </div>, document.body
       )}

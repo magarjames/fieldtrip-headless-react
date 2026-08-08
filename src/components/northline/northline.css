@@ -1283,16 +1283,35 @@
   color: rgba(255, 255, 255, 0.85);
 }
 
+.nl-dialog-option-fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0 0 1.75rem 0;
+}
+
+.nl-dialog-glass-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 1.25rem 2.5rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.15);
+}
+
 .nl-dialog-glass-add {
   margin: 0;
-  border-radius: 0;
-  padding: 1.5rem;
-  font-size: 1.1rem;
+  border-radius: 1000px;
+  padding: 0.9rem 2.5rem;
+  font-size: 1rem;
+  font-weight: 700;
   background: var(--nl-white) !important;
   color: var(--nl-ink) !important;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 .nl-dialog-glass-add:hover {
-  background: rgba(255, 255, 255, 0.85) !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  transform: translateY(-1px);
 }
 
 .nl-dialog-close {
