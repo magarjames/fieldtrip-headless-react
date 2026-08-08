@@ -455,8 +455,15 @@
     transform: none;
     width: auto;
     margin-inline: 0;
-    margin-left: clamp(14rem, 22vw, 26rem);
+    margin-left: calc(max(17.5rem, 25vw) - clamp(20rem, 28vw, 42rem));
     margin-right: auto;
+  }
+
+  .northline--v8.northline--continuation.northline--split-navigation
+    .nl-collection-intro {
+    width: min(100%, 39rem);
+    margin-left: 0;
+    transform: translate3d(clamp(-6.5rem, -5.25vw, -4.5rem), 0, 0);
   }
 
   .northline--continuation.northline--split-navigation .nl-filter-row,

@@ -375,7 +375,7 @@ export function NorthlinePageV8({
 
   return (
     <div
-      className={`northline${continuation ? " northline--continuation" : ""}${splitNavigation ? " northline--split-navigation" : ""}${risingEdge ? " northline--rising-edge" : ""}`}
+      className={`northline northline--v8${continuation ? " northline--continuation" : ""}${splitNavigation ? " northline--split-navigation" : ""}${risingEdge ? " northline--rising-edge" : ""}`}
       data-direction-contract="THESIS: an editorial utility store that treats clothing as an answer to city movement, not a status display. OWN-WORLD: a pale dawn sky, deep ink typography, white canvas, one clay ember feature block, and precise pill controls. STORY: discover a concise collection, inspect an item, and add it to a bag. FIRST VIEWPORT: a large Northline wordmark, a clean fashion silhouette, and a right-aligned statement. FORM: original luxury utility storefront with alternating light and dark bands. FINISH: documented, responsive, and reviewed."
     >
       <a className="nl-skip-link" href="#collection">
