@@ -33,6 +33,9 @@ function FieldtripNorthlinePage() {
         continuation
         splitNavigation
         risingEdge
+        scrollSystemStory
+        materialsVideoSrc="/northline/materials-motion.mp4"
+        materialsCopyVariant="streetwear"
       />
     </>
   );
