@@ -27,59 +27,6 @@ type Product = {
   shopifyVariantId?: string;
 };
 
-const products: Product[] = [
-  {
-    id: "transit-shell",
-    name: "Transit shell",
-    group: "Outer layers",
-    price: "GBP 148",
-    image: heroDawn,
-    alt: "Model wearing a black technical shell and charcoal cargo trousers against a pale dawn sky.",
-    description:
-      "A softly structured weather layer with a cropped line and room for the layers you already own.",
-    colors: ["Graphite", "Deep navy"],
-    sizes: ["XS", "S", "M", "L", "XL"],
-  },
-  {
-    id: "arc-cargo",
-    name: "Arc cargo",
-    group: "Bottoms",
-    price: "GBP 96",
-    image: flatlay,
-    alt: "Black utility trousers shown in an overhead studio flat lay.",
-    description:
-      "Relaxed utility trousers with a clean drape, a calmer pocket layout, and an adjustable finish.",
-    colors: ["Black", "Charcoal"],
-    sizes: ["XS", "S", "M", "L", "XL"],
-  },
-  {
-    id: "line-crossbody",
-    name: "Line crossbody",
-    group: "Carry goods",
-    price: "GBP 74",
-    image: detailBlue,
-    alt: "Close detail of a dark technical jacket sleeve with an acid-lime drawcord.",
-    description:
-      "A compact crossbody for the things that are annoying to hold and too useful to leave behind.",
-    colors: ["Lime", "Black"],
-    sizes: ["One size"],
-  },
-  {
-    id: "shift-crew",
-    name: "Shift crew",
-    group: "Outer layers",
-    price: "GBP 62",
-    image: materials,
-    alt: "Black cotton, ripstop fabric, and lime lining arranged with a metal zipper.",
-    description:
-      "A dense everyday layer built around a simple fit, visible texture, and an easy collar.",
-    colors: ["Washed black", "Stone"],
-    sizes: ["XS", "S", "M", "L", "XL"],
-  },
-];
-
-
-
 export function NorthlinePageV8({
   showHeader = true,
   showHero = true,
@@ -127,36 +74,19 @@ export function NorthlinePageV8({
     }
   }, []);
 
-  // Merge dummy products with live Shopify products
-  const liveProducts: Product[] = [...products.map(p => {
-    const sp = shopifyProducts.find(s => s.title.toLowerCase() === p.name.toLowerCase());
-    if (sp && sp.variants && sp.variants.length > 0) {
-      return {
-        ...p,
-        price: `GBP ${sp.variants[0].price.amount}`,
-        shopifyVariantId: (sp.variants[0] as any).id
-      };
-    }
-    return p;
-  })];
-
-  shopifyProducts.forEach(sp => {
-    const isMatched = products.some(p => p.name.toLowerCase() === sp.title.toLowerCase());
-    if (!isMatched) {
-      liveProducts.push({
-        id: sp.id.toString(),
-        name: sp.title,
-        group: (sp.productType || "New Arrivals").charAt(0).toUpperCase() + (sp.productType || "New Arrivals").slice(1),
-        price: `GBP ${sp.variants?.[0]?.price?.amount || '0'}`,
-        image: sp.images?.[0]?.src || flatlay,
-        alt: sp.title,
-        description: sp.vendor || "A purposeful new addition to the line.",
-        colors: ["Default"],
-        sizes: ["One Size"],
-        shopifyVariantId: (sp.variants?.[0] as any)?.id
-      });
-    }
-  });
+  // Map live Shopify products
+  const liveProducts: Product[] = shopifyProducts.map(sp => ({
+    id: sp.id.toString(),
+    name: sp.title,
+    group: (sp.productType || "New Arrivals").charAt(0).toUpperCase() + (sp.productType || "New Arrivals").slice(1),
+    price: `GBP ${sp.variants?.[0]?.price?.amount || '0'}`,
+    image: sp.images?.[0]?.src || flatlay,
+    alt: sp.title,
+    description: sp.vendor || "A purposeful new addition to the line.",
+    colors: ["Default"],
+    sizes: ["One Size"],
+    shopifyVariantId: (sp.variants?.[0] as any)?.id
+  }));
 
   const dynamicFilters = ["All", ...Array.from(new Set(liveProducts.map(p => p.group).filter(Boolean)))];
 
@@ -642,7 +572,11 @@ export function NorthlinePageV8({
             <button
               className="nl-text-action"
               type="button"
-              onClick={() => openProduct(liveProducts[0])}
+              onClick={() => {
+                if (liveProducts.length > 0) {
+                  openProduct(liveProducts[0])
+                }
+              }}
             >
               Build the starting set
             </button>
