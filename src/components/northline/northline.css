@@ -1534,19 +1534,7 @@
   background: rgba(255, 255, 255, 0.9) !important;
   transform: translateY(-1px);
 }
-  border-radius: 1000px;
-  background: transparent;
-  color: var(--nl-ink);
-  font-size: 0.82rem;
-  font-weight: 700;
-  line-height: 1;
-}
 
-.nl-bag-list button:hover {
-  border-color: var(--nl-ink);
-  background: var(--nl-ink);
-  color: var(--nl-white);
-}
 
 .nl-bag-checkout {
   width: 100%;
