@@ -6,6 +6,8 @@ import {
   NorthlineScrollEdge,
   type NorthlineEdgeMotion,
 } from "@/components/northline/NorthlineScrollEdge";
+import { shopifyClient } from "@/lib/shopify";
+import type { Product as ShopifyProduct } from "shopify-buy";
 import { NorthlineScrollFilm } from "@/components/northline/NorthlineScrollFilm";
 import detailBlue from "@/assets/northline/detail-blue.jpg";
 import flatlay from "@/assets/northline/flatlay.jpg";
@@ -15,13 +17,14 @@ import materials from "@/assets/northline/materials.jpg";
 type Product = {
   id: string;
   name: string;
-  group: "Outer layers" | "Bottoms" | "Carry goods";
+  group: string;
   price: string;
   image: string;
   alt: string;
   description: string;
   colors: string[];
   sizes: string[];
+  shopifyVariantId?: string;
 };
 
 const products: Product[] = [
@@ -75,7 +78,7 @@ const products: Product[] = [
   },
 ];
 
-const filters = ["All", "Outer layers", "Bottoms", "Carry goods"] as const;
+
 
 export function NorthlinePageV8({
   showHeader = true,
@@ -95,7 +98,7 @@ export function NorthlinePageV8({
   /** Lift a soft fabric-like edge over the previous scene as the collection arrives. */
   risingEdge?: boolean;
 } = {}) {
-  const [activeFilter, setActiveFilter] = useState<(typeof filters)[number]>("All");
+  const [activeFilter, setActiveFilter] = useState<string>("All");
   const deferredFilter = useDeferredValue(activeFilter);
   const [activeProduct, setActiveProduct] = useState<Product | null>(null);
   const [selectedColor, setSelectedColor] = useState("");
@@ -105,6 +108,9 @@ export function NorthlinePageV8({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [signupMessage, setSignupMessage] = useState("");
+  const [shopifyProducts, setShopifyProducts] = useState<ShopifyProduct[]>([]);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+
   const continuationNavRef = useRef<HTMLElement>(null);
   const edgeMotionRef = useRef<NorthlineEdgeMotion>({ progress: 0 });
   const materialsRef = useRef<HTMLElement>(null);
@@ -112,7 +118,49 @@ export function NorthlinePageV8({
   const materialsEdgeMotionRef = useRef<NorthlineEdgeMotion>({ progress: 0 });
   const systemEdgeMotionRef = useRef<NorthlineEdgeMotion>({ progress: 0 });
 
-  const shownProducts = products.filter(
+  // Fetch real products from Shopify
+  useEffect(() => {
+    if (import.meta.env.VITE_SHOPIFY_DOMAIN && import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN) {
+      shopifyClient.product.fetchAll().then((fetchedProducts) => {
+        setShopifyProducts(fetchedProducts as any); // Cast to any to avoid strict type mismatch with local typings
+      }).catch(err => console.error("Shopify fetch error:", err));
+    }
+  }, []);
+
+  // Merge dummy products with live Shopify products
+  const liveProducts: Product[] = [...products.map(p => {
+    const sp = shopifyProducts.find(s => s.title.toLowerCase() === p.name.toLowerCase());
+    if (sp && sp.variants && sp.variants.length > 0) {
+      return {
+        ...p,
+        price: `GBP ${sp.variants[0].price.amount}`,
+        shopifyVariantId: (sp.variants[0] as any).id
+      };
+    }
+    return p;
+  })];
+
+  shopifyProducts.forEach(sp => {
+    const isMatched = products.some(p => p.name.toLowerCase() === sp.title.toLowerCase());
+    if (!isMatched) {
+      liveProducts.push({
+        id: sp.id.toString(),
+        name: sp.title,
+        group: (sp.productType || "New Arrivals").charAt(0).toUpperCase() + (sp.productType || "New Arrivals").slice(1),
+        price: `GBP ${sp.variants?.[0]?.price?.amount || '0'}`,
+        image: sp.images?.[0]?.src || flatlay,
+        alt: sp.title,
+        description: sp.vendor || "A purposeful new addition to the line.",
+        colors: ["Default"],
+        sizes: ["One Size"],
+        shopifyVariantId: (sp.variants?.[0] as any)?.id
+      });
+    }
+  });
+
+  const dynamicFilters = ["All", ...Array.from(new Set(liveProducts.map(p => p.group).filter(Boolean)))];
+
+  const shownProducts = liveProducts.filter(
     (product) => deferredFilter === "All" || product.group === deferredFilter,
   );
 
@@ -345,6 +393,37 @@ export function NorthlinePageV8({
     setEmail("");
   }
 
+  const checkout = async () => {
+    if (bag.length === 0) return;
+    setIsCheckingOut(true);
+    try {
+      const checkoutSession = await shopifyClient.checkout.create();
+      // Count duplicate items to send correct quantities
+      const quantities: Record<string, number> = {};
+      bag.forEach(item => {
+        if (item.shopifyVariantId) {
+          quantities[item.shopifyVariantId] = (quantities[item.shopifyVariantId] || 0) + 1;
+        }
+      });
+      
+      const lineItemsToAdd = Object.keys(quantities).map(variantId => ({
+        variantId,
+        quantity: quantities[variantId]
+      }));
+
+      if (lineItemsToAdd.length > 0) {
+        await shopifyClient.checkout.addLineItems(checkoutSession.id, lineItemsToAdd);
+        window.location.href = checkoutSession.webUrl;
+      } else {
+        alert("No valid products in bag to checkout.");
+        setIsCheckingOut(false);
+      }
+    } catch (error) {
+      console.error("Checkout error:", error);
+      setIsCheckingOut(false);
+    }
+  };
+
   return (
     <div
       className={`northline${continuation ? " northline--continuation" : ""}${splitNavigation ? " northline--split-navigation" : ""}${risingEdge ? " northline--rising-edge" : ""}`}
@@ -460,7 +539,7 @@ export function NorthlinePageV8({
             <p>Every piece earns its place by keeping one part of a busy day simpler.</p>
           </div>
           <div className="nl-filter-row" aria-label="Filter the collection">
-            {filters.map((filter) => (
+            {dynamicFilters.map((filter) => (
               <button
                 key={filter}
                 className={activeFilter === filter ? "is-active" : ""}
@@ -563,7 +642,7 @@ export function NorthlinePageV8({
             <button
               className="nl-text-action"
               type="button"
-              onClick={() => openProduct(products[0])}
+              onClick={() => openProduct(liveProducts[0])}
             >
               Build the starting set
             </button>
@@ -769,8 +848,14 @@ export function NorthlinePageV8({
                     </li>
                   ))}
                 </ul>
-                <button className="nl-button nl-button-primary nl-bag-checkout" type="button">
-                  Checkout is a demo
+                <button 
+                  className="nl-button nl-button-primary nl-bag-checkout" 
+                  type="button"
+                  onClick={checkout}
+                  disabled={isCheckingOut}
+                  style={{ opacity: isCheckingOut ? 0.7 : 1 }}
+                >
+                  {isCheckingOut ? "Loading checkout..." : "Checkout via Shopify"}
                 </button>
               </>
             ) : (
