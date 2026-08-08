@@ -331,25 +331,30 @@ export function NorthlinePageV8({
       edges.forEach(({ section, motion }) => {
         if (!section) return;
         const edge = section.querySelector<HTMLElement>(".nl-section-edge");
-        if (!edge) return;
+        const videoFlow = section.querySelector<HTMLElement>(".nl-material-video");
+        if (!edge && !videoFlow) return;
 
         if (!desktop) {
           motion.current.progress = 0;
-          edge.style.removeProperty("transform");
+          edge?.style.removeProperty("transform");
+          videoFlow?.style.removeProperty("--nl-video-flow-offset");
           return;
         }
 
         if (reducedMotion.matches) {
           motion.current.progress = 1;
-          edge.style.transform = `translate3d(0, ${-edgeLift}px, 0)`;
+          if (edge) edge.style.transform = `translate3d(0, ${-edgeLift}px, 0)`;
+          videoFlow?.style.setProperty("--nl-video-flow-offset", `${-edgeLift}px`);
           return;
         }
 
         const sectionTop = section.getBoundingClientRect().top;
         const progress = Math.min(1, Math.max(0, (window.innerHeight - sectionTop) / edgeDistance));
         const easedProgress = 1 - Math.pow(1 - progress, 3);
+        const offset = (-edgeLift * easedProgress).toFixed(2);
         motion.current.progress = easedProgress;
-        edge.style.transform = `translate3d(0, ${(-edgeLift * easedProgress).toFixed(2)}px, 0)`;
+        if (edge) edge.style.transform = `translate3d(0, ${offset}px, 0)`;
+        videoFlow?.style.setProperty("--nl-video-flow-offset", `${offset}px`);
       });
     };
 
@@ -371,9 +376,12 @@ export function NorthlinePageV8({
       edges.forEach(({ section, motion }) => {
         motion.current.progress = 0;
         section?.querySelector<HTMLElement>(".nl-section-edge")?.style.removeProperty("transform");
+        section
+          ?.querySelector<HTMLElement>(".nl-material-video")
+          ?.style.removeProperty("--nl-video-flow-offset");
       });
     };
-  }, [risingEdge]);
+  }, [materialsVideoSrc, risingEdge]);
 
   function openProduct(product: Product) {
     setActiveProduct(product);
