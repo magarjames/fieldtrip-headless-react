@@ -15,8 +15,26 @@ export const Route = createFileRoute("/s/v8")({
 });
 
 function FieldtripNorthlineV8Page() {
+  const openBag = () => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("open-northline-bag"));
+    }
+  };
+
   return (
     <>
+      <button
+        className="v8-global-cart"
+        type="button"
+        onClick={openBag}
+        aria-label="Open shopping bag"
+        aria-haspopup="dialog"
+      >
+        <span className="v8-global-cart-label">Bag</span>
+        <span className="v8-global-cart-icon" aria-hidden="true">
+          <ShoppingCart size={19} strokeWidth={2.2} />
+        </span>
+      </button>
       <div id="fieldtrip-top">
         <FieldtripPageV8
           backdrop={<FoldBackdropV8 />}
@@ -25,12 +43,7 @@ function FieldtripNorthlineV8Page() {
           primaryHref="#collection"
           secondaryHref="#materials"
           shopHref="#collection"
-          shopText={<ShoppingCart size={20} />}
-          onShopClick={() => {
-            if (typeof window !== "undefined") {
-              window.dispatchEvent(new Event("open-northline-bag"));
-            }
-          }}
+          showShopAction={false}
         />
       </div>
       <NorthlinePageV8

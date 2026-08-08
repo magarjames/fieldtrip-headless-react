@@ -44,6 +44,7 @@ export function FieldtripPageV8({
   shopHref = "#grid",
   shopText,
   onShopClick,
+  showShopAction = true,
 }: {
   theme?: "bright" | "dark";
   /** fixed layer rendered behind the whole page (v5's fold gradient) */
@@ -57,6 +58,8 @@ export function FieldtripPageV8({
   shopHref?: string;
   shopText?: React.ReactNode;
   onShopClick?: () => void;
+  /** Hide the local hero action when a route provides a persistent shop control. */
+  showShopAction?: boolean;
 }) {
   useReveal();
   const [cat, setCat] = useState<string>("all");
@@ -254,7 +257,7 @@ export function FieldtripPageV8({
           {theme === "dark" ? " · After dark" : ""}
         </span>
         <span className="flex-1" />
-        <div className="absolute right-4 top-4 z-50 sm:right-6 lg:right-8">
+        {showShopAction && <div className="absolute right-4 top-4 z-50 sm:right-6 lg:right-8">
           {onShopClick ? (
             <button
               type="button"
@@ -297,7 +300,7 @@ export function FieldtripPageV8({
               {shopText ?? `Shop ${PIECE_COUNT}`}
             </a>
           )}
-        </div>
+        </div>}
       </header>
 
       {/* ---- hero: the fit is the hero, not a flat lay --------------------- */}
