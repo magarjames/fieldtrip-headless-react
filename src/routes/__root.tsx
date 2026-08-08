@@ -76,7 +76,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { title: "Count Club — Stock & waste people" },
       { name: "description", content: "Weekly stock, waste and labour reporting for independent restaurants. You count once a week. We hand back one page that says where the money went." },
       { property: "og:title", content: "Count Club — Stock & waste people" },
@@ -122,4 +122,3 @@ function RootComponent() {
     </QueryClientProvider>
   );
 }
-

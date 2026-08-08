@@ -453,7 +453,9 @@
 
   .northline--continuation.northline--split-navigation .nl-collection-intro {
     transform: none;
-    margin-left: max(17.5rem, 25vw);
+    width: auto;
+    margin-inline: 0;
+    margin-left: clamp(14rem, 22vw, 26rem);
     margin-right: auto;
   }
 
@@ -2072,6 +2074,69 @@
 
   .nl-bag-drawer {
     width: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  .nl-collection {
+    padding-block: 4.25rem 5.5rem;
+  }
+
+  .nl-continuation-nav,
+  .nl-filter-row {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+  }
+
+  .nl-continuation-nav::-webkit-scrollbar,
+  .nl-filter-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nl-continuation-nav {
+    margin-bottom: 2rem;
+  }
+
+  .nl-continuation-nav a,
+  .nl-filter-row button {
+    flex: 0 0 auto;
+  }
+
+  .nl-filter-row button,
+  .nl-product-actions button,
+  .nl-text-action {
+    min-height: 2.75rem;
+  }
+
+  .nl-materials--video {
+    min-height: 100svh;
+    align-content: end;
+    padding-top: max(5rem, env(safe-area-inset-top));
+    padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  }
+
+  .nl-system--scroll-story {
+    min-height: 205svh;
+  }
+
+  .nl-system--scroll-story .nl-system-frame {
+    padding-block: max(3.75rem, env(safe-area-inset-top)) 1.25rem;
+  }
+
+  .nl-system--scroll-story .nl-system-image,
+  .nl-system--scroll-story .nl-system-image img {
+    height: 31svh;
+  }
+
+  .nl-film-step-sequence {
+    min-height: 350svh;
+  }
+
+  .nl-film-frame {
+    padding-top: max(1.25rem, env(safe-area-inset-top));
+    padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
   }
 }
 

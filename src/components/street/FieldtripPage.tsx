@@ -136,6 +136,57 @@ export function FieldtripPage({
         @media (min-width:1600px){
           .ft .ft-figure-edge{ transform:translateX(clamp(1.5rem,calc(33.55vw - 512.8px),8rem)) }
         }
+        @media (max-width:767px){
+          .ft.ft--landing .ft-hero{
+            min-height:calc(100svh - 4.75rem);
+            grid-template-rows:auto auto auto auto;
+            align-items:start;
+            gap:1.15rem;
+            padding-top:.75rem;
+            padding-bottom:1.25rem
+          }
+          .ft.ft--landing .ft-hero > .min-w-0{ display:contents }
+          .ft.ft--landing .ft-hero h1{ order:1 }
+          .ft.ft--landing .ft-figure{ order:2 }
+          .ft.ft--landing .ft-hero-description{ order:3 }
+          .ft.ft--landing .ft-hero-actions{ order:4 }
+          .ft.ft--landing .ft-hero h1{
+            font-size:clamp(2.7rem,12.5vw,4.5rem);
+            line-height:.88
+          }
+          .ft.ft--landing .ft-hero-description{
+            max-width:38ch;
+            margin-top:0;
+            font-size:.94rem;
+            line-height:1.45
+          }
+          .ft.ft--landing .ft-hero-actions{ margin-top:0 }
+          .ft.ft--landing .ft-figure,
+          .ft.ft--landing .ft-figure-edge{
+            width:100%;
+            transform:none
+          }
+          .ft.ft--landing .ft-chibi-stage{
+            height:clamp(18rem,40svh,21rem);
+            aspect-ratio:auto
+          }
+          .ft.ft--landing .ft-fit-controls{
+            flex-wrap:nowrap;
+            gap:.45rem;
+            margin-inline:-1rem;
+            padding-inline:1rem;
+            overflow-x:auto;
+            overscroll-behavior-inline:contain;
+            scrollbar-width:none
+          }
+          .ft.ft--landing .ft-fit-controls::-webkit-scrollbar{ display:none }
+          .ft.ft--landing .ft-fit-controls .chip{ flex:0 0 auto }
+          .ft.ft--landing .ft-fit-description{
+            margin-top:.6rem;
+            min-height:2.8em;
+            font-size:.6rem
+          }
+        }
         @media (prefers-reduced-motion:reduce){
           .ft *{ animation:none !important; transition-duration:.01ms !important }
           .ft .rv{ opacity:1; transform:none }

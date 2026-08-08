@@ -440,21 +440,29 @@ export function NorthlinePage({
 
       const travel = Math.max(1, section.offsetHeight - window.innerHeight);
       const progress = clamp(-section.getBoundingClientRect().top / travel);
+      const mobileStory = window.innerWidth <= 767;
+      // Phones enter the sticky scene with a visible first beat instead of an
+      // empty clay panel. The remaining words still scrub through the section.
+      const storyProgress = mobileStory ? 0.17 + progress * 0.83 : progress;
 
       words.forEach((word, index) => {
-        const reveal = smoothstep(0.025 + index * 0.068, 0.15 + index * 0.068, progress);
+        const reveal = smoothstep(
+          0.025 + index * 0.068,
+          0.15 + index * 0.068,
+          storyProgress,
+        );
         word.style.opacity = reveal.toFixed(3);
         word.style.transform = `translate3d(0, ${(0.82 * (1 - reveal)).toFixed(3)}em, 0)`;
         word.style.filter = `blur(${(8 * (1 - reveal)).toFixed(2)}px)`;
       });
 
-      const detailReveal = smoothstep(0.5, 0.69, progress);
+      const detailReveal = smoothstep(0.5, 0.69, storyProgress);
       if (details) {
         details.style.opacity = detailReveal.toFixed(3);
         details.style.transform = `translate3d(0, ${(28 * (1 - detailReveal)).toFixed(2)}px, 0)`;
       }
 
-      const imageReveal = smoothstep(0.08, 0.58, progress);
+      const imageReveal = smoothstep(0.08, 0.58, storyProgress);
       if (image) {
         image.style.opacity = (0.18 + imageReveal * 0.82).toFixed(3);
         image.style.transform = `translate3d(${(52 * (1 - imageReveal)).toFixed(2)}px, 0, 0) scale(${(1.07 - imageReveal * 0.07).toFixed(4)})`;

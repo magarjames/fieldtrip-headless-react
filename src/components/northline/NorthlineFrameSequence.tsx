@@ -68,8 +68,9 @@ export function NorthlineFrameSequence({
     const cache = new Map<number, CachedFrame>();
     const blobUrls = new Map<number, string>();
     const blobRequests = new Map<number, Promise<void>>();
-    const maxDecodedFrames = 32;
-    const preloadRadius = 10;
+    const mobileSequence = window.innerWidth <= 767;
+    const maxDecodedFrames = mobileSequence ? 16 : 32;
+    const preloadRadius = mobileSequence ? 4 : 10;
     let active = false;
     let disposed = false;
     let currentProgress = 0;
@@ -216,6 +217,9 @@ export function NorthlineFrameSequence({
     const warmSequence = async () => {
       if (warmupStarted) return;
       warmupStarted = true;
+      // Loading all 300 frames up front is wasteful on a phone. The smaller
+      // prime window above follows the scroll position and keeps memory bounded.
+      if (mobileSequence) return;
 
       for (let start = 0; start < frameCount && !disposed; start += 6) {
         const batch = Array.from(
@@ -276,7 +280,7 @@ export function NorthlineFrameSequence({
         primeWindow(Math.round(targetProgress * (frameCount - 1)));
         void warmSequence();
       },
-      { rootMargin: "180% 0px" },
+      { rootMargin: mobileSequence ? "80% 0px" : "180% 0px" },
     );
 
     const onResize = () => {

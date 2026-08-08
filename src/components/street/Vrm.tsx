@@ -71,6 +71,55 @@ export function useModelAvailable(urls: readonly string[]): ModelProbe {
 
 type Loaded = { kind: "vrm"; vrm: VRM } | { kind: "glb"; scene: THREE.Group };
 
+const modelCache = new Map<string, Promise<Loaded>>();
+
+function loadFigureModel(url: string) {
+  const cached = modelCache.get(url);
+  if (cached) return cached;
+
+  const request = new Promise<Loaded>((resolve, reject) => {
+    const loader = new GLTFLoader();
+    loader.register((parser) => new VRMLoaderPlugin(parser));
+    loader.load(
+      url,
+      (gltf) => {
+        const vrm = gltf.userData.vrm as VRM | undefined;
+        if (vrm) {
+          VRMUtils.rotateVRM0(vrm);
+          VRMUtils.removeUnnecessaryVertices(vrm.scene);
+          VRMUtils.combineSkeletons(vrm.scene);
+          vrm.scene.traverse((object) => {
+            object.frustumCulled = false;
+          });
+          resolve({ kind: "vrm", vrm });
+          return;
+        }
+
+        const scene = gltf.scene;
+        const size = new THREE.Box3().setFromObject(scene).getSize(new THREE.Vector3());
+        if (size.y > 0) scene.scale.setScalar(FIGURE_HEIGHT / size.y);
+        scene.traverse((object) => {
+          object.frustumCulled = false;
+        });
+        resolve({ kind: "glb", scene });
+      },
+      undefined,
+      reject,
+    );
+  }).catch((error) => {
+    modelCache.delete(url);
+    throw error;
+  });
+
+  modelCache.set(url, request);
+  return request;
+}
+
+/** Start downloading and parsing before the figure mounts. */
+export function preloadFigureModel(url: string) {
+  void loadFigureModel(url).catch(() => undefined);
+}
+
 type Props = {
   url?: string;
   /** hide these mesh names, which is how the outfit swap survives a rig */
@@ -92,39 +141,14 @@ export function VrmFigure({ url = VRM_URL, hide = [], still, onPick, onFail }: P
 
   useEffect(() => {
     let live = true;
-    const loader = new GLTFLoader();
-    loader.register((parser) => new VRMLoaderPlugin(parser));
-
-    loader.load(
-      url,
-      (gltf) => {
-        if (!live) return;
-        const vrm = gltf.userData.vrm as VRM | undefined;
-        if (vrm) {
-          // VRM 0.x faces the opposite way to 1.0; this normalises both
-          VRMUtils.rotateVRM0(vrm);
-          // trim what we will never draw, and merge skeletons for fewer draws
-          VRMUtils.removeUnnecessaryVertices(vrm.scene);
-          VRMUtils.combineSkeletons(vrm.scene);
-          vrm.scene.traverse((o) => {
-            o.frustumCulled = false;
-          });
-          setModel({ kind: "vrm", vrm });
-          return;
-        }
-        // no VRM extension: treat it as a plain sculpted model. Generators
-        // export at arbitrary scales, so normalise height to the figure slot.
-        const scene = gltf.scene;
-        const size = new THREE.Box3().setFromObject(scene).getSize(new THREE.Vector3());
-        if (size.y > 0) scene.scale.setScalar(FIGURE_HEIGHT / size.y);
-        scene.traverse((o) => {
-          o.frustumCulled = false;
-        });
-        setModel({ kind: "glb", scene });
-      },
-      undefined,
-      () => live && onFail("could not parse the model file"),
-    );
+    setModel(null);
+    void loadFigureModel(url)
+      .then((loaded) => {
+        if (live) setModel(loaded);
+      })
+      .catch(() => {
+        if (live) onFail("could not parse the model file");
+      });
 
     return () => {
       live = false;
@@ -205,10 +229,10 @@ export function VrmFigure({ url = VRM_URL, hide = [], still, onPick, onFail }: P
       }}
     >
       {model.kind === "vrm" ? (
-        <primitive object={model.vrm.scene} />
+        <primitive object={model.vrm.scene} dispose={null} />
       ) : (
         <group ref={glbRoot} position={[0, -0.12, 0]}>
-          <primitive object={model.scene} />
+          <primitive object={model.scene} dispose={null} />
         </group>
       )}
     </Center>

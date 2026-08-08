@@ -3,7 +3,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { ContactShadows, Environment, Lightformer, RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
 import { Stage, useReducedMotion } from "@/components/world/stage";
-import { VrmFigure, useModelAvailable, VRM_URL } from "./Vrm";
+import { preloadFigureModel, VrmFigure, useModelAvailable, VRM_URL } from "./Vrm";
 import { fabricTexture, disposeFabrics, type Fabric } from "./textures";
 import { activeOutfit } from "./outfitSync";
 
@@ -592,6 +592,8 @@ export function Figure({
     replicas pass them in and those join the probe. */
 const GLB_CANDIDATES = OUTFITS.map((o) => o.model);
 
+if (typeof window !== "undefined") preloadFigureModel(GLB_CANDIDATES[0]);
+
 export function ChibiHero({
   fallbackSrc,
   vrmUrls,
@@ -643,15 +645,28 @@ export function ChibiHero({
     setVrmBroken(true);
   }, []);
 
-  // warm the http cache for the other fits' models so the first outfit swap
-  // does not wait on a 15MB download
+  // Alternate fits are large. Warm them one at a time when the browser is
+  // idle so they never compete with the model visible in the opening frame.
   useEffect(() => {
     if (modelProbe.state !== "ready") return;
-    modelProbe.present.forEach((u) => {
-      fetch(u)
-        .then((r) => r.arrayBuffer())
-        .catch(() => {});
-    });
+    let cancelled = false;
+    const alternates = [...modelProbe.present].filter((url) => url !== GLB_CANDIDATES[0]);
+    const warmAlternates = async () => {
+      for (const url of alternates) {
+        if (cancelled) return;
+        try {
+          const response = await fetch(url, { cache: "force-cache" });
+          await response.arrayBuffer();
+        } catch {
+          // A missing optional model falls through to the procedural figure.
+        }
+      }
+    };
+    const idleId = window.requestIdleCallback(() => void warmAlternates(), { timeout: 4000 });
+    return () => {
+      cancelled = true;
+      window.cancelIdleCallback(idleId);
+    };
   }, [modelProbe]);
 
   return (
@@ -659,8 +674,8 @@ export function ChibiHero({
       <div
         className={
           layout === "stage"
-            ? "relative h-[min(74vh,880px)] w-full"
-            : "relative aspect-[3/4] w-full overflow-hidden"
+            ? "ft-chibi-stage relative h-[min(74vh,880px)] w-full"
+            : "ft-chibi-stage relative aspect-[3/4] w-full overflow-hidden"
         }
       >
         <Stage

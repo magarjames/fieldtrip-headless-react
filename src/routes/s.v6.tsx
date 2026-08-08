@@ -6,11 +6,21 @@ import { pageMeta } from "@/components/northline/parts";
 
 export const Route = createFileRoute("/s/v6")({
   component: FieldtripNorthlinePage,
-  head: () =>
-    pageMeta(
+  head: () => ({
+    ...pageMeta(
       "Fieldtrip x Northline | Dress for the long way home",
       "A playful Fieldtrip fitting room opening into Northline utility layers, materials, and motion.",
     ),
+    links: [
+      {
+        rel: "preload",
+        href: "/fieldtrip/mascot-euro.glb",
+        as: "fetch",
+        type: "model/gltf-binary",
+        fetchPriority: "high",
+      },
+    ],
+  }),
 });
 
 function FieldtripNorthlinePage() {
