@@ -1183,7 +1183,8 @@
   -webkit-backdrop-filter: blur(32px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 16px 64px rgba(0, 0, 0, 0.3);
-  color: var(--nl-white);
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
   border-radius: 24px;
   overflow: hidden;
   width: min(100%, 55rem);
@@ -1272,13 +1273,14 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.5);
   margin-bottom: 0.75rem;
 }
 
 .nl-dialog-option-value {
   font-size: 1.1rem;
   font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .nl-dialog-glass-add {
@@ -1323,15 +1325,25 @@
   padding: clamp(2rem, 4vw, 3rem) clamp(1.4rem, 3.7vw, 3.5rem) 2rem;
 }
 
+.nl-dialog-group {
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0 0 0.5rem;
+}
+
 .nl-dialog-glass-left h2 {
-  margin-top: 0.5rem;
+  margin-top: 0;
   font-size: clamp(2rem, 3vw, 3.25rem);
   line-height: 0.9;
+  color: var(--nl-white);
 }
 
 .nl-dialog-description {
   margin: 0 0 1.5rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.7);
   font-size: 1rem;
 }
 
