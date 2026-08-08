@@ -46,6 +46,8 @@ export function NorthlinePageV8({
   splitNavigation?: boolean;
   /** Lift a soft fabric-like edge over the previous scene as the collection arrives. */
   risingEdge?: boolean;
+  materialsCopyVariant?: "utility" | "streetwear";
+  materialsVideoSrc?: string;
 } = {}) {
   const [activeFilter, setActiveFilter] = useState<string>("All");
   const deferredFilter = useDeferredValue(activeFilter);
@@ -66,6 +68,90 @@ export function NorthlinePageV8({
   const systemRef = useRef<HTMLElement>(null);
   const materialsEdgeMotionRef = useRef<NorthlineEdgeMotion>({ progress: 0 });
   const systemEdgeMotionRef = useRef<NorthlineEdgeMotion>({ progress: 0 });
+  const materialsVideoRef = useRef<HTMLVideoElement>(null);
+  const [materialsVideoBlocked, setMaterialsVideoBlocked] = useState(false);
+
+  const materialsStory =
+    materialsCopyVariant === "streetwear"
+      ? {
+          title: "Streetwear for",
+          titleAccent: "after dark.",
+          intro:
+            "Graphic layers, relaxed proportions, and finishing details that turn separate pieces into a complete look.",
+          points: [
+            {
+              title: "Graphic layers",
+              body: "Statement tees and outer layers that give the outfit its point of view.",
+            },
+            {
+              title: "Relaxed silhouettes",
+              body: "Loose lines and wide fits made for stacking without losing their shape.",
+            },
+            {
+              title: "Finish the look",
+              body: "Metal details and accessories that pull every layer in the same direction.",
+            },
+          ],
+        }
+      : {
+          title: "Fabric does",
+          titleAccent: "the talking.",
+          intro:
+            "The collection begins with texture, weight, and the small parts that stay useful after the first wear.",
+          points: [
+            {
+              title: "Dense cotton",
+              body: "Soft enough for a long day. Structured enough to keep its line.",
+            },
+            {
+              title: "Ripstop nylon",
+              body: "A lightweight answer for unpredictable weather and overpacked bags.",
+            },
+            {
+              title: "Plain hardware",
+              body: "Zips and closures that do their work without becoming the whole look.",
+            },
+          ],
+        };
+
+  useEffect(() => {
+    const video = materialsVideoRef.current;
+    if (!video || !materialsVideoSrc) return;
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let isVisible = false;
+
+    const syncPlayback = () => {
+      if (reducedMotion.matches || document.hidden || !isVisible) {
+        video.pause();
+        if (reducedMotion.matches) setMaterialsVideoBlocked(false);
+        return;
+      }
+
+      void video.play().catch(() => {
+        setMaterialsVideoBlocked(true);
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        syncPlayback();
+      },
+      { threshold: 0.08 },
+    );
+
+    observer.observe(video);
+    reducedMotion.addEventListener("change", syncPlayback);
+    document.addEventListener("visibilitychange", syncPlayback);
+
+    return () => {
+      observer.disconnect();
+      reducedMotion.removeEventListener("change", syncPlayback);
+      document.removeEventListener("visibilitychange", syncPlayback);
+      video.pause();
+    };
+  }, [materialsVideoSrc]);
 
   // Fetch real products from Shopify
   useEffect(() => {
@@ -531,8 +617,12 @@ export function NorthlinePageV8({
           </div>
         </section>
 
-        <section ref={materialsRef} id="materials" className="nl-materials">
-          {risingEdge && (
+        <section
+          ref={materialsRef}
+          id="materials"
+          className={`nl-materials${materialsVideoSrc ? " nl-materials--video" : ""}`}
+        >
+          {risingEdge && !materialsVideoSrc && (
             <NorthlineScrollEdge
               motion={materialsEdgeMotionRef}
               colour="#0f0f1c"
@@ -540,36 +630,68 @@ export function NorthlinePageV8({
               className="nl-section-edge nl-materials-edge"
             />
           )}
-          <figure className="nl-material-image nl-reveal">
-            <img
-              src={materials}
-              alt="Close textile study of cotton, ripstop, lime lining, and zipper hardware."
-              loading="lazy"
-              decoding="async"
-            />
-          </figure>
+          {materialsVideoSrc ? (
+            <>
+              <svg className="nl-material-video-mask-defs" aria-hidden="true">
+                <defs>
+                  <clipPath id="nl-material-video-flow-clip" clipPathUnits="objectBoundingBox">
+                    <path
+                      className="nl-material-video-flow-path"
+                      d="M0 .068 C.07 .035 .12 .084 .19 .052 C.27 .022 .33 .088 .42 .049 C.51 .026 .58 .082 .67 .045 C.76 .02 .84 .075 .92 .041 C.96 .03 .98 .054 1 .05 L1 1 L0 1 Z"
+                    />
+                  </clipPath>
+                </defs>
+              </svg>
+              <div className="nl-material-video" aria-hidden="true">
+                <video
+                  ref={materialsVideoRef}
+                  src={materialsVideoSrc}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                  onPlaying={() => setMaterialsVideoBlocked(false)}
+                />
+              </div>
+              {materialsVideoBlocked && (
+                <button
+                  type="button"
+                  className="nl-material-video-play"
+                  onClick={() => {
+                    const video = materialsVideoRef.current;
+                    if (!video) return;
+                    video.muted = true;
+                    void video.play().then(() => setMaterialsVideoBlocked(false));
+                  }}
+                >
+                  Play motion
+                </button>
+              )}
+            </>
+          ) : (
+            <figure className="nl-material-image nl-reveal">
+              <img
+                src={materials}
+                alt="Close textile study of cotton, ripstop, lime lining, and zipper hardware."
+                loading="lazy"
+                decoding="async"
+              />
+            </figure>
+          )}
           <div className="nl-material-copy nl-reveal">
             <h2>
-              Fabric does
-              <span>the talking.</span>
+              {materialsStory.title}
+              <span>{materialsStory.titleAccent}</span>
             </h2>
-            <p>
-              The collection begins with texture, weight, and the small parts that stay useful after
-              the first wear.
-            </p>
+            <p>{materialsStory.intro}</p>
             <div className="nl-material-list">
-              <article>
-                <h3>Dense cotton</h3>
-                <p>Soft enough for a long day. Structured enough to keep its line.</p>
-              </article>
-              <article>
-                <h3>Ripstop nylon</h3>
-                <p>A lightweight answer for unpredictable weather and overpacked bags.</p>
-              </article>
-              <article>
-                <h3>Plain hardware</h3>
-                <p>Zips and closures that do their work without becoming the whole look.</p>
-              </article>
+              {materialsStory.points.map((point) => (
+                <article key={point.title}>
+                  <h3>{point.title}</h3>
+                  <p>{point.body}</p>
+                </article>
+              ))}
             </div>
           </div>
         </section>
