@@ -59,7 +59,7 @@ export function FieldtripPageV8({
   onShopClick?: () => void;
 }) {
   useReveal();
-  const [cat, setCat] = useState<CatId | "all">("all");
+  const [cat, setCat] = useState<string>("all");
   const [shopifyProducts, setShopifyProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<{ id: string; variantId: string; quantity: number }[]>([]);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
@@ -118,6 +118,7 @@ export function FieldtripPageV8({
     }
   });
 
+  const dynamicCats = Array.from(new Set(livePieces.map(p => p.cat).filter(Boolean)));
   const shown = cat === "all" ? livePieces : livePieces.filter((p) => p.cat === cat);
   const byId = (id: string) => livePieces.find((p) => p.id === id);
 
@@ -423,15 +424,15 @@ export function FieldtripPageV8({
             </div>
 
             <div className="mt-6 flex flex-wrap gap-2" role="group" aria-label="Filter by category">
-              {(["all", ...CATS.map((c) => c.id)] as const).map((c) => (
+              {["all", ...dynamicCats].map((c) => (
                 <button
                   key={c}
                   type="button"
                   className="chip"
                   aria-pressed={cat === c}
-                  onClick={() => setCat(c as CatId | "all")}
+                  onClick={() => setCat(c)}
                 >
-                  {c === "all" ? "Everything" : CATS.find((x) => x.id === c)?.label ?? c}
+                  {c === "all" ? "Everything" : c.charAt(0).toUpperCase() + c.slice(1)}
                 </button>
               ))}
             </div>
