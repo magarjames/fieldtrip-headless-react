@@ -132,14 +132,12 @@ export function NorthlinePageV8({
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let animationFrame = 0;
-    let cachedIntroBaseLeft: number | null = null;
     let cachedLinkWidths: number[] | null = null;
 
     const clearMotionStyles = () => {
       nav.classList.remove("is-scroll-motion-ready");
       nav.classList.remove("is-docked");
       nav.style.removeProperty("--nl-nav-progress");
-      intro.style.removeProperty("transform");
       edge?.style.removeProperty("transform");
       edgeMotionRef.current.progress = 0;
       links.forEach((link) => link.style.removeProperty("transform"));
@@ -179,21 +177,12 @@ export function NorthlinePageV8({
       const entryTop = Math.min(54, Math.max(42, window.innerHeight * 0.052));
       const railTop = Math.min(176, Math.max(112, window.innerWidth * 0.11));
       const railBottom = railTop + links.length * 58;
-      
-      if (cachedIntroBaseLeft === null) {
-        const introTransform = new DOMMatrixReadOnly(window.getComputedStyle(intro).transform);
-        cachedIntroBaseLeft = intro.getBoundingClientRect().left - introTransform.m41;
-      }
-      const introTargetLeft = Math.max(280, window.innerWidth * 0.25);
-      const textTravel = Math.max(0, cachedIntroBaseLeft - introTargetLeft);
-
       nav.classList.toggle("is-docked", collectionTop <= 0 && collectionBottom > railBottom);
       edgeMotionRef.current.progress = easedEdgeProgress;
       edge?.style.setProperty(
         "transform",
         `translate3d(0, ${(-edgeLift * easedEdgeProgress).toFixed(2)}px, 0)`,
       );
-      intro.style.transform = `translate3d(${(-textTravel * easedProgress).toFixed(2)}px, 0, 0)`;
 
       let horizontalOffset = 0;
       links.forEach((link, index) => {
@@ -215,7 +204,6 @@ export function NorthlinePageV8({
     };
 
     const handleResize = () => {
-      cachedIntroBaseLeft = null;
       cachedLinkWidths = null;
       scheduleNavigationUpdate();
     };
