@@ -30,6 +30,7 @@ function FieldtripNorthlinePage() {
         <FieldtripPage
           backdrop={<FoldBackdrop />}
           figurePlacement="edge"
+          heroVariant="destinations"
           content="landing"
           primaryHref="#collection"
           secondaryHref="#materials"

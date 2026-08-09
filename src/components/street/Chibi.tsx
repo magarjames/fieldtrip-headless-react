@@ -598,6 +598,9 @@ export function ChibiHero({
   fallbackSrc,
   vrmUrls,
   layout = "framed",
+  outfitIndex,
+  onOutfitChange,
+  showControls = true,
 }: {
   fallbackSrc: string;
   /** one .vrm replica per outfit, in OUTFITS order; a present replica
@@ -605,13 +608,30 @@ export function ChibiHero({
   vrmUrls?: readonly string[];
   /** "framed" is the bordered 3:4 card; "stage" is an unframed full-bleed
       block for the figure-shop pages */
-  layout?: "framed" | "stage";
+  layout?: "framed" | "stage" | "map";
+  /** Optional controlled outfit index for destination-led hero layouts. */
+  outfitIndex?: number;
+  onOutfitChange?: (index: number) => void;
+  showControls?: boolean;
 }) {
-  const [i, setI] = useState(0); // open on Gallery Day: no cap, no shades, the face carries it
+  const [internalIndex, setInternalIndex] = useState(0);
+  const controlledIndex =
+    typeof outfitIndex === "number"
+      ? Math.max(0, Math.min(OUTFITS.length - 1, outfitIndex))
+      : undefined;
+  const i = controlledIndex ?? internalIndex;
   const reduced = useReducedMotion();
   const outfit = OUTFITS[i];
 
-  const next = () => setI((v) => (v + 1) % OUTFITS.length);
+  const selectOutfit = useCallback(
+    (index: number) => {
+      if (controlledIndex === undefined) setInternalIndex(index);
+      onOutfitChange?.(index);
+    },
+    [controlledIndex, onOutfitChange],
+  );
+
+  const next = useCallback(() => selectOutfit((i + 1) % OUTFITS.length), [i, selectOutfit]);
 
   // publish the active fit so the v4 backdrop can retint itself per frame
   useEffect(() => {
@@ -670,12 +690,14 @@ export function ChibiHero({
   }, [modelProbe]);
 
   return (
-    <div>
+    <div className={layout === "map" ? "h-full" : undefined}>
       <div
         className={
           layout === "stage"
             ? "ft-chibi-stage relative h-[min(74vh,880px)] w-full"
-            : "ft-chibi-stage relative aspect-[3/4] w-full overflow-hidden"
+            : layout === "map"
+              ? "ft-chibi-stage relative h-full w-full"
+              : "ft-chibi-stage relative aspect-[3/4] w-full overflow-hidden"
         }
       >
         <Stage
@@ -685,7 +707,9 @@ export function ChibiHero({
           camera={
             layout === "stage"
               ? { position: [0, 0.3, 4.6], fov: 36 }
-              : { position: [0, 0.05, 4.9], fov: 38 }
+              : layout === "map"
+                ? { position: [0, 0.12, 8], fov: 34 }
+                : { position: [0, 0.05, 4.9], fov: 38 }
           }
           dpr={[1, 2]}
           antialias
@@ -753,7 +777,7 @@ export function ChibiHero({
               stage gets a deeper pool instead. */}
           <ContactShadows
             position={[0, -1.58, 0]}
-            opacity={layout === "stage" ? 0.55 : 0.28}
+            opacity={layout === "stage" ? 0.55 : layout === "map" ? 0.22 : 0.28}
             scale={4.4}
             blur={2.6}
             far={2.2}
@@ -762,6 +786,7 @@ export function ChibiHero({
           />
           {modelUrl ? (
             <VrmFigure
+              key={modelUrl}
               url={modelUrl}
               still={reduced}
               onPick={next}
@@ -790,16 +815,23 @@ export function ChibiHero({
       </div>
 
       {/* real controls, so the model is never the only way through */}
-      <div className="ft-fit-controls mt-3 flex flex-wrap items-center gap-2">
-        <button className="chip" onClick={next}>
-          Change the fit
-        </button>
-        {OUTFITS.map((o, n) => (
-          <button key={o.fitId} className="chip" aria-pressed={n === i} onClick={() => setI(n)}>
-            {o.name}
+      {showControls && (
+        <div className="ft-fit-controls mt-3 flex flex-wrap items-center gap-2">
+          <button className="chip" onClick={next}>
+            Change the fit
           </button>
-        ))}
-      </div>
+          {OUTFITS.map((o, n) => (
+            <button
+              key={o.fitId}
+              className="chip"
+              aria-pressed={n === i}
+              onClick={() => selectOutfit(n)}
+            >
+              {o.name}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* every fit takes two lines, whether its description wraps or not:
           Gallery Day's short text no longer pulls the layout up a line when
@@ -808,13 +840,15 @@ export function ChibiHero({
           the whole hero (the tagline shares an items-end row with this
           column) by a few pixels on the short fits. mt-4 gives it air from
           the chips */}
-      <p
-        className="ft-fit-description lbl mt-4 min-h-[2.8em]"
-        aria-live="polite"
-        style={{ lineHeight: 1.4, color: "var(--dim)" }}
-      >
-        Wearing: {outfit.name} · {outfit.wears}
-      </p>
+      {showControls && (
+        <p
+          className="ft-fit-description lbl mt-4 min-h-[2.8em]"
+          aria-live="polite"
+          style={{ lineHeight: 1.4, color: "var(--dim)" }}
+        >
+          Wearing: {outfit.name} · {outfit.wears}
+        </p>
+      )}
     </div>
   );
 }
