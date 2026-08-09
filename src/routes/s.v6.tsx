@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { FieldtripPage } from "@/components/street/FieldtripPage";
-import { FoldBackdrop } from "@/components/street/FoldBackdrop";
 import { NorthlinePage } from "@/components/northline/NorthlinePage";
 import { pageMeta } from "@/components/northline/parts";
 
@@ -28,7 +27,6 @@ function FieldtripNorthlinePage() {
     <>
       <div id="fieldtrip-top">
         <FieldtripPage
-          backdrop={<FoldBackdrop />}
           figurePlacement="edge"
           heroVariant="destinations"
           content="landing"

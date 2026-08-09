@@ -59,9 +59,12 @@ export function DestinationDiorama({ primaryHref }: { primaryHref: string }) {
     const stage = stageRef.current;
     if (!stage) return;
 
-    const gallery = smoothstep(0.03, 0.2, progress);
-    const offDuty = smoothstep(0.31, 0.49, progress);
-    const rest = smoothstep(0.6, 0.79, progress);
+    const galleryIn = smoothstep(0.03, 0.2, progress);
+    const offDutyIn = smoothstep(0.31, 0.49, progress);
+    const restIn = smoothstep(0.6, 0.79, progress);
+    const gallery = galleryIn * (1 - offDutyIn);
+    const offDuty = offDutyIn * (1 - restIn);
+    const rest = restIn;
     const galleryRoute = smoothstep(0.08, 0.25, progress);
     const offDutyRoute = smoothstep(0.37, 0.54, progress);
     const restRoute = smoothstep(0.66, 0.84, progress);

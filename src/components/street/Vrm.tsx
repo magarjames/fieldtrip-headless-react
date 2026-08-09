@@ -140,14 +140,12 @@ export function VrmFigure({ url = VRM_URL, hide = [], still, onPick, onFail }: P
 
   useEffect(() => {
     let live = true;
-    setModel(null);
     void loadFigureModel(url)
       .then((loaded) => {
         if (!live) return;
-        // R3F stores renderer metadata on mounted Object3D instances. Reusing
-        // a cached scene after an outfit switch makes the renderer treat that
-        // stale object as an update and can crash on the third route change.
-        // Clone only the scene graph; geometry and materials remain shared.
+        // Keep the current figure mounted while the next large model parses.
+        // R3F stores renderer metadata on mounted Object3D instances, so clone
+        // only the incoming scene graph; geometry and materials remain shared.
         setModel(
           loaded.kind === "glb" ? { kind: "glb", scene: cloneSkeleton(loaded.scene) } : loaded,
         );

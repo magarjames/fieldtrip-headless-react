@@ -711,7 +711,7 @@ export function ChibiHero({
                 ? { position: [0, 0.12, 8], fov: 34 }
                 : { position: [0, 0.05, 4.9], fov: 38 }
           }
-          dpr={[1, 2]}
+          dpr={layout === "map" ? [1, 1.35] : [1, 2]}
           antialias
           shadows
           /* no still while the model loads: the space stays empty until the
@@ -733,7 +733,7 @@ export function ChibiHero({
               Environment presets fetch from a CDN, and this page has no other
               external asset dependency, so the env map is rendered in-scene:
               soft box reflections in the clearcoat, no network. */}
-          <Environment resolution={256}>
+          <Environment resolution={layout === "map" ? 128 : 256}>
             <Lightformer
               form="rect"
               intensity={2.4}
@@ -766,7 +766,7 @@ export function ChibiHero({
             position={[2.6, 4.4, 3.2]}
             intensity={2.1}
             castShadow
-            shadow-mapSize={[1024, 1024]}
+            shadow-mapSize={layout === "map" ? [512, 512] : [1024, 1024]}
             shadow-bias={-0.0012}
             shadow-normalBias={0.02}
           />
@@ -781,12 +781,11 @@ export function ChibiHero({
             scale={4.4}
             blur={2.6}
             far={2.2}
-            resolution={512}
+            resolution={layout === "map" ? 256 : 512}
             color="#000000"
           />
           {modelUrl ? (
             <VrmFigure
-              key={modelUrl}
               url={modelUrl}
               still={reduced}
               onPick={next}
