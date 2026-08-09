@@ -446,11 +446,7 @@ export function NorthlinePage({
       const storyProgress = mobileStory ? 0.17 + progress * 0.83 : progress;
 
       words.forEach((word, index) => {
-        const reveal = smoothstep(
-          0.025 + index * 0.068,
-          0.15 + index * 0.068,
-          storyProgress,
-        );
+        const reveal = smoothstep(0.025 + index * 0.068, 0.15 + index * 0.068, storyProgress);
         word.style.opacity = reveal.toFixed(3);
         word.style.transform = `translate3d(0, ${(0.82 * (1 - reveal)).toFixed(3)}em, 0)`;
         word.style.filter = `blur(${(8 * (1 - reveal)).toFixed(2)}px)`;
@@ -717,11 +713,10 @@ export function NorthlinePage({
                 <video
                   ref={materialsVideoRef}
                   src={materialsVideoSrc}
-                  autoPlay
                   muted
                   loop
                   playsInline
-                  preload="auto"
+                  preload="metadata"
                   onPlaying={() => setMaterialsVideoBlocked(false)}
                 />
               </div>

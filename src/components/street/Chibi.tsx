@@ -620,6 +620,24 @@ export function ChibiHero({
   const i = controlledIndex ?? internalIndex;
   const reduced = useReducedMotion();
   const outfit = OUTFITS[i];
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [stageVisible, setStageVisible] = useState(false);
+
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+
+    if (!("IntersectionObserver" in window)) {
+      setStageVisible(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(([entry]) => setStageVisible(entry.isIntersecting), {
+      rootMargin: "100% 0px",
+    });
+    observer.observe(stage);
+    return () => observer.disconnect();
+  }, []);
 
   const selectOutfit = useCallback(
     (index: number) => {
@@ -666,7 +684,7 @@ export function ChibiHero({
   // Alternate fits are large. Warm them one at a time when the browser is
   // idle so they never compete with the model visible in the opening frame.
   useEffect(() => {
-    if (modelProbe.state !== "ready") return;
+    if (!stageVisible || modelProbe.state !== "ready") return;
     let cancelled = false;
     const alternates = [...modelProbe.present].filter((url) => url !== GLB_CANDIDATES[0]);
     const warmAlternates = async () => {
@@ -685,11 +703,12 @@ export function ChibiHero({
       cancelled = true;
       window.cancelIdleCallback(idleId);
     };
-  }, [modelProbe]);
+  }, [modelProbe, stageVisible]);
 
   return (
     <div className={layout === "map" ? "h-full" : undefined}>
       <div
+        ref={stageRef}
         className={
           layout === "stage"
             ? "ft-chibi-stage relative h-[min(74vh,880px)] w-full"
@@ -699,6 +718,7 @@ export function ChibiHero({
         }
       >
         <Stage
+          active={stageVisible}
           /* the stage layout has more viewport to fill, so the camera moves in.
              The framed camera is tuned for the sculpted GLBs (2.35 units); the
              taller procedural fallback still just fits at this distance. */

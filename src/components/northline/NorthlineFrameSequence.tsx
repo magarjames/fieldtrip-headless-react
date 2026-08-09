@@ -64,13 +64,10 @@ export function NorthlineFrameSequence({
     const selectedBasePath =
       highResBasePath && window.innerWidth >= highResMinWidth ? highResBasePath : basePath;
     const normalizedBasePath = selectedBasePath.replace(/\/$/, "");
-    const abortController = new AbortController();
     const cache = new Map<number, CachedFrame>();
-    const blobUrls = new Map<number, string>();
-    const blobRequests = new Map<number, Promise<void>>();
     const mobileSequence = window.innerWidth <= 767;
-    const maxDecodedFrames = mobileSequence ? 16 : 32;
-    const preloadRadius = mobileSequence ? 4 : 10;
+    const maxDecodedFrames = mobileSequence ? 4 : 8;
+    const preloadRadius = mobileSequence ? 1 : 2;
     let active = false;
     let disposed = false;
     let currentProgress = 0;
@@ -79,7 +76,6 @@ export function NorthlineFrameSequence({
     let measurementQueued = false;
     let animationFrame = 0;
     let lastViewportWidth = window.innerWidth;
-    let warmupStarted = false;
 
     const frameUrl = (index: number) => {
       const frameNumber = String(index + 1).padStart(pad, "0");
@@ -177,7 +173,7 @@ export function NorthlineFrameSequence({
         const desiredFrame = Math.round(currentProgress * (frameCount - 1));
         if (shouldDraw || Math.abs(desiredFrame - index) <= 1) drawFrame(index);
       };
-      image.src = blobUrls.get(index) ?? frameUrl(index);
+      image.src = frameUrl(index);
       pruneCache(index);
     };
 
@@ -188,47 +184,6 @@ export function NorthlineFrameSequence({
         ensureFrame(center - distance);
       }
       pruneCache(center);
-    };
-
-    const warmFrame = (index: number) => {
-      if (blobUrls.has(index)) return Promise.resolve();
-      const existingRequest = blobRequests.get(index);
-      if (existingRequest) return existingRequest;
-
-      const request = fetch(frameUrl(index), {
-        cache: "force-cache",
-        signal: abortController.signal,
-      })
-        .then((response) => {
-          if (!response.ok) throw new Error(`Frame ${index + 1} failed to load.`);
-          return response.blob();
-        })
-        .then((blob) => {
-          if (!disposed) blobUrls.set(index, URL.createObjectURL(blob));
-        })
-        .catch(() => undefined)
-        .then(() => undefined)
-        .finally(() => blobRequests.delete(index));
-
-      blobRequests.set(index, request);
-      return request;
-    };
-
-    const warmSequence = async () => {
-      if (warmupStarted) return;
-      warmupStarted = true;
-      // Loading all 300 frames up front is wasteful on a phone. The smaller
-      // prime window above follows the scroll position and keeps memory bounded.
-      if (mobileSequence) return;
-
-      for (let start = 0; start < frameCount && !disposed; start += 6) {
-        const batch = Array.from(
-          { length: Math.min(6, frameCount - start) },
-          (_, offset) => start + offset,
-        );
-        await Promise.all(batch.map(warmFrame));
-        await new Promise<void>((resolve) => window.setTimeout(resolve, 12));
-      }
     };
 
     const readProgress = () => {
@@ -278,9 +233,8 @@ export function NorthlineFrameSequence({
         if (!active) return;
         readProgress();
         primeWindow(Math.round(targetProgress * (frameCount - 1)));
-        void warmSequence();
       },
-      { rootMargin: mobileSequence ? "80% 0px" : "180% 0px" },
+      { rootMargin: mobileSequence ? "35% 0px" : "70% 0px" },
     );
 
     const onResize = () => {
@@ -297,7 +251,6 @@ export function NorthlineFrameSequence({
 
     return () => {
       disposed = true;
-      abortController.abort();
       intersectionObserver.disconnect();
       window.removeEventListener("scroll", scheduleMeasurement);
       window.removeEventListener("resize", onResize);
@@ -305,7 +258,6 @@ export function NorthlineFrameSequence({
       cache.forEach((record) => {
         record.image.src = "";
       });
-      blobUrls.forEach((url) => URL.revokeObjectURL(url));
       figure.classList.remove("is-sequence-ready");
       step.classList.remove("is-film-motion-ready");
       canvas.style.removeProperty("object-position");
@@ -334,8 +286,8 @@ export function NorthlineFrameSequence({
       <canvas
         ref={canvasRef}
         className="nl-film-sequence-canvas"
-        width={1920}
-        height={1080}
+        width={1}
+        height={1}
         aria-hidden="true"
       />
     </figure>
