@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ShoppingCart } from "lucide-react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { FieldtripPageV8 } from "@/components/street/FieldtripPageV8";
 import { FoldBackdropV8 } from "@/components/street/FoldBackdropV8";
 import { NorthlinePageV8 } from "@/components/northline/NorthlinePageV8";
@@ -23,18 +25,7 @@ function FieldtripNorthlineV8Page() {
 
   return (
     <>
-      <button
-        className="v8-global-cart"
-        type="button"
-        onClick={openBag}
-        aria-label="Open shopping bag"
-        aria-haspopup="dialog"
-      >
-        <span className="v8-global-cart-label">Bag</span>
-        <span className="v8-global-cart-icon" aria-hidden="true">
-          <ShoppingCart size={19} strokeWidth={2.2} />
-        </span>
-      </button>
+      <PersistentV8Cart onOpen={openBag} />
       <div id="fieldtrip-top">
         <FieldtripPageV8
           backdrop={<FoldBackdropV8 />}
@@ -55,5 +46,31 @@ function FieldtripNorthlineV8Page() {
         risingEdge
       />
     </>
+  );
+}
+
+function PersistentV8Cart({ onOpen }: { onOpen: () => void }) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  return createPortal(
+    <button
+      className="v8-global-cart"
+      type="button"
+      onClick={onOpen}
+      aria-label="Open shopping bag"
+      aria-haspopup="dialog"
+    >
+      <span className="v8-global-cart-label">Bag</span>
+      <span className="v8-global-cart-icon" aria-hidden="true">
+        <ShoppingCart size={19} strokeWidth={2.2} />
+      </span>
+    </button>,
+    document.body,
   );
 }
