@@ -80,7 +80,7 @@ const OUTFITS: Outfit[] = [
     topFabric: "linen",
     altFabric: "crochet",
     legFabric: "linen",
-    model: "/fieldtrip/mascot-euro.glb",
+    model: "/fieldtrip/mascot-euro.mobile.glb",
     wears: "Pale blue shirt, black wide trousers, chain at the hip.",
   },
   {
@@ -99,7 +99,7 @@ const OUTFITS: Outfit[] = [
     topFabric: "jersey",
     altFabric: "jersey",
     legFabric: "denim",
-    model: "/fieldtrip/mascot-corner.glb",
+    model: "/fieldtrip/mascot-corner.mobile.glb",
     wears: "Backwards red cap, red bandana, white tee, cuffed white jeans.",
   },
   {
@@ -118,7 +118,7 @@ const OUTFITS: Outfit[] = [
     topFabric: "ripstop",
     altFabric: "ripstop",
     legFabric: "mesh",
-    model: "/fieldtrip/mascot-rest.glb",
+    model: "/fieldtrip/mascot-rest.mobile.glb",
     wears: "Sweater vest over a white tee, wide brown shorts, white sneakers.",
   },
 ];
