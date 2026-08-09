@@ -2,7 +2,6 @@ import { useState } from "react";
 import { BRAND, TAGLINE, DROP, PIECE_COUNT, PIECES, CATS, FITS, money, type CatId } from "./data";
 import { shot, shotFor } from "./media";
 import { ChibiHero } from "./Chibi";
-import { DestinationDiorama } from "./DestinationDiorama";
 import { useReveal } from "@/components/northline/parts";
 
 /* ============================================================================
@@ -40,7 +39,6 @@ export function FieldtripPage({
   primaryHref = "#fits",
   secondaryHref = "#grid",
   shopHref = "#grid",
-  heroVariant = "classic",
 }: {
   theme?: "bright" | "dark";
   /** fixed layer rendered behind the whole page (v5's fold gradient) */
@@ -52,7 +50,6 @@ export function FieldtripPage({
   primaryHref?: string;
   secondaryHref?: string;
   shopHref?: string;
-  heroVariant?: "classic" | "destinations";
 }) {
   useReveal();
   const [cat, setCat] = useState<CatId | "all">("all");
@@ -61,7 +58,7 @@ export function FieldtripPage({
 
   return (
     <div
-      className={`ft min-h-dvh${theme === "dark" ? " ft--dark" : ""}${backdrop ? " ft--clear" : ""}${content === "landing" ? " ft--landing" : ""}${heroVariant === "destinations" ? " ft--destinations" : ""}`}
+      className={`ft min-h-dvh${theme === "dark" ? " ft--dark" : ""}${backdrop ? " ft--clear" : ""}${content === "landing" ? " ft--landing" : ""}`}
     >
       <style>{`
         .ft{
@@ -80,7 +77,6 @@ export function FieldtripPage({
         .ft.ft--clear{ background:transparent }
         .ft .ft-backdrop{ position:fixed; inset:0; z-index:0; pointer-events:none }
         .ft.ft--clear > :not(.ft-backdrop){ position:relative; z-index:1 }
-        .ft.ft--clear > .ft-skip-link{ position:absolute }
         .ft h1,.ft h2,.ft h3{ font-family:"Archivo Black",Archivo,sans-serif; margin:0;
           letter-spacing:-0.045em; line-height:0.9; text-transform:uppercase }
         .ft p{ margin:0; line-height:1.55 }
@@ -89,24 +85,6 @@ export function FieldtripPage({
         .ft .lbl{ font-family:"JetBrains Mono",monospace; font-size:0.66rem;
           text-transform:uppercase; letter-spacing:0.14em }
         .ft .shell{ max-width:1560px; margin-inline:auto; padding-inline:clamp(1rem,4vw,2.25rem) }
-        .ft.ft--destinations > header.shell{
-          position:absolute;
-          inset:0 0 auto;
-          z-index:12;
-          width:100%;
-          max-width:none;
-          padding-inline:clamp(1rem,3.25vw,4rem);
-          color:#f3f3ef
-        }
-        .ft.ft--destinations > header.shell .lbl{ color:rgba(243,243,239,.58) !important }
-        .ft.ft--destinations > header.shell .btn{
-          border:1px solid rgba(243,243,239,.48);
-          border-radius:.35rem;
-          background:rgba(5,7,10,.5);
-          color:#f3f3ef;
-          -webkit-backdrop-filter:blur(12px);
-          backdrop-filter:blur(12px)
-        }
         .ft .btn{ display:inline-flex; align-items:center; min-height:44px; padding:0 1.4rem;
           border-radius:999px; background:var(--ink); color:var(--paper);
           font-weight:700; font-size:0.85rem; letter-spacing:-0.01em;
@@ -144,240 +122,6 @@ export function FieldtripPage({
           color:var(--paper);
           -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px)
         }
-        .ft .ft-destination-hero{
-          position:relative;
-          display:block;
-          min-height:calc(100svh - 4.8rem);
-          padding-top:clamp(1.5rem,4vh,3.5rem);
-          padding-bottom:clamp(2rem,5vh,4.5rem);
-          overflow:hidden;
-          isolation:isolate
-        }
-        .ft .ft-destination-hero.shell{ max-width:none;padding-inline:0 }
-        .ft .ft-destination-copy{
-          position:absolute;
-          left:5%;
-          top:39%;
-          z-index:5;
-          width:min(51%,48rem);
-          transform:translateY(-45%)
-        }
-        .ft .ft-destination-copy h1{
-          max-width:9ch;
-          font-size:clamp(4rem,8vw,8rem);
-          letter-spacing:-.075em;
-          line-height:.88
-        }
-        .ft .ft-destination-copy h1 span{ display:block }
-        .ft .ft-destination-copy .ft-hero-description{ max-width:24rem }
-        .ft .ft-destination-map{
-          position:absolute;
-          inset:0;
-          container-type:inline-size;
-          min-height:0;
-          margin:0;
-          background:rgba(248,251,252,.48)
-        }
-        .ft .ft-destination-map::before{
-          content:"";
-          position:absolute;
-          inset:-8%;
-          z-index:0;
-          background:
-            radial-gradient(ellipse at 74% 35%,rgba(20,19,23,.15),transparent 32%),
-            radial-gradient(ellipse at 32% 88%,rgba(20,19,23,.12),transparent 30%),
-            radial-gradient(ellipse at 91% 88%,rgba(20,19,23,.1),transparent 24%);
-          filter:blur(42px);
-          opacity:.7;
-          pointer-events:none
-        }
-        .ft .ft-map-contours{
-          position:absolute;
-          inset:-3%;
-          z-index:1;
-          width:106%;
-          height:106%;
-          color:var(--ink);
-          opacity:.42;
-          overflow:hidden;
-          filter:blur(.12px) drop-shadow(0 12px 14px rgba(20,19,23,.08));
-          pointer-events:none
-        }
-        .ft .ft-map-contours path{ vector-effect:non-scaling-stroke }
-        .ft .ft-topo-contour{
-          fill:none;
-          stroke:currentColor;
-          stroke-width:.72;
-          opacity:.58
-        }
-        .ft .ft-topo-contour--major{ stroke-width:1.35;opacity:.88 }
-        .ft .ft-map-routes{
-          position:absolute;
-          inset:0;
-          width:100%;
-          height:100%;
-          z-index:2;
-          overflow:visible;
-          pointer-events:none
-        }
-        .ft .ft-map-route{
-          fill:none;
-          stroke:color-mix(in srgb,var(--ink) 55%,transparent);
-          stroke-width:2.25;
-          stroke-dasharray:6 7;
-          stroke-linecap:round;
-          stroke-linejoin:round;
-          vector-effect:non-scaling-stroke;
-          transition:stroke .35s ease,stroke-width .35s ease,stroke-dashoffset .5s ease
-        }
-        .ft .ft-map-route.is-active{
-          stroke:var(--ink);
-          stroke-width:3.1;
-          stroke-dashoffset:-7
-        }
-        .ft .ft-map-routes--mobile{ display:none }
-        .ft .ft-destination-figure{
-          --ft-travel-x:0cqw;
-          --ft-travel-y:0cqh;
-          position:absolute;
-          left:61.3%;
-          top:36%;
-          z-index:3;
-          width:clamp(13rem,18vw,18rem);
-          height:clamp(18rem,45vh,28rem);
-          transform:translate(-50%,-46%) translate(var(--ft-travel-x),var(--ft-travel-y));
-          transition:transform 1.05s cubic-bezier(.16,1,.3,1);
-          isolation:isolate;
-          will-change:transform
-        }
-        .ft .ft-destination-figure::after{
-          content:"";
-          position:absolute;
-          left:50%;
-          bottom:10%;
-          z-index:0;
-          width:38%;
-          height:6%;
-          transform:translateX(-50%);
-          border-radius:50%;
-          background:rgba(20,19,23,.28);
-          filter:blur(12px);
-          pointer-events:none
-        }
-        .ft .ft-destination-figure > *{ position:relative;z-index:1 }
-        .ft .ft-destination-figure[data-destination="gallery"]{
-          --ft-travel-x:13cqw;
-          --ft-travel-y:-10svh
-        }
-        .ft .ft-destination-figure[data-destination="off-duty"]{
-          --ft-travel-x:-8cqw;
-          --ft-travel-y:-20svh
-        }
-        .ft .ft-destination-figure[data-destination="rest"]{
-          --ft-travel-x:13cqw;
-          --ft-travel-y:34svh
-        }
-        .ft .ft-destination-node{
-          position:absolute;
-          z-index:5;
-          display:grid;
-          grid-template-columns:auto minmax(0,1fr);
-          align-items:start;
-          gap:.72rem;
-          width:min(16rem,31%);
-          min-width:12.25rem;
-          padding:0;
-          border:0;
-          background:transparent;
-          color:var(--ink);
-          text-align:left;
-          cursor:pointer
-        }
-        .ft .ft-destination-node--off-duty{ top:4%; left:50% }
-        .ft .ft-destination-node--gallery{ top:22%; right:5% }
-        .ft .ft-destination-node--rest{ right:7%; bottom:8% }
-        .ft .ft-destination-marker{
-          display:grid;
-          width:1.85rem;
-          height:1.85rem;
-          place-items:center;
-          border:3px solid var(--ink);
-          border-radius:50%;
-          background:color-mix(in srgb,var(--paper) 72%,transparent);
-          transition:background .25s ease,transform .25s cubic-bezier(.16,1,.3,1)
-        }
-        .ft .ft-destination-marker::after{
-          content:"";
-          width:.72rem;
-          height:.72rem;
-          border-radius:50%;
-          background:var(--ink)
-        }
-        .ft .ft-destination-node[aria-pressed="true"] .ft-destination-marker{
-          background:var(--ink);
-          transform:scale(1.08)
-        }
-        .ft .ft-destination-node:focus{ outline:none }
-        .ft .ft-destination-node:focus-visible .ft-destination-marker{
-          outline:2px solid var(--ink);
-          outline-offset:4px
-        }
-        .ft .ft-destination-node[aria-pressed="true"] .ft-destination-marker::after{
-          background:var(--paper)
-        }
-        .ft .ft-destination-card{
-          min-width:0;
-          filter:drop-shadow(0 13px 18px rgba(20,19,23,.15))
-        }
-        .ft .ft-destination-title{
-          display:inline-flex;
-          min-height:2.35rem;
-          align-items:center;
-          padding:.34rem .88rem .42rem;
-          border:1px solid color-mix(in srgb,var(--ink) 32%,transparent);
-          border-radius:999px;
-          background:var(--ink);
-          color:var(--paper);
-          font-size:clamp(.95rem,1.35vw,1.3rem);
-          font-weight:700;
-          line-height:1;
-          transition:background .25s ease,color .25s ease,transform .25s cubic-bezier(.16,1,.3,1)
-        }
-        .ft .ft-destination-node[aria-pressed="true"] .ft-destination-title{
-          border-color:var(--ink);
-          background:var(--ink);
-          color:var(--paper);
-          transform:translateY(-2px)
-        }
-        .ft .ft-destination-detail{
-          display:block;
-          margin-top:.4rem;
-          padding:.68rem .78rem .72rem;
-          border:1px solid color-mix(in srgb,var(--ink) 22%,transparent);
-          border-radius:.7rem;
-          background:color-mix(in srgb,var(--paper) 84%,transparent);
-          color:var(--dim);
-          font-size:.73rem;
-          line-height:1.35;
-          box-shadow:0 10px 26px rgba(20,19,23,.1);
-          -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
-          opacity:.86;
-          transition:opacity .25s ease,background .25s ease
-        }
-        .ft .ft-destination-node[aria-pressed="true"] .ft-destination-detail{
-          background:color-mix(in srgb,var(--paper) 91%,transparent);
-          opacity:1
-        }
-        .ft .ft-destination-node:hover .ft-destination-marker{ transform:scale(1.08) }
-        .ft .ft-map-status{
-          position:absolute;
-          left:59%;
-          bottom:1.1rem;
-          z-index:6;
-          transform:translateX(-50%);
-          white-space:nowrap;
-          color:var(--dim)
-        }
         @media (min-width:1024px){
           .ft .ft-figure-edge{ transform:translateX(clamp(1rem,calc(3.125vw - 16px),1.5rem)) }
           .ft.ft--landing .ft-figure{
@@ -393,85 +137,6 @@ export function FieldtripPage({
           .ft .ft-figure-edge{ transform:translateX(clamp(1.5rem,calc(33.55vw - 512.8px),8rem)) }
         }
         @media (max-width:767px){
-          .ft .ft-destination-hero{
-            display:block;
-            min-height:auto;
-            padding-top:1.2rem;
-            padding-bottom:2rem;
-            overflow:visible
-          }
-          .ft .ft-destination-copy{
-            position:relative;
-            left:auto;
-            top:auto;
-            width:auto;
-            padding-inline:1rem;
-            transform:none
-          }
-          .ft .ft-destination-copy h1{
-            max-width:9ch;
-            font-size:clamp(2.72rem,12vw,5rem)
-          }
-          .ft .ft-destination-copy .ft-hero-description{
-            margin-top:1rem;
-            font-size:.92rem;
-            line-height:1.45
-          }
-          .ft .ft-destination-copy .ft-hero-actions{ margin-top:1.2rem }
-          .ft .ft-destination-map{
-            position:relative;
-            inset:auto;
-            min-height:35rem;
-            margin:1.4rem 0 0;
-            overflow:hidden
-          }
-          .ft .ft-destination-map::before{ inset:0;filter:blur(28px);opacity:.5 }
-          .ft .ft-map-contours{
-            inset:0;
-            width:100%;
-            height:100%
-          }
-          .ft .ft-map-routes--desktop{ display:none }
-          .ft .ft-map-routes--mobile{ display:block }
-          .ft .ft-destination-figure{
-            left:41%;
-            top:46%;
-            width:13.5rem;
-            height:24rem
-          }
-          .ft .ft-destination-figure[data-destination="gallery"]{
-            --ft-travel-x:26cqw;
-            --ft-travel-y:-16svh
-          }
-          .ft .ft-destination-figure[data-destination="off-duty"]{
-            --ft-travel-x:-16cqw;
-            --ft-travel-y:-16svh
-          }
-          .ft .ft-destination-figure[data-destination="rest"]{
-            --ft-travel-x:27cqw;
-            --ft-travel-y:17svh
-          }
-          .ft .ft-destination-node{
-            width:auto;
-            min-width:0;
-            gap:.42rem
-          }
-          .ft .ft-destination-node--off-duty{ top:6%; left:4% }
-          .ft .ft-destination-node--gallery{ top:13%; right:3% }
-          .ft .ft-destination-node--rest{ right:5%; bottom:7% }
-          .ft .ft-destination-marker{
-            width:1.45rem;
-            height:1.45rem;
-            border-width:2px
-          }
-          .ft .ft-destination-marker::after{ width:.52rem;height:.52rem }
-          .ft .ft-destination-title{
-            min-height:2rem;
-            padding:.3rem .68rem .36rem;
-            font-size:.78rem
-          }
-          .ft .ft-destination-detail{ display:none }
-          .ft .ft-map-status{ left:50%;bottom:.4rem;font-size:.56rem }
           .ft.ft--landing .ft-hero{
             min-height:calc(100svh - 4.75rem);
             grid-template-rows:auto auto auto auto;
@@ -534,10 +199,7 @@ export function FieldtripPage({
         </div>
       )}
 
-      <a
-        href={primaryHref}
-        className="ft-skip-link btn absolute left-[-9999px] z-50 focus:left-4 focus:top-4"
-      >
+      <a href={primaryHref} className="btn absolute left-[-9999px] z-50 focus:left-4 focus:top-4">
         Skip to the collection
       </a>
 
@@ -549,7 +211,7 @@ export function FieldtripPage({
         </span>
         <span className="flex-1" />
         <a href={shopHref} className="btn">
-          {heroVariant === "destinations" ? "Bag 0" : `Shop ${PIECE_COUNT}`}
+          Shop {PIECE_COUNT}
         </a>
       </header>
 
@@ -559,35 +221,31 @@ export function FieldtripPage({
           which pushed the chibi panel clean off the right edge. The vw
           coefficient is sized so the longest word still fits the left track
           at every width from the lg breakpoint up. */}
-      {heroVariant === "destinations" ? (
-        <DestinationDiorama primaryHref={primaryHref} />
-      ) : (
-        <section className="ft-hero shell grid items-end gap-8 pb-10 pt-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
-          <div className="min-w-0">
-            <h1 className="text-[clamp(2.9rem,7.5vw,10rem)]">{TAGLINE}</h1>
-            <p
-              className="ft-hero-description mt-6 max-w-[46ch] text-[1.05rem]"
-              style={{ color: "var(--dim)" }}
-            >
-              {PIECE_COUNT} pieces built to be layered, not admired one at a time. Wide bottoms,
-              boxy tops, and enough colour to ruin a capsule wardrobe.
-            </p>
-            <div className="ft-hero-actions mt-7 flex flex-wrap gap-2.5">
-              <a href={primaryHref} className="btn">
-                See the fits
-              </a>
-              <a href={secondaryHref} className="chip">
-                Every piece
-              </a>
-            </div>
+      <section className="ft-hero shell grid items-end gap-8 pb-10 pt-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
+        <div className="min-w-0">
+          <h1 className="text-[clamp(2.9rem,7.5vw,10rem)]">{TAGLINE}</h1>
+          <p
+            className="ft-hero-description mt-6 max-w-[46ch] text-[1.05rem]"
+            style={{ color: "var(--dim)" }}
+          >
+            {PIECE_COUNT} pieces built to be layered, not admired one at a time. Wide bottoms, boxy
+            tops, and enough colour to ruin a capsule wardrobe.
+          </p>
+          <div className="ft-hero-actions mt-7 flex flex-wrap gap-2.5">
+            <a href={primaryHref} className="btn">
+              See the fits
+            </a>
+            <a href={secondaryHref} className="chip">
+              Every piece
+            </a>
           </div>
-          {/* the mascot wears the drop, and changing its fit is the same data the
+        </div>
+        {/* the mascot wears the drop, and changing its fit is the same data the
             fits section is merchandised from */}
-          <div className={`ft-figure${figurePlacement === "edge" ? " ft-figure-edge" : ""}`}>
-            <ChibiHero fallbackSrc={shot("ft-hero", 900, 1200)} />
-          </div>
-        </section>
-      )}
+        <div className={`ft-figure${figurePlacement === "edge" ? " ft-figure-edge" : ""}`}>
+          <ChibiHero fallbackSrc={shot("ft-hero", 900, 1200)} />
+        </div>
+      </section>
 
       {content === "full" && (
         <>
