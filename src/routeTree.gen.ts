@@ -28,7 +28,6 @@ import { Route as WBloomRouteImport } from './routes/w.bloom'
 import { Route as WAtlasRouteImport } from './routes/w.atlas'
 import { Route as SV8RouteImport } from './routes/s.v8'
 import { Route as SV7RouteImport } from './routes/s.v7'
-import { Route as SV6RouteImport } from './routes/s.v6'
 import { Route as SV5RouteImport } from './routes/s.v5'
 import { Route as SV4RouteImport } from './routes/s.v4'
 import { Route as SV3RouteImport } from './routes/s.v3'
@@ -136,11 +135,6 @@ const SV7Route = SV7RouteImport.update({
   path: '/s/v7',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SV6Route = SV6RouteImport.update({
-  id: '/s/v6',
-  path: '/s/v6',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SV5Route = SV5RouteImport.update({
   id: '/s/v5',
   path: '/s/v5',
@@ -213,7 +207,6 @@ export interface FileRoutesByFullPath {
   '/s/v3': typeof SV3Route
   '/s/v4': typeof SV4Route
   '/s/v5': typeof SV5Route
-  '/s/v6': typeof SV6Route
   '/s/v7': typeof SV7Route
   '/s/v8': typeof SV8Route
   '/w/atlas': typeof WAtlasRoute
@@ -246,7 +239,6 @@ export interface FileRoutesByTo {
   '/s/v3': typeof SV3Route
   '/s/v4': typeof SV4Route
   '/s/v5': typeof SV5Route
-  '/s/v6': typeof SV6Route
   '/s/v7': typeof SV7Route
   '/s/v8': typeof SV8Route
   '/w/atlas': typeof WAtlasRoute
@@ -280,7 +272,6 @@ export interface FileRoutesById {
   '/s/v3': typeof SV3Route
   '/s/v4': typeof SV4Route
   '/s/v5': typeof SV5Route
-  '/s/v6': typeof SV6Route
   '/s/v7': typeof SV7Route
   '/s/v8': typeof SV8Route
   '/w/atlas': typeof WAtlasRoute
@@ -315,7 +306,6 @@ export interface FileRouteTypes {
     | '/s/v3'
     | '/s/v4'
     | '/s/v5'
-    | '/s/v6'
     | '/s/v7'
     | '/s/v8'
     | '/w/atlas'
@@ -348,7 +338,6 @@ export interface FileRouteTypes {
     | '/s/v3'
     | '/s/v4'
     | '/s/v5'
-    | '/s/v6'
     | '/s/v7'
     | '/s/v8'
     | '/w/atlas'
@@ -381,7 +370,6 @@ export interface FileRouteTypes {
     | '/s/v3'
     | '/s/v4'
     | '/s/v5'
-    | '/s/v6'
     | '/s/v7'
     | '/s/v8'
     | '/w/atlas'
@@ -415,7 +403,6 @@ export interface RootRouteChildren {
   SV3Route: typeof SV3Route
   SV4Route: typeof SV4Route
   SV5Route: typeof SV5Route
-  SV6Route: typeof SV6Route
   SV7Route: typeof SV7Route
   SV8Route: typeof SV8Route
   WAtlasRoute: typeof WAtlasRoute
@@ -568,13 +555,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SV7RouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/s/v6': {
-      id: '/s/v6'
-      path: '/s/v6'
-      fullPath: '/s/v6'
-      preLoaderRoute: typeof SV6RouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/s/v5': {
       id: '/s/v5'
       path: '/s/v5'
@@ -671,7 +651,6 @@ const rootRouteChildren: RootRouteChildren = {
   SV3Route: SV3Route,
   SV4Route: SV4Route,
   SV5Route: SV5Route,
-  SV6Route: SV6Route,
   SV7Route: SV7Route,
   SV8Route: SV8Route,
   WAtlasRoute: WAtlasRoute,
