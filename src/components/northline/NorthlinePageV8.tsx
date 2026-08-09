@@ -9,10 +9,11 @@ import {
 import { createPortal } from "react-dom";
 
 import "@/components/northline/northline.css";
+import "@/components/northline/northline-v8.css";
 import {
-  NorthlineScrollEdge,
-  type NorthlineEdgeMotion,
-} from "@/components/northline/NorthlineScrollEdge";
+  NorthlineScrollEdgeV8,
+  type NorthlineEdgeMotionV8,
+} from "@/components/northline/NorthlineScrollEdgeV8";
 import { shopifyClient } from "@/lib/shopify";
 import type { Product as ShopifyProduct } from "shopify-buy";
 import { NorthlineScrollFilm } from "@/components/northline/NorthlineScrollFilm";
@@ -104,11 +105,11 @@ export function NorthlinePageV8({
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const continuationNavRef = useRef<HTMLElement>(null);
-  const edgeMotionRef = useRef<NorthlineEdgeMotion>({ progress: 0 });
+  const edgeMotionRef = useRef<NorthlineEdgeMotionV8>({ progress: 0 });
   const materialsRef = useRef<HTMLElement>(null);
   const systemRef = useRef<HTMLElement>(null);
-  const materialsEdgeMotionRef = useRef<NorthlineEdgeMotion>({ progress: 0 });
-  const systemEdgeMotionRef = useRef<NorthlineEdgeMotion>({ progress: 0 });
+  const materialsEdgeMotionRef = useRef<NorthlineEdgeMotionV8>({ progress: 0 });
+  const systemEdgeMotionRef = useRef<NorthlineEdgeMotionV8>({ progress: 0 });
   const materialsVideoRef = useRef<HTMLVideoElement>(null);
   const materialsCopyRef = useRef<HTMLDivElement>(null);
   const [materialsVideoBlocked, setMaterialsVideoBlocked] = useState(false);
@@ -620,7 +621,7 @@ export function NorthlinePageV8({
         )}
 
         <section id="collection" className="nl-collection">
-          {risingEdge && <NorthlineScrollEdge motion={edgeMotionRef} />}
+          {risingEdge && <NorthlineScrollEdgeV8 motion={edgeMotionRef} />}
           {continuation && (
             <nav
               ref={continuationNavRef}
@@ -691,7 +692,7 @@ export function NorthlinePageV8({
           className={`nl-materials${materialsVideoSrc ? " nl-materials--video" : ""}`}
         >
           {risingEdge && !materialsVideoSrc && (
-            <NorthlineScrollEdge
+            <NorthlineScrollEdgeV8
               motion={materialsEdgeMotionRef}
               colour="#0f0f1c"
               toneStrength={0}
@@ -791,7 +792,7 @@ export function NorthlinePageV8({
 
         <section ref={systemRef} className="nl-system">
           {risingEdge && (
-            <NorthlineScrollEdge
+            <NorthlineScrollEdgeV8
               motion={systemEdgeMotionRef}
               colour="#bc7155"
               toneStrength={0}
