@@ -8,6 +8,7 @@ import { NorthlinePageV8 } from "@/components/northline/NorthlinePageV8";
 import { pageMeta } from "@/components/northline/parts";
 
 export const Route = createFileRoute("/s/v8")({
+  ssr: false,
   component: FieldtripNorthlineV8Page,
   head: () =>
     pageMeta(
