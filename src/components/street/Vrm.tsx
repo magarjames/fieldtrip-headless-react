@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Center } from "@react-three/drei";
 import * as THREE from "three";
@@ -126,12 +126,20 @@ type Props = {
   still: boolean;
   onPick: () => void;
   onFail: (reason: string) => void;
+  loadingFallback?: ReactNode;
 };
 
 /** a loaded figure is scaled so its height matches the procedural chibi */
 const FIGURE_HEIGHT = 2.35;
 
-export function VrmFigure({ url = VRM_URL, hide = [], still, onPick, onFail }: Props) {
+export function VrmFigure({
+  url = VRM_URL,
+  hide = [],
+  still,
+  onPick,
+  onFail,
+  loadingFallback = null,
+}: Props) {
   const [model, setModel] = useState<Loaded | null>(null);
   const { pointer } = useThree();
   const glbRoot = useRef<THREE.Group>(null);
@@ -214,7 +222,7 @@ export function VrmFigure({ url = VRM_URL, hide = [], still, onPick, onFail }: P
     }
   });
 
-  if (!model) return null;
+  if (!model) return <>{loadingFallback}</>;
 
   return (
     <Center

@@ -3,7 +3,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { ContactShadows, Environment, Lightformer, RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
 import { Stage, useReducedMotion } from "@/components/world/stage";
-import { preloadFigureModel, VrmFigure, useModelAvailable, VRM_URL } from "./Vrm";
+import { VrmFigure, useModelAvailable, VRM_URL } from "./Vrm";
 import { fabricTexture, disposeFabrics, type Fabric } from "./textures";
 import { activeOutfit } from "./outfitSync";
 
@@ -592,8 +592,6 @@ export function Figure({
     replicas pass them in and those join the probe. */
 const GLB_CANDIDATES = OUTFITS.map((o) => o.model);
 
-if (typeof window !== "undefined") preloadFigureModel(GLB_CANDIDATES[0]);
-
 export function ChibiHero({
   fallbackSrc,
   vrmUrls,
@@ -790,15 +788,13 @@ export function ChibiHero({
               still={reduced}
               onPick={next}
               onFail={onVrmFail}
+              loadingFallback={<Figure outfit={outfit} onPick={next} still={reduced} />}
               /* the rig's garment meshes for the fits we are not wearing */
               hide={OUTFITS.filter((o) => o !== outfit).map((o) => o.name)}
             />
-          ) : /* nothing until the probe answers: the procedural figure is a
-                 fallback for "no model files exist", not a loading state, and
-                 showing it first reads as a flash of the wrong mascot */
-          modelProbe.state === "ready" ? (
+          ) : (
             <Figure outfit={outfit} onPick={next} still={reduced} />
-          ) : null}
+          )}
         </Stage>
 
         {/* the hint. Decorative: the button below does the same job. */}

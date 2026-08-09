@@ -588,6 +588,7 @@ export function DestinationDiorama({ primaryHref }: { primaryHref: string }) {
             height={941}
             loading="eager"
             decoding="async"
+            fetchPriority="low"
           />
           <img
             className="ft-diorama-world ft-diorama-world--off-duty"
@@ -597,6 +598,7 @@ export function DestinationDiorama({ primaryHref }: { primaryHref: string }) {
             height={941}
             loading="eager"
             decoding="async"
+            fetchPriority="low"
           />
           <img
             className="ft-diorama-world ft-diorama-world--rest"
@@ -606,6 +608,7 @@ export function DestinationDiorama({ primaryHref }: { primaryHref: string }) {
             height={941}
             loading="eager"
             decoding="async"
+            fetchPriority="low"
           />
         </div>
 
