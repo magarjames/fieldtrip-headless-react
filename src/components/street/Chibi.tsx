@@ -3,7 +3,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { ContactShadows, Environment, Lightformer, RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
 import { Stage, useReducedMotion } from "@/components/world/stage";
-import { VrmFigure, useModelAvailable, VRM_URL } from "./Vrm";
+import { preloadFigureModel, VrmFigure, useModelAvailable, VRM_URL } from "./Vrm";
 import { fabricTexture, disposeFabrics, type Fabric } from "./textures";
 import { activeOutfit } from "./outfitSync";
 
@@ -80,7 +80,7 @@ const OUTFITS: Outfit[] = [
     topFabric: "linen",
     altFabric: "crochet",
     legFabric: "linen",
-    model: "/fieldtrip/mascot-euro.mobile.glb",
+    model: "/fieldtrip/mascot-euro.glb",
     wears: "Pale blue shirt, black wide trousers, chain at the hip.",
   },
   {
@@ -99,7 +99,7 @@ const OUTFITS: Outfit[] = [
     topFabric: "jersey",
     altFabric: "jersey",
     legFabric: "denim",
-    model: "/fieldtrip/mascot-corner.mobile.glb",
+    model: "/fieldtrip/mascot-corner.glb",
     wears: "Backwards red cap, red bandana, white tee, cuffed white jeans.",
   },
   {
@@ -118,7 +118,7 @@ const OUTFITS: Outfit[] = [
     topFabric: "ripstop",
     altFabric: "ripstop",
     legFabric: "mesh",
-    model: "/fieldtrip/mascot-rest.mobile.glb",
+    model: "/fieldtrip/mascot-rest.glb",
     wears: "Sweater vest over a white tee, wide brown shorts, white sneakers.",
   },
 ];
@@ -592,13 +592,12 @@ export function Figure({
     replicas pass them in and those join the probe. */
 const GLB_CANDIDATES = OUTFITS.map((o) => o.model);
 
+if (typeof window !== "undefined") preloadFigureModel(GLB_CANDIDATES[0]);
+
 export function ChibiHero({
   fallbackSrc,
   vrmUrls,
   layout = "framed",
-  outfitIndex,
-  onOutfitChange,
-  showControls = true,
 }: {
   fallbackSrc: string;
   /** one .vrm replica per outfit, in OUTFITS order; a present replica
@@ -606,48 +605,13 @@ export function ChibiHero({
   vrmUrls?: readonly string[];
   /** "framed" is the bordered 3:4 card; "stage" is an unframed full-bleed
       block for the figure-shop pages */
-  layout?: "framed" | "stage" | "map";
-  /** Optional controlled outfit index for destination-led hero layouts. */
-  outfitIndex?: number;
-  onOutfitChange?: (index: number) => void;
-  showControls?: boolean;
+  layout?: "framed" | "stage";
 }) {
-  const [internalIndex, setInternalIndex] = useState(0);
-  const controlledIndex =
-    typeof outfitIndex === "number"
-      ? Math.max(0, Math.min(OUTFITS.length - 1, outfitIndex))
-      : undefined;
-  const i = controlledIndex ?? internalIndex;
+  const [i, setI] = useState(0); // open on Gallery Day: no cap, no shades, the face carries it
   const reduced = useReducedMotion();
   const outfit = OUTFITS[i];
-  const stageRef = useRef<HTMLDivElement>(null);
-  const [stageVisible, setStageVisible] = useState(false);
 
-  useEffect(() => {
-    const stage = stageRef.current;
-    if (!stage) return;
-
-    if (!("IntersectionObserver" in window)) {
-      setStageVisible(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(([entry]) => setStageVisible(entry.isIntersecting), {
-      rootMargin: "100% 0px",
-    });
-    observer.observe(stage);
-    return () => observer.disconnect();
-  }, []);
-
-  const selectOutfit = useCallback(
-    (index: number) => {
-      if (controlledIndex === undefined) setInternalIndex(index);
-      onOutfitChange?.(index);
-    },
-    [controlledIndex, onOutfitChange],
-  );
-
-  const next = useCallback(() => selectOutfit((i + 1) % OUTFITS.length), [i, selectOutfit]);
+  const next = () => setI((v) => (v + 1) % OUTFITS.length);
 
   // publish the active fit so the v4 backdrop can retint itself per frame
   useEffect(() => {
@@ -684,7 +648,7 @@ export function ChibiHero({
   // Alternate fits are large. Warm them one at a time when the browser is
   // idle so they never compete with the model visible in the opening frame.
   useEffect(() => {
-    if (!stageVisible || modelProbe.state !== "ready") return;
+    if (modelProbe.state !== "ready") return;
     let cancelled = false;
     const alternates = [...modelProbe.present].filter((url) => url !== GLB_CANDIDATES[0]);
     const warmAlternates = async () => {
@@ -703,33 +667,27 @@ export function ChibiHero({
       cancelled = true;
       window.cancelIdleCallback(idleId);
     };
-  }, [modelProbe, stageVisible]);
+  }, [modelProbe]);
 
   return (
-    <div className={layout === "map" ? "h-full" : undefined}>
+    <div>
       <div
-        ref={stageRef}
         className={
           layout === "stage"
             ? "ft-chibi-stage relative h-[min(74vh,880px)] w-full"
-            : layout === "map"
-              ? "ft-chibi-stage relative h-full w-full"
-              : "ft-chibi-stage relative aspect-[3/4] w-full overflow-hidden"
+            : "ft-chibi-stage relative aspect-[3/4] w-full overflow-hidden"
         }
       >
         <Stage
-          active={stageVisible}
           /* the stage layout has more viewport to fill, so the camera moves in.
              The framed camera is tuned for the sculpted GLBs (2.35 units); the
              taller procedural fallback still just fits at this distance. */
           camera={
             layout === "stage"
               ? { position: [0, 0.3, 4.6], fov: 36 }
-              : layout === "map"
-                ? { position: [0, 0.12, 8], fov: 34 }
-                : { position: [0, 0.05, 4.9], fov: 38 }
+              : { position: [0, 0.05, 4.9], fov: 38 }
           }
-          dpr={layout === "map" ? [1, 1.35] : [1, 2]}
+          dpr={[1, 2]}
           antialias
           shadows
           /* no still while the model loads: the space stays empty until the
@@ -751,7 +709,7 @@ export function ChibiHero({
               Environment presets fetch from a CDN, and this page has no other
               external asset dependency, so the env map is rendered in-scene:
               soft box reflections in the clearcoat, no network. */}
-          <Environment resolution={layout === "map" ? 128 : 256}>
+          <Environment resolution={256}>
             <Lightformer
               form="rect"
               intensity={2.4}
@@ -784,7 +742,7 @@ export function ChibiHero({
             position={[2.6, 4.4, 3.2]}
             intensity={2.1}
             castShadow
-            shadow-mapSize={layout === "map" ? [512, 512] : [1024, 1024]}
+            shadow-mapSize={[1024, 1024]}
             shadow-bias={-0.0012}
             shadow-normalBias={0.02}
           />
@@ -795,11 +753,11 @@ export function ChibiHero({
               stage gets a deeper pool instead. */}
           <ContactShadows
             position={[0, -1.58, 0]}
-            opacity={layout === "stage" ? 0.55 : layout === "map" ? 0.22 : 0.28}
+            opacity={layout === "stage" ? 0.55 : 0.28}
             scale={4.4}
             blur={2.6}
             far={2.2}
-            resolution={layout === "map" ? 256 : 512}
+            resolution={512}
             color="#000000"
           />
           {modelUrl ? (
@@ -808,13 +766,15 @@ export function ChibiHero({
               still={reduced}
               onPick={next}
               onFail={onVrmFail}
-              loadingFallback={<Figure outfit={outfit} onPick={next} still={reduced} />}
               /* the rig's garment meshes for the fits we are not wearing */
               hide={OUTFITS.filter((o) => o !== outfit).map((o) => o.name)}
             />
-          ) : (
+          ) : /* nothing until the probe answers: the procedural figure is a
+                 fallback for "no model files exist", not a loading state, and
+                 showing it first reads as a flash of the wrong mascot */
+          modelProbe.state === "ready" ? (
             <Figure outfit={outfit} onPick={next} still={reduced} />
-          )}
+          ) : null}
         </Stage>
 
         {/* the hint. Decorative: the button below does the same job. */}
@@ -830,23 +790,16 @@ export function ChibiHero({
       </div>
 
       {/* real controls, so the model is never the only way through */}
-      {showControls && (
-        <div className="ft-fit-controls mt-3 flex flex-wrap items-center gap-2">
-          <button className="chip" onClick={next}>
-            Change the fit
+      <div className="ft-fit-controls mt-3 flex flex-wrap items-center gap-2">
+        <button className="chip" onClick={next}>
+          Change the fit
+        </button>
+        {OUTFITS.map((o, n) => (
+          <button key={o.fitId} className="chip" aria-pressed={n === i} onClick={() => setI(n)}>
+            {o.name}
           </button>
-          {OUTFITS.map((o, n) => (
-            <button
-              key={o.fitId}
-              className="chip"
-              aria-pressed={n === i}
-              onClick={() => selectOutfit(n)}
-            >
-              {o.name}
-            </button>
-          ))}
-        </div>
-      )}
+        ))}
+      </div>
 
       {/* every fit takes two lines, whether its description wraps or not:
           Gallery Day's short text no longer pulls the layout up a line when
@@ -855,15 +808,13 @@ export function ChibiHero({
           the whole hero (the tagline shares an items-end row with this
           column) by a few pixels on the short fits. mt-4 gives it air from
           the chips */}
-      {showControls && (
-        <p
-          className="ft-fit-description lbl mt-4 min-h-[2.8em]"
-          aria-live="polite"
-          style={{ lineHeight: 1.4, color: "var(--dim)" }}
-        >
-          Wearing: {outfit.name} · {outfit.wears}
-        </p>
-      )}
+      <p
+        className="ft-fit-description lbl mt-4 min-h-[2.8em]"
+        aria-live="polite"
+        style={{ lineHeight: 1.4, color: "var(--dim)" }}
+      >
+        Wearing: {outfit.name} · {outfit.wears}
+      </p>
     </div>
   );
 }

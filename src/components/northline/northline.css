@@ -150,6 +150,75 @@
   transform: translateY(-1px);
 }
 
+/* ── Persistent floating cart button ── */
+.nl-floating-bag {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  background: rgba(20, 20, 20, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #fff;
+  cursor: pointer;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+  transition:
+    transform 200ms ease,
+    background 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.nl-floating-bag:hover {
+  transform: translateY(-2px) scale(1.06);
+  background: var(--nl-clay, #c3623e);
+  box-shadow:
+    0 8px 32px rgba(195, 98, 62, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+.nl-floating-bag:active {
+  transform: scale(0.95);
+}
+
+.nl-floating-bag svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.nl-floating-bag-count {
+  position: absolute;
+  top: -0.25rem;
+  right: -0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.3rem;
+  height: 1.3rem;
+  padding: 0 0.35rem;
+  border-radius: 1000px;
+  background: var(--nl-clay, #c3623e);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1;
+  animation: nl-badge-pop 300ms ease;
+}
+
+@keyframes nl-badge-pop {
+  0% { transform: scale(0); }
+  60% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
 .nl-menu-button {
   display: none;
 }
@@ -442,18 +511,6 @@
     width: 100%;
     height: 100%;
     overflow: visible;
-    transform-origin: center bottom;
-    transition: filter 180ms linear;
-  }
-
-  .northline--rising-edge .nl-scroll-edge-shadow {
-    transform: translateY(-3px) scaleY(1.035);
-    transform-origin: center bottom;
-    filter: blur(7px);
-  }
-
-  .northline--rising-edge .nl-scroll-edge-surface {
-    transform-origin: center bottom;
   }
 
   .northline--rising-edge .nl-scroll-edge > div,
@@ -469,6 +526,13 @@
     margin-inline: 0;
     margin-left: calc(max(17.5rem, 25vw) - clamp(20rem, 28vw, 42rem));
     margin-right: auto;
+  }
+
+  .northline--v8.northline--continuation.northline--split-navigation
+    .nl-collection-intro {
+    width: min(100%, 39rem);
+    margin-left: 0;
+    transform: translate3d(clamp(-6.5rem, -5.25vw, -4.5rem), 0, 0);
   }
 
   .northline--continuation.northline--split-navigation .nl-filter-row,
@@ -1380,7 +1444,7 @@
 
 .nl-layer {
   position: fixed;
-  z-index: 200;
+  z-index: 80;
   inset: 0;
   display: grid;
   place-items: center;

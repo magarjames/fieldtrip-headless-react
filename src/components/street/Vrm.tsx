@@ -1,9 +1,8 @@
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Center } from "@react-three/drei";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { clone as cloneSkeleton } from "three/examples/jsm/utils/SkeletonUtils.js";
 import { VRMLoaderPlugin, VRMUtils, type VRM } from "@pixiv/three-vrm";
 
 /* ============================================================================
@@ -35,7 +34,9 @@ import { VRMLoaderPlugin, VRMUtils, type VRM } from "@pixiv/three-vrm";
 export const VRM_URL = "/fieldtrip/mascot.vrm";
 /** one sculpted model per fit, in catalogue order (f1, f2, f3) */
 
-export type ModelProbe = { state: "checking" } | { state: "ready"; present: ReadonlySet<string> };
+export type ModelProbe =
+  | { state: "checking" }
+  | { state: "ready"; present: ReadonlySet<string> };
 
 /** HEAD-probe every candidate so the caller can decide before mounting a Canvas */
 export function useModelAvailable(urls: readonly string[]): ModelProbe {
@@ -126,20 +127,12 @@ type Props = {
   still: boolean;
   onPick: () => void;
   onFail: (reason: string) => void;
-  loadingFallback?: ReactNode;
 };
 
 /** a loaded figure is scaled so its height matches the procedural chibi */
 const FIGURE_HEIGHT = 2.35;
 
-export function VrmFigure({
-  url = VRM_URL,
-  hide = [],
-  still,
-  onPick,
-  onFail,
-  loadingFallback = null,
-}: Props) {
+export function VrmFigure({ url = VRM_URL, hide = [], still, onPick, onFail }: Props) {
   const [model, setModel] = useState<Loaded | null>(null);
   const { pointer } = useThree();
   const glbRoot = useRef<THREE.Group>(null);
@@ -148,15 +141,10 @@ export function VrmFigure({
 
   useEffect(() => {
     let live = true;
+    setModel(null);
     void loadFigureModel(url)
       .then((loaded) => {
-        if (!live) return;
-        // Keep the current figure mounted while the next large model parses.
-        // R3F stores renderer metadata on mounted Object3D instances, so clone
-        // only the incoming scene graph; geometry and materials remain shared.
-        setModel(
-          loaded.kind === "glb" ? { kind: "glb", scene: cloneSkeleton(loaded.scene) } : loaded,
-        );
+        if (live) setModel(loaded);
       })
       .catch(() => {
         if (live) onFail("could not parse the model file");
@@ -222,7 +210,7 @@ export function VrmFigure({
     }
   });
 
-  if (!model) return <>{loadingFallback}</>;
+  if (!model) return null;
 
   return (
     <Center

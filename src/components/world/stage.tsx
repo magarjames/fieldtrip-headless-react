@@ -114,8 +114,6 @@ export function useElementProgress(el: React.RefObject<HTMLElement | null>) {
 
 type StageProps = {
   children: React.ReactNode;
-  /** Release the WebGL context while a stage is far outside the viewport. */
-  active?: boolean;
   /** rendered instead of the canvas under reduced motion or before mount */
   fallback?: React.ReactNode;
   camera?: { position?: [number, number, number]; fov?: number };
@@ -134,7 +132,6 @@ type StageProps = {
 
 export function Stage({
   children,
-  active = true,
   fallback = null,
   camera = { position: [0, 0, 6], fov: 45 },
   className = "",
@@ -146,7 +143,6 @@ export function Stage({
   const reduced = useReducedMotion();
   useResizeKick();
 
-  if (!active) return null;
   if (!mounted || reduced) return <>{fallback}</>;
 
   /* Do not position the Canvas from here. R3F measures its own container, and

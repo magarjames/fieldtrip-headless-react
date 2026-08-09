@@ -9,11 +9,10 @@ import {
 import { createPortal } from "react-dom";
 
 import "@/components/northline/northline.css";
-import "@/components/northline/northline-v8.css";
 import {
-  NorthlineScrollEdgeV8,
-  type NorthlineEdgeMotionV8,
-} from "@/components/northline/NorthlineScrollEdgeV8";
+  NorthlineScrollEdge,
+  type NorthlineEdgeMotion,
+} from "@/components/northline/NorthlineScrollEdge";
 import { shopifyClient } from "@/lib/shopify";
 import type { Product as ShopifyProduct } from "shopify-buy";
 import { NorthlineScrollFilm } from "@/components/northline/NorthlineScrollFilm";
@@ -105,11 +104,11 @@ export function NorthlinePageV8({
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const continuationNavRef = useRef<HTMLElement>(null);
-  const edgeMotionRef = useRef<NorthlineEdgeMotionV8>({ progress: 0 });
+  const edgeMotionRef = useRef<NorthlineEdgeMotion>({ progress: 0 });
   const materialsRef = useRef<HTMLElement>(null);
   const systemRef = useRef<HTMLElement>(null);
-  const materialsEdgeMotionRef = useRef<NorthlineEdgeMotionV8>({ progress: 0 });
-  const systemEdgeMotionRef = useRef<NorthlineEdgeMotionV8>({ progress: 0 });
+  const materialsEdgeMotionRef = useRef<NorthlineEdgeMotion>({ progress: 0 });
+  const systemEdgeMotionRef = useRef<NorthlineEdgeMotion>({ progress: 0 });
   const materialsVideoRef = useRef<HTMLVideoElement>(null);
   const materialsCopyRef = useRef<HTMLDivElement>(null);
   const [materialsVideoBlocked, setMaterialsVideoBlocked] = useState(false);
@@ -537,6 +536,21 @@ export function NorthlinePageV8({
         Skip to collection
       </a>
 
+      {/* Persistent floating cart button — always visible */}
+      <button
+        className="nl-floating-bag"
+        type="button"
+        onClick={() => setBagOpen(true)}
+        aria-label={`Open bag, ${bag.length} items`}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <path d="M16 10a4 4 0 01-8 0" />
+        </svg>
+        {bag.length > 0 && <span className="nl-floating-bag-count">{bag.length}</span>}
+      </button>
+
       {showHeader && (
         <header className="nl-header">
           <a className="nl-wordmark" href={homeHref} aria-label="Northline home">
@@ -621,7 +635,7 @@ export function NorthlinePageV8({
         )}
 
         <section id="collection" className="nl-collection">
-          {risingEdge && <NorthlineScrollEdgeV8 motion={edgeMotionRef} />}
+          {risingEdge && <NorthlineScrollEdge motion={edgeMotionRef} />}
           {continuation && (
             <nav
               ref={continuationNavRef}
@@ -692,7 +706,7 @@ export function NorthlinePageV8({
           className={`nl-materials${materialsVideoSrc ? " nl-materials--video" : ""}`}
         >
           {risingEdge && !materialsVideoSrc && (
-            <NorthlineScrollEdgeV8
+            <NorthlineScrollEdge
               motion={materialsEdgeMotionRef}
               colour="#0f0f1c"
               toneStrength={0}
@@ -792,7 +806,7 @@ export function NorthlinePageV8({
 
         <section ref={systemRef} className="nl-system">
           {risingEdge && (
-            <NorthlineScrollEdgeV8
+            <NorthlineScrollEdge
               motion={systemEdgeMotionRef}
               colour="#bc7155"
               toneStrength={0}
