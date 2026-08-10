@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { NorthlineLookbook } from "@/components/northline/NorthlineLookbook";
 import { pageMeta } from "@/components/northline/parts";
 
-export const Route = createFileRoute("/s_/v8_/lookbook")({
+export const Route = createFileRoute("/lookbook")({
   component: NorthlineLookbookPage,
   head: () =>
     pageMeta(
