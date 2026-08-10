@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { shopifyClient } from "@/lib/shopify";
 import "./northline.css";
+import heroDawn from "./assets/hero-dawn.jpg";
 
 // Interface for our mapped local product state
 interface Product {
@@ -28,6 +29,7 @@ export function NorthlineShop() {
   const [bagOpen, setBagOpen] = useState(false);
   const [activeProduct, setActiveProduct] = useState<Product | null>(null);
   const [selectedColor, setSelectedColor] = useState<string>("Default");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
@@ -173,32 +175,93 @@ export function NorthlineShop() {
   }, []);
 
   return (
-    <div className="nl-scope" style={{ minHeight: '100vh', backgroundColor: '#000' }}>
-      <header className="nl-header" style={{ position: "sticky", top: 0, zIndex: 50, background: "#0a0a0a", borderBottom: '1px solid #222' }}>
-        <a className="nl-wordmark" href="/s/v8" aria-label="Back to Northline home">
+    <div className="nl-scope" style={{ 
+      minHeight: '100vh', 
+      backgroundColor: '#000',
+      backgroundImage: `url(${heroDawn})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed',
+      color: '#fff'
+    }}>
+      <header className="nl-header" style={{ 
+        position: "sticky", 
+        top: 0, 
+        zIndex: 50, 
+        background: "rgba(10, 10, 10, 0.4)", 
+        backdropFilter: "blur(16px)",
+        WebkitBackdropFilter: "blur(16px)",
+        borderBottom: '1px solid rgba(255, 255, 255, 0.05)' 
+      }}>
+        <a className="nl-wordmark" href="#" aria-label="Northline home">
           Northline
         </a>
-        <nav className="nl-nav" aria-label="Primary navigation">
-          <a href="/s/v8/shop">Shop</a>
-          <a href="/s/v8#materials">Materials</a>
-          <a href="/s/v8#journal">Journal</a>
+        <nav className="nl-header-nav" aria-label="Main">
+          <a href="#">Shop</a>
+          <a href="#">Materials</a>
+          <a href="#">Journal</a>
         </nav>
         <div className="nl-header-actions">
-          <button 
-            className="nl-bag-button" 
-            type="button" 
+          <button
+            className="nl-bag-button"
+            type="button"
             onClick={() => setBagOpen(true)}
-            aria-label={`Open bag, ${bag.length} items`}
+            aria-haspopup="dialog"
           >
-            Bag ({bag.length})
+            Bag <span>{bag.length}</span>
+          </button>
+          <button
+            className="nl-menu-button"
+            type="button"
+            onClick={() => setMobileMenuOpen((open) => !open)}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="northline-mobile-menu"
+          >
+            {mobileMenuOpen ? "Close" : "Menu"}
           </button>
         </div>
+        {mobileMenuOpen && (
+          <nav
+            id="northline-mobile-menu"
+            className="nl-mobile-menu"
+            aria-label="Mobile"
+            style={{
+              background: "rgba(10, 10, 10, 0.7)", 
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
+            }}
+          >
+            <a href="#" onClick={() => setMobileMenuOpen(false)}>
+              Shop
+            </a>
+            <a href="#" onClick={() => setMobileMenuOpen(false)}>
+              Materials
+            </a>
+            <a href="#" onClick={() => setMobileMenuOpen(false)}>
+              Journal
+            </a>
+          </nav>
+        )}
       </header>
 
       <main className="nl-shop-container" style={{ display: 'flex', minHeight: '100vh', padding: '4rem 5vw', gap: '4rem' }}>
         
         {/* Sticky Sidebar for Categories and Filters */}
-        <aside className="nl-shop-sidebar" style={{ width: '250px', position: 'sticky', top: '120px', height: 'max-content', display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+        <aside className="nl-shop-sidebar" style={{ 
+          width: '250px', 
+          position: 'sticky', 
+          top: '120px', 
+          height: 'max-content', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: '3rem',
+          background: 'rgba(15, 15, 15, 0.35)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          border: '1px solid rgba(255, 255, 255, 0.05)',
+          borderRadius: '16px',
+          padding: '2rem'
+        }}>
           
           {/* Category List */}
           <section>
@@ -327,26 +390,49 @@ export function NorthlineShop() {
             <>
               <div className="nl-product-grid" style={{ padding: 0, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '3rem 2rem' }}>
                 {displayedProducts.map((product, index) => (
-                  <article className="nl-product" key={product.id} data-product-index={index}>
+                  <article 
+                    className="nl-product" 
+                    key={product.id} 
+                    data-product-index={index}
+                    style={{
+                      background: 'rgba(15, 15, 15, 0.35)',
+                      backdropFilter: 'blur(16px)',
+                      WebkitBackdropFilter: 'blur(16px)',
+                      border: '1px solid rgba(255, 255, 255, 0.05)',
+                      borderRadius: '16px',
+                      padding: '1.5rem',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      transition: 'transform 0.3s ease, background 0.3s ease',
+                    }}
+                  >
                     <button
                       className="nl-product-image"
                       type="button"
                       onClick={() => openProduct(product)}
                       aria-label={`View details for ${product.name}`}
-                      style={{ background: 'transparent', aspectRatio: '4/5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                      style={{ background: 'transparent', aspectRatio: '4/5', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '8px', overflow: 'hidden' }}
                     >
-                      <img src={product.image} alt={product.alt} loading="lazy" style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
+                      <img src={product.image} alt={product.alt} loading="lazy" style={{ objectFit: 'cover', width: '100%', height: '100%', transition: 'transform 0.5s ease' }} />
                     </button>
-                    <div className="nl-product-copy" style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-                      <h3 style={{ color: '#fff', fontSize: '1.1rem', marginBottom: '0.5rem' }}>{product.name}</h3>
-                      <p style={{ color: '#999' }}>{product.price}</p>
+                    <div className="nl-product-copy" style={{ marginTop: '1.5rem', textAlign: 'center', flexGrow: 1 }}>
+                      <h3 style={{ color: '#fff', fontSize: '1.1rem', marginBottom: '0.5rem', fontWeight: 500 }}>{product.name}</h3>
+                      <p style={{ color: 'rgba(255,255,255,0.7)' }}>{product.price}</p>
                     </div>
-                    <div className="nl-product-actions" style={{ marginTop: '1rem', display: 'flex', justifyContent: 'center' }}>
+                    <div className="nl-product-actions" style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'center' }}>
                       <button
                         className="nl-button"
                         type="button"
                         onClick={() => openProduct(product)}
-                        style={{ padding: '0.5rem 1.5rem', border: '1px solid #333', background: 'transparent', color: '#fff', borderRadius: '2px' }}
+                        style={{ 
+                          padding: '0.75rem 1.5rem', 
+                          border: '1px solid rgba(255,255,255,0.2)', 
+                          background: 'rgba(255,255,255,0.05)', 
+                          color: '#fff', 
+                          borderRadius: '30px',
+                          transition: 'background 0.2s ease',
+                          width: '100%'
+                        }}
                       >
                         View Details
                       </button>
