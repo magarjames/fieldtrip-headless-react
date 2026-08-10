@@ -2379,3 +2379,152 @@
     width: min(31rem, 100%);
   }
 }
+
+/* ========================================================= */
+/* LOOKBOOK
+/* ========================================================= */
+
+.nl-lookbook-container {
+  height: 100dvh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+  background: #000;
+}
+
+.nl-lookbook-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.nl-lookbook-scroller {
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+.nl-look {
+  height: 100dvh;
+  width: 100vw;
+  position: relative;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.nl-look-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.nl-look-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(2rem, 5vw, 4rem);
+  padding-bottom: clamp(3rem, 8vw, 6rem);
+}
+
+.nl-look-details {
+  pointer-events: auto;
+  max-width: 32rem;
+  width: 100%;
+}
+
+.nl-look-title {
+  color: #fff;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  margin-bottom: 2rem;
+}
+
+.nl-look-products {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.nl-look-product-card {
+  display: flex;
+  align-items: center;
+  background: rgba(25, 25, 25, 0.65);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 0.75rem;
+  gap: 1rem;
+  color: #fff;
+  text-align: left;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s;
+  cursor: pointer;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+.nl-look-product-card:hover {
+  background: rgba(45, 45, 45, 0.75);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.nl-look-product-img {
+  width: 4rem;
+  height: 5rem;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.nl-look-product-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.nl-look-product-group {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.6;
+  margin-bottom: 0.25rem;
+}
+
+.nl-look-product-name {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.nl-look-product-price {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.nl-look-product-action {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: #fff;
+  color: #000;
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin-right: 0.5rem;
+}
