@@ -29,8 +29,14 @@ export function NorthlineShop() {
   const [activeProduct, setActiveProduct] = useState<Product | null>(null);
   const [selectedColor, setSelectedColor] = useState<string>("Default");
   const [selectedSize, setSelectedSize] = useState<string>("");
-  const [activeFilter, setActiveFilter] = useState("All");
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+
+  // Filter & Sort State
+  const [activeFilter, setActiveFilter] = useState("All"); // Category
+  const [activeColors, setActiveColors] = useState<string[]>([]);
+  const [activeSizes, setActiveSizes] = useState<string[]>([]);
+  const [sortOrder, setSortOrder] = useState<string>("featured"); // featured, newest, price-asc, price-desc
+  const [visibleCount, setVisibleCount] = useState<number>(12);
 
   // Fetch real products from Shopify
   useEffect(() => {
@@ -65,12 +71,45 @@ export function NorthlineShop() {
     shopifyVariantId: sp.variants?.[0]?.id?.toString()
   }));
 
-  // Build a list of categories based on the product group (productType)
-  const dynamicFilters = ["All", ...Array.from(new Set(liveProducts.map(p => p.group).filter(Boolean)))];
+  // Build dynamic filter lists
+  const dynamicCategories = ["All", ...Array.from(new Set(liveProducts.map(p => p.group).filter(Boolean)))];
+  const dynamicColors = Array.from(new Set(liveProducts.flatMap(p => p.colors))).filter(c => c !== "Default");
+  const dynamicSizes = Array.from(new Set(liveProducts.flatMap(p => p.sizes))).filter(Boolean);
 
-  const shownProducts = liveProducts.filter(
-    (p) => activeFilter === "All" || p.group === activeFilter
-  );
+  // Apply filters and sort
+  const shownProducts = liveProducts.filter((p) => {
+    if (activeFilter !== "All" && p.group !== activeFilter) return false;
+    
+    // Exact match for selected colors (if any are selected, product must have at least one of them)
+    if (activeColors.length > 0) {
+      const hasMatchingColor = p.colors.some(c => activeColors.includes(c));
+      // If product only has "Default" color, we usually skip it if specific colors are filtered, 
+      // but let's strictly check intersection.
+      if (!hasMatchingColor) return false;
+    }
+
+    if (activeSizes.length > 0) {
+      const hasMatchingSize = p.sizes.some(s => activeSizes.includes(s));
+      if (!hasMatchingSize) return false;
+    }
+
+    return true;
+  }).sort((a, b) => {
+    if (sortOrder === "price-asc") return (a.rawPrice || 0) - (b.rawPrice || 0);
+    if (sortOrder === "price-desc") return (b.rawPrice || 0) - (a.rawPrice || 0);
+    if (sortOrder === "newest") return b.id.localeCompare(a.id);
+    return 0; // featured/default
+  });
+
+  const displayedProducts = shownProducts.slice(0, visibleCount);
+
+  // Toggle Handlers
+  const toggleColor = (color: string) => {
+    setActiveColors(prev => prev.includes(color) ? prev.filter(c => c !== color) : [...prev, color]);
+  };
+  const toggleSize = (size: string) => {
+    setActiveSizes(prev => prev.includes(size) ? prev.filter(s => s !== size) : [...prev, size]);
+  };
 
   const openProduct = (product: Product) => {
     setActiveProduct(product);
@@ -93,7 +132,6 @@ export function NorthlineShop() {
     setIsCheckingOut(true);
     try {
       const checkoutSession = await shopifyClient.checkout.create();
-      // Count duplicate items to send correct quantities
       const quantities: Record<string, number> = {};
       bag.forEach(item => {
         if (item.shopifyVariantId) {
@@ -128,7 +166,6 @@ export function NorthlineShop() {
     return () => { document.body.style.overflow = ''; };
   }, [activeProduct, bagOpen]);
 
-  // Listen for custom events to open the bag (e.g. from the V8 hero)
   useEffect(() => {
     const handleOpenBag = () => setBagOpen(true);
     window.addEventListener("open-northline-bag", handleOpenBag);
@@ -160,69 +197,186 @@ export function NorthlineShop() {
 
       <main className="nl-shop-container" style={{ display: 'flex', minHeight: '100vh', padding: '4rem 5vw', gap: '4rem' }}>
         
-        {/* Sticky Sidebar for Categories */}
-        <aside className="nl-shop-sidebar" style={{ width: '250px', position: 'sticky', top: '120px', height: 'fit-content' }}>
-          <h2 style={{ fontSize: '1.25rem', marginBottom: '1.5rem', color: '#fff', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Categories</h2>
-          <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            {dynamicFilters.map(filter => (
-              <li key={filter}>
-                <button
-                  type="button"
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    padding: 0,
-                    color: activeFilter === filter ? '#fff' : '#666',
-                    fontSize: '1.1rem',
-                    cursor: 'pointer',
-                    transition: 'color 0.2s ease',
-                    textAlign: 'left'
-                  }}
-                  onClick={() => setActiveFilter(filter)}
-                >
-                  {filter}
-                </button>
-              </li>
-            ))}
-          </ul>
+        {/* Sticky Sidebar for Categories and Filters */}
+        <aside className="nl-shop-sidebar" style={{ width: '250px', position: 'sticky', top: '120px', height: 'max-content', display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+          
+          {/* Category List */}
+          <section>
+            <h2 style={{ fontSize: '0.85rem', marginBottom: '1rem', color: '#666', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Categories</h2>
+            <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              {dynamicCategories.map(filter => (
+                <li key={filter}>
+                  <button
+                    type="button"
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      padding: 0,
+                      color: activeFilter === filter ? '#fff' : '#999',
+                      fontSize: '1rem',
+                      cursor: 'pointer',
+                      transition: 'color 0.2s ease',
+                      textAlign: 'left',
+                      fontWeight: activeFilter === filter ? '500' : '400'
+                    }}
+                    onClick={() => setActiveFilter(filter)}
+                  >
+                    {filter}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          {/* Size Filter */}
+          {dynamicSizes.length > 0 && (
+            <section>
+              <h2 style={{ fontSize: '0.85rem', marginBottom: '1rem', color: '#666', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Size</h2>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                {dynamicSizes.map(size => (
+                  <button
+                    key={size}
+                    type="button"
+                    onClick={() => toggleSize(size)}
+                    style={{
+                      background: activeSizes.includes(size) ? '#fff' : 'transparent',
+                      color: activeSizes.includes(size) ? '#000' : '#fff',
+                      border: '1px solid #333',
+                      borderRadius: '2px',
+                      padding: '0.25rem 0.5rem',
+                      fontSize: '0.85rem',
+                      cursor: 'pointer',
+                      minWidth: '40px',
+                      textAlign: 'center',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Color Filter */}
+          {dynamicColors.length > 0 && (
+            <section>
+              <h2 style={{ fontSize: '0.85rem', marginBottom: '1rem', color: '#666', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Color</h2>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                {dynamicColors.map(color => (
+                  <button
+                    key={color}
+                    type="button"
+                    onClick={() => toggleColor(color)}
+                    aria-label={`Filter by ${color}`}
+                    title={color}
+                    style={{
+                      width: '24px',
+                      height: '24px',
+                      borderRadius: '50%',
+                      backgroundColor: color.toLowerCase().replace(/\s/g, ''),
+                      border: activeColors.includes(color) ? '2px solid #fff' : '1px solid #333',
+                      cursor: 'pointer',
+                      padding: 0,
+                      outlineOffset: '2px',
+                      transition: 'border 0.2s ease'
+                    }}
+                  />
+                ))}
+              </div>
+            </section>
+          )}
         </aside>
 
-        {/* Product Grid */}
-        <section className="nl-shop-content" style={{ flex: 1 }}>
+        {/* Product Grid Area */}
+        <section className="nl-shop-content" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+          
+          {/* Header & Sort Controls */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', paddingBottom: '1rem', borderBottom: '1px solid #222' }}>
+            <span style={{ color: '#999', fontSize: '0.9rem' }}>
+              {shownProducts.length} {shownProducts.length === 1 ? 'Result' : 'Results'}
+            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <label htmlFor="sortOrder" style={{ color: '#666', fontSize: '0.9rem' }}>Sort by</label>
+              <select 
+                id="sortOrder"
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value)}
+                style={{
+                  background: 'transparent',
+                  color: '#fff',
+                  border: 'none',
+                  outline: 'none',
+                  fontSize: '0.9rem',
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="featured">Featured</option>
+                <option value="newest">Newest</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+              </select>
+            </div>
+          </div>
+
           {shopifyLoading ? (
             <p style={{ color: '#666' }}>Loading collection...</p>
-          ) : shownProducts.length === 0 ? (
-            <p style={{ color: '#666' }}>No products found in this category.</p>
+          ) : displayedProducts.length === 0 ? (
+            <p style={{ color: '#666' }}>No products match your filters.</p>
           ) : (
-            <div className="nl-product-grid" style={{ padding: 0, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '3rem 2rem' }}>
-              {shownProducts.map((product, index) => (
-                <article className="nl-product" key={product.id} data-product-index={index}>
-                  <button
-                    className="nl-product-image"
-                    type="button"
-                    onClick={() => openProduct(product)}
-                    aria-label={`View details for ${product.name}`}
-                    style={{ background: 'transparent', aspectRatio: '4/5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                  >
-                    <img src={product.image} alt={product.alt} loading="lazy" style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
-                  </button>
-                  <div className="nl-product-copy" style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-                    <h3 style={{ color: '#fff', fontSize: '1.1rem', marginBottom: '0.5rem' }}>{product.name}</h3>
-                    <p style={{ color: '#999' }}>{product.price}</p>
-                  </div>
-                  <div className="nl-product-actions" style={{ marginTop: '1rem', display: 'flex', justifyContent: 'center' }}>
+            <>
+              <div className="nl-product-grid" style={{ padding: 0, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '3rem 2rem' }}>
+                {displayedProducts.map((product, index) => (
+                  <article className="nl-product" key={product.id} data-product-index={index}>
                     <button
-                      className="nl-button"
+                      className="nl-product-image"
                       type="button"
                       onClick={() => openProduct(product)}
-                      style={{ padding: '0.5rem 1.5rem', border: '1px solid #333', background: 'transparent', color: '#fff', borderRadius: '2px' }}
+                      aria-label={`View details for ${product.name}`}
+                      style={{ background: 'transparent', aspectRatio: '4/5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                     >
-                      View Details
+                      <img src={product.image} alt={product.alt} loading="lazy" style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
                     </button>
-                  </div>
-                </article>
-              ))}
-            </div>
+                    <div className="nl-product-copy" style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+                      <h3 style={{ color: '#fff', fontSize: '1.1rem', marginBottom: '0.5rem' }}>{product.name}</h3>
+                      <p style={{ color: '#999' }}>{product.price}</p>
+                    </div>
+                    <div className="nl-product-actions" style={{ marginTop: '1rem', display: 'flex', justifyContent: 'center' }}>
+                      <button
+                        className="nl-button"
+                        type="button"
+                        onClick={() => openProduct(product)}
+                        style={{ padding: '0.5rem 1.5rem', border: '1px solid #333', background: 'transparent', color: '#fff', borderRadius: '2px' }}
+                      >
+                        View Details
+                      </button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+
+              {/* Load More Button */}
+              {visibleCount < shownProducts.length && (
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '4rem' }}>
+                  <button
+                    onClick={() => setVisibleCount(prev => prev + 12)}
+                    style={{
+                      background: 'transparent',
+                      color: '#fff',
+                      border: '1px solid #333',
+                      padding: '0.75rem 3rem',
+                      fontSize: '0.9rem',
+                      cursor: 'pointer',
+                      transition: 'background 0.2s ease'
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.background = '#111'}
+                    onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                  >
+                    Load More
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </section>
 
