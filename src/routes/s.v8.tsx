@@ -22,9 +22,9 @@ function FieldtripNorthlineV8Page() {
           backdrop={<FoldBackdropV8 />}
           figurePlacement="edge"
           content="landing"
-          primaryHref="#collection"
-          secondaryHref="/s/v8/shop"
-          shopHref="#collection"
+          primaryHref="#"
+          secondaryHref="#"
+          shopHref="#"
           shopText={<ShoppingCart size={20} />}
           onShopClick={() => {
             if (typeof window !== "undefined") {

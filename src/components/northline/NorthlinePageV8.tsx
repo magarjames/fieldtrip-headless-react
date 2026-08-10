@@ -538,13 +538,13 @@ export function NorthlinePageV8({
 
       {showHeader && (
         <header className="nl-header">
-          <a className="nl-wordmark" href={homeHref} aria-label="Northline home">
+          <a className="nl-wordmark" href="#" aria-label="Northline home">
             Northline
           </a>
-          <nav className="nl-nav" aria-label="Primary navigation">
-            <a href="/s/v8/shop">Shop</a>
-            <a href="#materials">Materials</a>
-            <a href="#journal">Journal</a>
+          <nav className="nl-header-nav" aria-label="Main">
+            <a href="#">Shop</a>
+            <a href="#">Materials</a>
+            <a href="#">Journal</a>
           </nav>
           <div className="nl-header-actions">
             <button
@@ -569,15 +569,15 @@ export function NorthlinePageV8({
             <nav
               id="northline-mobile-menu"
               className="nl-mobile-menu"
-              aria-label="Mobile navigation"
+              aria-label="Mobile"
             >
-              <a href="#collection" onClick={() => setMobileMenuOpen(false)}>
+              <a href="#" onClick={() => setMobileMenuOpen(false)}>
                 Shop
               </a>
-              <a href="#materials" onClick={() => setMobileMenuOpen(false)}>
+              <a href="#" onClick={() => setMobileMenuOpen(false)}>
                 Materials
               </a>
-              <a href="#journal" onClick={() => setMobileMenuOpen(false)}>
+              <a href="#" onClick={() => setMobileMenuOpen(false)}>
                 Journal
               </a>
             </nav>
@@ -608,10 +608,10 @@ export function NorthlinePageV8({
                 Purposeful layers and carry goods for platforms, pavements, and everything after.
               </p>
               <div className="nl-hero-actions">
-                <a className="nl-button nl-button-primary" href="/s/v8/shop">
+                <a className="nl-button nl-button-primary" href="#">
                   Shop the system
                 </a>
-                <a className="nl-button nl-button-quiet" href="#materials">
+                <a className="nl-button nl-button-quiet" href="#">
                   See the material
                 </a>
               </div>
@@ -627,9 +627,16 @@ export function NorthlinePageV8({
               className="nl-continuation-nav"
               aria-label="Collection navigation"
             >
-              <a href="#collection">Shop</a>
-              <a href="#materials">Materials</a>
-              <a href="#journal">Journal</a>
+              <a href="#">Shop</a>
+              <a href="#">Materials</a>
+              <a href="#">Journal</a>
+            </nav>
+          )}
+          {!splitNavigation && (
+            <nav className="nl-footer-nav" aria-label="Footer">
+              <a href="#">Shop</a>
+              <a href="#">Materials</a>
+              <a href="#">Journal</a>
             </nav>
           )}
           <div className="nl-collection-intro nl-reveal">
