@@ -40,6 +40,7 @@ import { Route as NlHyerRouteImport } from './routes/nl.hyer'
 import { Route as NlGalleryRouteImport } from './routes/nl.gallery'
 import { Route as NlFlightRouteImport } from './routes/nl.flight'
 import { Route as NlBrutalistRouteImport } from './routes/nl.brutalist'
+import { Route as SV8ShopRouteImport } from './routes/s.v8.shop'
 
 const NorthlineWorldRoute = NorthlineWorldRouteImport.update({
   id: '/northline-world',
@@ -196,6 +197,11 @@ const NlBrutalistRoute = NlBrutalistRouteImport.update({
   path: '/nl/brutalist',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SV8ShopRoute = SV8ShopRouteImport.update({
+  id: '/shop',
+  path: '/shop',
+  getParentRoute: () => SV8Route,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -215,7 +221,7 @@ export interface FileRoutesByFullPath {
   '/s/v5': typeof SV5Route
   '/s/v6': typeof SV6Route
   '/s/v7': typeof SV7Route
-  '/s/v8': typeof SV8Route
+  '/s/v8': typeof SV8RouteWithChildren
   '/w/atlas': typeof WAtlasRoute
   '/w/bloom': typeof WBloomRoute
   '/w/cloth': typeof WClothRoute
@@ -229,6 +235,7 @@ export interface FileRoutesByFullPath {
   '/nl/': typeof NlIndexRoute
   '/s/': typeof SIndexRoute
   '/w/': typeof WIndexRoute
+  '/s/v8/shop': typeof SV8ShopRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -248,7 +255,7 @@ export interface FileRoutesByTo {
   '/s/v5': typeof SV5Route
   '/s/v6': typeof SV6Route
   '/s/v7': typeof SV7Route
-  '/s/v8': typeof SV8Route
+  '/s/v8': typeof SV8RouteWithChildren
   '/w/atlas': typeof WAtlasRoute
   '/w/bloom': typeof WBloomRoute
   '/w/cloth': typeof WClothRoute
@@ -262,6 +269,7 @@ export interface FileRoutesByTo {
   '/nl': typeof NlIndexRoute
   '/s': typeof SIndexRoute
   '/w': typeof WIndexRoute
+  '/s/v8/shop': typeof SV8ShopRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -282,7 +290,7 @@ export interface FileRoutesById {
   '/s/v5': typeof SV5Route
   '/s/v6': typeof SV6Route
   '/s/v7': typeof SV7Route
-  '/s/v8': typeof SV8Route
+  '/s/v8': typeof SV8RouteWithChildren
   '/w/atlas': typeof WAtlasRoute
   '/w/bloom': typeof WBloomRoute
   '/w/cloth': typeof WClothRoute
@@ -296,6 +304,7 @@ export interface FileRoutesById {
   '/nl/': typeof NlIndexRoute
   '/s/': typeof SIndexRoute
   '/w/': typeof WIndexRoute
+  '/s/v8/shop': typeof SV8ShopRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -331,6 +340,7 @@ export interface FileRouteTypes {
     | '/nl/'
     | '/s/'
     | '/w/'
+    | '/s/v8/shop'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -364,6 +374,7 @@ export interface FileRouteTypes {
     | '/nl'
     | '/s'
     | '/w'
+    | '/s/v8/shop'
   id:
     | '__root__'
     | '/'
@@ -397,6 +408,7 @@ export interface FileRouteTypes {
     | '/nl/'
     | '/s/'
     | '/w/'
+    | '/s/v8/shop'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -417,7 +429,7 @@ export interface RootRouteChildren {
   SV5Route: typeof SV5Route
   SV6Route: typeof SV6Route
   SV7Route: typeof SV7Route
-  SV8Route: typeof SV8Route
+  SV8Route: typeof SV8RouteWithChildren
   WAtlasRoute: typeof WAtlasRoute
   WBloomRoute: typeof WBloomRoute
   WClothRoute: typeof WClothRoute
@@ -652,8 +664,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NlBrutalistRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/s/v8/shop': {
+      id: '/s/v8/shop'
+      path: '/shop'
+      fullPath: '/s/v8/shop'
+      preLoaderRoute: typeof SV8ShopRouteImport
+      parentRoute: typeof SV8Route
+    }
   }
 }
+
+interface SV8RouteChildren {
+  SV8ShopRoute: typeof SV8ShopRoute
+}
+
+const SV8RouteChildren: SV8RouteChildren = {
+  SV8ShopRoute: SV8ShopRoute,
+}
+
+const SV8RouteWithChildren = SV8Route._addFileChildren(SV8RouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -673,7 +702,7 @@ const rootRouteChildren: RootRouteChildren = {
   SV5Route: SV5Route,
   SV6Route: SV6Route,
   SV7Route: SV7Route,
-  SV8Route: SV8Route,
+  SV8Route: SV8RouteWithChildren,
   WAtlasRoute: WAtlasRoute,
   WBloomRoute: WBloomRoute,
   WClothRoute: WClothRoute,

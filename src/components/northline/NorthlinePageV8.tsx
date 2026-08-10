@@ -542,7 +542,7 @@ export function NorthlinePageV8({
             Northline
           </a>
           <nav className="nl-nav" aria-label="Primary navigation">
-            <a href="#collection">Shop</a>
+            <a href="/s/v8/shop">Shop</a>
             <a href="#materials">Materials</a>
             <a href="#journal">Journal</a>
           </nav>
@@ -608,8 +608,8 @@ export function NorthlinePageV8({
                 Purposeful layers and carry goods for platforms, pavements, and everything after.
               </p>
               <div className="nl-hero-actions">
-                <a className="nl-button nl-button-primary" href="#collection">
-                  Shop the collection
+                <a className="nl-button nl-button-primary" href="/s/v8/shop">
+                  Shop the system
                 </a>
                 <a className="nl-button nl-button-quiet" href="#materials">
                   See the material
