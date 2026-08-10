@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { shopifyClient } from "@/lib/shopify";
 import "./northline.css";
-import heroDawn from "@/assets/northline/hero-dawn.png";
+import { ShaderBackdrop } from "@/components/editions/ShaderBackdrop";
 
 // Interface for our mapped local product state
 interface Product {
@@ -177,13 +177,13 @@ export function NorthlineShop() {
   return (
     <div className="nl-scope" style={{ 
       minHeight: '100vh', 
-      backgroundColor: '#000',
-      backgroundImage: `url(${heroDawn})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundAttachment: 'fixed',
-      color: '#fff'
+      backgroundColor: '#0f1310',
+      color: '#fff',
+      position: 'relative'
     }}>
+      <div style={{ position: 'fixed', inset: 0, zIndex: 0 }} className="ed">
+        <ShaderBackdrop />
+      </div>
       <header className="nl-header" style={{ 
         position: "sticky", 
         top: 0, 
@@ -244,7 +244,7 @@ export function NorthlineShop() {
         )}
       </header>
 
-      <main className="nl-shop-container" style={{ display: 'flex', minHeight: '100vh', padding: '4rem 5vw', gap: '4rem' }}>
+      <main className="nl-shop-container" style={{ position: 'relative', zIndex: 10, display: 'flex', minHeight: '100vh', padding: '4rem 5vw', gap: '4rem' }}>
         
         {/* Sticky Sidebar for Categories and Filters */}
         <aside className="nl-shop-sidebar" style={{ 
