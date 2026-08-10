@@ -233,9 +233,9 @@ export function NorthlinePageV8({
     alt: sp.title,
     description: sp.vendor || "A purposeful new addition to the line.",
     colors: (sp.options?.find((o: any) => o.name.toLowerCase() === 'color' || o.name.toLowerCase() === 'colour')
-      ?.values as any[])?.map((v: any) => typeof v === 'object' && v !== null ? v.value : v) || ["Default"],
+      ?.values as unknown as any[])?.map((v: any) => typeof v === 'object' && v !== null ? v.value : v) || ["Default"],
     sizes: (sp.options?.find((o: any) => o.name.toLowerCase() === 'size')
-      ?.values as any[])?.map((v: any) => typeof v === 'object' && v !== null ? v.value : v) || ["One Size"],
+      ?.values as unknown as any[])?.map((v: any) => typeof v === 'object' && v !== null ? v.value : v) || ["One Size"],
     shopifyVariantId: (sp.variants?.[0] as any)?.id,
     variants: sp.variants,
     images: sp.images?.map((img: any) => img.src) || [sp.images?.[0]?.src || flatlay]
