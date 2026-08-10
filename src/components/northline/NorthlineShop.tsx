@@ -141,6 +141,11 @@ export function NorthlineShop() {
         <a className="nl-wordmark" href="/s/v8" aria-label="Back to Northline home">
           Northline
         </a>
+        <nav className="nl-nav" aria-label="Primary navigation">
+          <a href="/s/v8/shop">Shop</a>
+          <a href="/s/v8#materials">Materials</a>
+          <a href="/s/v8#journal">Journal</a>
+        </nav>
         <div className="nl-header-actions">
           <button 
             className="nl-bag-button" 
