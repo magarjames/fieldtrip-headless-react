@@ -8,4 +8,5 @@ const storefrontAccessToken = import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN || '
 export const shopifyClient = Client.buildClient({
   domain: domain,
   storefrontAccessToken: storefrontAccessToken,
+  apiVersion: '2024-01',
 });

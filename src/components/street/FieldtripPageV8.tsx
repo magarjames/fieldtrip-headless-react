@@ -81,7 +81,7 @@ export function FieldtripPageV8({
     if (sp && sp.variants && sp.variants.length > 0) {
       return { 
         ...piece, 
-        price: parseFloat(sp.variants[0].price.amount), 
+        price: Number(sp.variants[0].price.amount), 
         shopifyVariantId: sp.variants[0].id 
       };
     }
@@ -93,7 +93,7 @@ export function FieldtripPageV8({
     const isMatched = PIECES.some(piece => piece.name.toLowerCase() === sp.title.toLowerCase());
     if (!isMatched) {
       const variantId = sp.variants?.[0]?.id;
-      const price = sp.variants?.[0]?.price?.amount ? parseFloat(sp.variants[0].price.amount) : 0;
+      const price = sp.variants?.[0]?.price?.amount ? Number(sp.variants[0].price.amount) : 0;
       
       // Generate a stable, bright fallback hover hue based on the product title
       let hash = 0;

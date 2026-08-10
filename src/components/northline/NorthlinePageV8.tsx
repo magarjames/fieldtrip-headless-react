@@ -30,6 +30,7 @@ type Product = {
   alt: string;
   description: string;
   colors: string[];
+  sizes: string[];
   shopifyVariantId?: string;
   variants?: any[];
   variantTitle?: string;
@@ -231,10 +232,10 @@ export function NorthlinePageV8({
     image: sp.images?.[0]?.src || flatlay,
     alt: sp.title,
     description: sp.vendor || "A purposeful new addition to the line.",
-    colors: sp.options?.find((o: any) => o.name.toLowerCase() === 'color' || o.name.toLowerCase() === 'colour')
-      ?.values.map((v: any) => typeof v === 'object' && v !== null ? v.value : v) || ["Default"],
-    sizes: sp.options?.find((o: any) => o.name.toLowerCase() === 'size')
-      ?.values.map((v: any) => typeof v === 'object' && v !== null ? v.value : v) || ["One Size"],
+    colors: (sp.options?.find((o: any) => o.name.toLowerCase() === 'color' || o.name.toLowerCase() === 'colour')
+      ?.values as any[])?.map((v: any) => typeof v === 'object' && v !== null ? v.value : v) || ["Default"],
+    sizes: (sp.options?.find((o: any) => o.name.toLowerCase() === 'size')
+      ?.values as any[])?.map((v: any) => typeof v === 'object' && v !== null ? v.value : v) || ["One Size"],
     shopifyVariantId: (sp.variants?.[0] as any)?.id,
     variants: sp.variants,
     images: sp.images?.map((img: any) => img.src) || [sp.images?.[0]?.src || flatlay]
