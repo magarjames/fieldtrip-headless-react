@@ -789,65 +789,6 @@ export function NorthlinePageV8({
           </div>
         </section>
 
-        <section ref={systemRef} className="nl-system">
-          {risingEdge && (
-            <NorthlineScrollEdge
-              motion={systemEdgeMotionRef}
-              colour="#bc7155"
-              toneStrength={0}
-              className="nl-section-edge nl-system-edge"
-            />
-          )}
-          <div className="nl-system-copy nl-reveal">
-            <h2>One less decision before the door.</h2>
-            <p>
-              A shell, a cargo, a smaller bag. Designed to work together without needing a uniform.
-            </p>
-            <button
-              className="nl-text-action"
-              type="button"
-              onClick={() => {
-                if (liveProducts.length > 0) {
-                  openProduct(liveProducts[0])
-                }
-              }}
-            >
-              Build the starting set
-            </button>
-          </div>
-          <figure className="nl-system-image nl-reveal">
-            <img
-              src={flatlay}
-              alt="Graphite outerwear, utility trousers, compact bag, and socks arranged as a complete outfit."
-              loading="lazy"
-              decoding="async"
-            />
-          </figure>
-        </section>
-
-        <NorthlineScrollFilm
-          image="/northline-motion/film-arrival-frames-hq/frame-001.webp"
-          frameSequence={{
-            basePath: "/northline-motion/film-arrival-frames",
-            highResBasePath: "/northline-motion/film-arrival-frames-hq",
-            frameCount: 300,
-          }}
-          alt="Person in black technical outerwear walking across a pale concrete terrace at dawn."
-          messages={[
-            {
-              title: "Leave with less friction.",
-              copy: "A considered layer keeps the first five minutes outside from deciding the rest of your day.",
-            },
-            {
-              title: "Let the material answer.",
-              copy: "Weather-resistant structure, quiet hardware, and enough room to move through the day.",
-            },
-            {
-              title: "Keep the last mile open.",
-              copy: "When the platform empties, the useful parts are the ones that are still with you.",
-            },
-          ]}
-        />
 
         <section id="journal" className="nl-signup">
           <div className="nl-signup-content nl-reveal">
