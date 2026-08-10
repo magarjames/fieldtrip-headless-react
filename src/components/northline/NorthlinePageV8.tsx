@@ -161,6 +161,20 @@ export function NorthlinePageV8({
     return () => { document.body.style.overflow = ''; };
   }, [activeProduct, bagOpen, mobileMenuOpen]);
 
+  const sideableImagesRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = sideableImagesRef.current;
+    if (!el) return;
+    const handleWheel = (e: WheelEvent) => {
+      if (e.deltaY !== 0) {
+        e.preventDefault();
+        el.scrollLeft += e.deltaY;
+      }
+    };
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => el.removeEventListener("wheel", handleWheel);
+  }, [activeProduct]);
+
 
   useEffect(() => {
     const video = materialsVideoRef.current;
@@ -933,7 +947,7 @@ export function NorthlinePageV8({
                 </div>
               </div>
               <div className="nl-dialog-glass-right">
-                <div className="nl-dialog-sideable-images">
+                <div className="nl-dialog-sideable-images" ref={sideableImagesRef}>
                   {activeProduct.images?.map((img, i) => (
                     <img key={i} src={img} alt={`${activeProduct.alt} view ${i + 1}`} loading="lazy" />
                   ))}
