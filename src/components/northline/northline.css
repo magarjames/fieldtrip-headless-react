@@ -1553,7 +1553,6 @@
 .nl-dialog-sideable-images {
   display: flex;
   overflow-x: auto;
-  scroll-snap-type: x mandatory;
   gap: 1rem;
   padding-bottom: 1rem;
   scrollbar-width: none;
@@ -1564,7 +1563,6 @@
 }
 
 .nl-dialog-sideable-images img {
-  scroll-snap-align: center;
   width: min(100%, 18rem);
   aspect-ratio: 3/4;
   object-fit: cover;
