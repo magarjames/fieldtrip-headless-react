@@ -1,4 +1,4 @@
-﻿import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { ShoppingCart } from "lucide-react";
 import { FieldtripPageV8 } from "@/components/street/FieldtripPageV8";
 import { FoldBackdropV8 } from "@/components/street/FoldBackdropV8";
@@ -23,7 +23,7 @@ function FieldtripNorthlineV8Page() {
           figurePlacement="edge"
           content="landing"
           primaryHref="#collection"
-          secondaryHref="#materials"
+          secondaryHref="/s/v8/shop"
           shopHref="#collection"
           shopText={<ShoppingCart size={20} />}
           onShopClick={() => {
