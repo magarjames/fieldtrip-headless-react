@@ -41,6 +41,7 @@ import { Route as NlGalleryRouteImport } from './routes/nl.gallery'
 import { Route as NlFlightRouteImport } from './routes/nl.flight'
 import { Route as NlBrutalistRouteImport } from './routes/nl.brutalist'
 import { Route as SV8ShopRouteImport } from './routes/s_.v8_.shop'
+import { Route as SV8LookbookRouteImport } from './routes/s_.v8_.lookbook'
 
 const NorthlineWorldRoute = NorthlineWorldRouteImport.update({
   id: '/northline-world',
@@ -202,6 +203,11 @@ const SV8ShopRoute = SV8ShopRouteImport.update({
   path: '/s/v8/shop',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SV8LookbookRoute = SV8LookbookRouteImport.update({
+  id: '/s_/v8_/lookbook',
+  path: '/s/v8/lookbook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -235,6 +241,7 @@ export interface FileRoutesByFullPath {
   '/nl/': typeof NlIndexRoute
   '/s/': typeof SIndexRoute
   '/w/': typeof WIndexRoute
+  '/s/v8/lookbook': typeof SV8LookbookRoute
   '/s/v8/shop': typeof SV8ShopRoute
 }
 export interface FileRoutesByTo {
@@ -269,6 +276,7 @@ export interface FileRoutesByTo {
   '/nl': typeof NlIndexRoute
   '/s': typeof SIndexRoute
   '/w': typeof WIndexRoute
+  '/s/v8/lookbook': typeof SV8LookbookRoute
   '/s/v8/shop': typeof SV8ShopRoute
 }
 export interface FileRoutesById {
@@ -304,6 +312,7 @@ export interface FileRoutesById {
   '/nl/': typeof NlIndexRoute
   '/s/': typeof SIndexRoute
   '/w/': typeof WIndexRoute
+  '/s_/v8_/lookbook': typeof SV8LookbookRoute
   '/s_/v8_/shop': typeof SV8ShopRoute
 }
 export interface FileRouteTypes {
@@ -340,6 +349,7 @@ export interface FileRouteTypes {
     | '/nl/'
     | '/s/'
     | '/w/'
+    | '/s/v8/lookbook'
     | '/s/v8/shop'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -374,6 +384,7 @@ export interface FileRouteTypes {
     | '/nl'
     | '/s'
     | '/w'
+    | '/s/v8/lookbook'
     | '/s/v8/shop'
   id:
     | '__root__'
@@ -408,6 +419,7 @@ export interface FileRouteTypes {
     | '/nl/'
     | '/s/'
     | '/w/'
+    | '/s_/v8_/lookbook'
     | '/s_/v8_/shop'
   fileRoutesById: FileRoutesById
 }
@@ -443,6 +455,7 @@ export interface RootRouteChildren {
   NlIndexRoute: typeof NlIndexRoute
   SIndexRoute: typeof SIndexRoute
   WIndexRoute: typeof WIndexRoute
+  SV8LookbookRoute: typeof SV8LookbookRoute
   SV8ShopRoute: typeof SV8ShopRoute
 }
 
@@ -672,6 +685,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SV8ShopRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/s_/v8_/lookbook': {
+      id: '/s_/v8_/lookbook'
+      path: '/s/v8/lookbook'
+      fullPath: '/s/v8/lookbook'
+      preLoaderRoute: typeof SV8LookbookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -707,6 +727,7 @@ const rootRouteChildren: RootRouteChildren = {
   NlIndexRoute: NlIndexRoute,
   SIndexRoute: SIndexRoute,
   WIndexRoute: WIndexRoute,
+  SV8LookbookRoute: SV8LookbookRoute,
   SV8ShopRoute: SV8ShopRoute,
 }
 export const routeTree = rootRouteImport
