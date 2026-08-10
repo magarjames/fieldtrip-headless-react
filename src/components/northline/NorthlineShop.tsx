@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { shopifyClient } from "@/lib/shopify";
 import "./northline.css";
-import { ShaderBackdrop } from "@/components/editions/ShaderBackdrop";
+import { FoldBackdropV8 } from "@/components/street/FoldBackdropV8";
 
 // Interface for our mapped local product state
 interface Product {
@@ -177,21 +177,21 @@ export function NorthlineShop() {
   return (
     <div className="nl-scope" style={{ 
       minHeight: '100vh', 
-      backgroundColor: '#0f1310',
-      color: '#fff',
+      backgroundColor: '#F5F8FB',
+      color: '#1a1a1a',
       position: 'relative'
     }}>
-      <div style={{ position: 'fixed', inset: 0, zIndex: 0 }} className="ed">
-        <ShaderBackdrop />
+      <div style={{ position: 'fixed', inset: 0, zIndex: 0 }}>
+        <FoldBackdropV8 />
       </div>
       <header className="nl-header" style={{ 
         position: "sticky", 
         top: 0, 
         zIndex: 50, 
-        background: "rgba(10, 10, 10, 0.4)", 
+        background: "rgba(255, 255, 255, 0.45)", 
         backdropFilter: "blur(16px)",
         WebkitBackdropFilter: "blur(16px)",
-        borderBottom: '1px solid rgba(255, 255, 255, 0.05)' 
+        borderBottom: '1px solid rgba(0, 0, 0, 0.06)' 
       }}>
         <a className="nl-wordmark" href="#" aria-label="Northline home">
           Northline
@@ -226,7 +226,7 @@ export function NorthlineShop() {
             className="nl-mobile-menu"
             aria-label="Mobile"
             style={{
-              background: "rgba(10, 10, 10, 0.7)", 
+              background: "rgba(255, 255, 255, 0.7)", 
               backdropFilter: "blur(20px)",
               WebkitBackdropFilter: "blur(20px)",
             }}
@@ -255,10 +255,10 @@ export function NorthlineShop() {
           display: 'flex', 
           flexDirection: 'column', 
           gap: '3rem',
-          background: 'rgba(15, 15, 15, 0.35)',
+          background: 'rgba(255, 255, 255, 0.35)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
-          border: '1px solid rgba(255, 255, 255, 0.05)',
+          border: '1px solid rgba(0, 0, 0, 0.06)',
           borderRadius: '16px',
           padding: '2rem'
         }}>
@@ -275,12 +275,12 @@ export function NorthlineShop() {
                       background: 'none',
                       border: 'none',
                       padding: 0,
-                      color: activeFilter === filter ? '#fff' : '#999',
+                      color: activeFilter === filter ? '#1a1a1a' : '#555',
                       fontSize: '1rem',
                       cursor: 'pointer',
                       transition: 'color 0.2s ease',
                       textAlign: 'left',
-                      fontWeight: activeFilter === filter ? '500' : '400'
+                      fontWeight: activeFilter === filter ? '600' : '400'
                     }}
                     onClick={() => setActiveFilter(filter)}
                   >
@@ -302,9 +302,9 @@ export function NorthlineShop() {
                     type="button"
                     onClick={() => toggleSize(size)}
                     style={{
-                      background: activeSizes.includes(size) ? '#fff' : 'transparent',
-                      color: activeSizes.includes(size) ? '#000' : '#fff',
-                      border: '1px solid #333',
+                      background: activeSizes.includes(size) ? '#1a1a1a' : 'transparent',
+                      color: activeSizes.includes(size) ? '#fff' : '#1a1a1a',
+                      border: '1px solid rgba(0,0,0,0.15)',
                       borderRadius: '2px',
                       padding: '0.25rem 0.5rem',
                       fontSize: '0.85rem',
@@ -338,7 +338,7 @@ export function NorthlineShop() {
                       height: '24px',
                       borderRadius: '50%',
                       backgroundColor: color.toLowerCase().replace(/\s/g, ''),
-                      border: activeColors.includes(color) ? '2px solid #fff' : '1px solid #333',
+                      border: activeColors.includes(color) ? '2px solid #1a1a1a' : '1px solid rgba(0,0,0,0.15)',
                       cursor: 'pointer',
                       padding: 0,
                       outlineOffset: '2px',
@@ -355,7 +355,7 @@ export function NorthlineShop() {
         <section className="nl-shop-content" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
           
           {/* Header & Sort Controls */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', paddingBottom: '1rem', borderBottom: '1px solid #222' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', paddingBottom: '1rem', borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
             <span style={{ color: '#999', fontSize: '0.9rem' }}>
               {shownProducts.length} {shownProducts.length === 1 ? 'Result' : 'Results'}
             </span>
@@ -367,7 +367,7 @@ export function NorthlineShop() {
                 onChange={(e) => setSortOrder(e.target.value)}
                 style={{
                   background: 'transparent',
-                  color: '#fff',
+                  color: '#1a1a1a',
                   border: 'none',
                   outline: 'none',
                   fontSize: '0.9rem',
@@ -395,10 +395,10 @@ export function NorthlineShop() {
                     key={product.id} 
                     data-product-index={index}
                     style={{
-                      background: 'rgba(15, 15, 15, 0.35)',
+                      background: 'rgba(255, 255, 255, 0.45)',
                       backdropFilter: 'blur(16px)',
                       WebkitBackdropFilter: 'blur(16px)',
-                      border: '1px solid rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(0, 0, 0, 0.06)',
                       borderRadius: '16px',
                       padding: '1.5rem',
                       display: 'flex',
@@ -416,8 +416,8 @@ export function NorthlineShop() {
                       <img src={product.image} alt={product.alt} loading="lazy" style={{ objectFit: 'cover', width: '100%', height: '100%', transition: 'transform 0.5s ease' }} />
                     </button>
                     <div className="nl-product-copy" style={{ marginTop: '1.5rem', textAlign: 'center', flexGrow: 1 }}>
-                      <h3 style={{ color: '#fff', fontSize: '1.1rem', marginBottom: '0.5rem', fontWeight: 500 }}>{product.name}</h3>
-                      <p style={{ color: 'rgba(255,255,255,0.7)' }}>{product.price}</p>
+                      <h3 style={{ color: '#1a1a1a', fontSize: '1.1rem', marginBottom: '0.5rem', fontWeight: 500 }}>{product.name}</h3>
+                      <p style={{ color: 'rgba(0,0,0,0.55)' }}>{product.price}</p>
                     </div>
                     <div className="nl-product-actions" style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'center' }}>
                       <button
@@ -426,9 +426,9 @@ export function NorthlineShop() {
                         onClick={() => openProduct(product)}
                         style={{ 
                           padding: '0.75rem 1.5rem', 
-                          border: '1px solid rgba(255,255,255,0.2)', 
-                          background: 'rgba(255,255,255,0.05)', 
-                          color: '#fff', 
+                          border: '1px solid rgba(0,0,0,0.15)', 
+                          background: 'rgba(0,0,0,0.04)', 
+                          color: '#1a1a1a', 
                           borderRadius: '30px',
                           transition: 'background 0.2s ease',
                           width: '100%'
@@ -448,14 +448,14 @@ export function NorthlineShop() {
                     onClick={() => setVisibleCount(prev => prev + 12)}
                     style={{
                       background: 'transparent',
-                      color: '#fff',
-                      border: '1px solid #333',
+                      color: '#1a1a1a',
+                      border: '1px solid rgba(0,0,0,0.15)',
                       padding: '0.75rem 3rem',
                       fontSize: '0.9rem',
                       cursor: 'pointer',
                       transition: 'background 0.2s ease'
                     }}
-                    onMouseOver={(e) => e.currentTarget.style.background = '#111'}
+                    onMouseOver={(e) => e.currentTarget.style.background = 'rgba(0,0,0,0.04)'}
                     onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
                   >
                     Load More
