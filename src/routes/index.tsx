@@ -23,7 +23,7 @@ function FieldtripNorthlineV8Page() {
           figurePlacement="edge"
           content="landing"
           primaryHref="#"
-          secondaryHref="#"
+          secondaryHref="/s/v8/shop"
           shopHref="#"
           shopText={<ShoppingCart size={20} />}
           onShopClick={() => {
