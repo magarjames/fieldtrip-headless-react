@@ -1465,6 +1465,10 @@
   padding: clamp(2rem, 5vw, 5rem);
 }
 
+.nl-layer.is-immersive .nl-layer-backdrop {
+  background: transparent;
+}
+
 .nl-layer-backdrop-image {
   position: absolute;
   inset: 0;
