@@ -175,73 +175,52 @@ export function NorthlineShop() {
   }, []);
 
   return (
-    <div className="nl-scope" style={{ 
+    <div className="ft" style={{ 
       minHeight: '100vh', 
-      backgroundColor: '#F5F8FB',
-      color: '#1a1a1a',
+      backgroundColor: 'transparent',
+      color: 'var(--ink)',
       position: 'relative'
     }}>
+      <style>{`
+        .ft{
+          --paper:#FBF7EF; --ink:#141317; --dim:#565462; --hair:rgba(20,19,23,0.16);
+          --pop:#F5C518; --pop-ink:#141317;
+          font-family:Archivo,"Helvetica Neue",sans-serif;
+        }
+        .ft .lbl{ font-family:"JetBrains Mono",monospace; font-size:0.66rem;
+          text-transform:uppercase; letter-spacing:0.14em }
+        .ft .shell{ max-width:1560px; margin-inline:auto; padding-inline:clamp(1rem,4vw,2.25rem) }
+        .ft .btn{ display:inline-flex; align-items:center; min-height:44px; padding:0 1.4rem;
+          border-radius:999px; background:var(--ink); color:var(--paper);
+          font-weight:700; font-size:0.85rem; letter-spacing:-0.01em;
+          transition:transform .2s cubic-bezier(.16,1,.3,1) }
+        .ft .btn:active{ transform:scale(.97) }
+      `}</style>
       <div style={{ position: 'fixed', inset: 0, zIndex: 0 }}>
         <FoldBackdropV8 />
       </div>
-      <header className="nl-header" style={{ 
-        position: "sticky", 
-        top: 0, 
-        zIndex: 50, 
-        background: "rgba(255, 255, 255, 0.45)", 
-        backdropFilter: "blur(16px)",
-        WebkitBackdropFilter: "blur(16px)",
-        borderBottom: '1px solid rgba(0, 0, 0, 0.06)' 
-      }}>
-        <a className="nl-wordmark" href="#" aria-label="Northline home">
-          Northline
-        </a>
-        <nav className="nl-header-nav" aria-label="Main">
-          <a href="#">Shop</a>
-          <a href="#">Materials</a>
-          <a href="#">Journal</a>
-        </nav>
-        <div className="nl-header-actions">
-          <button
-            className="nl-bag-button"
-            type="button"
-            onClick={() => setBagOpen(true)}
-            aria-haspopup="dialog"
-          >
-            Bag <span>{bag.length}</span>
-          </button>
-          <button
-            className="nl-menu-button"
-            type="button"
-            onClick={() => setMobileMenuOpen((open) => !open)}
-            aria-expanded={mobileMenuOpen}
-            aria-controls="northline-mobile-menu"
-          >
-            {mobileMenuOpen ? "Close" : "Menu"}
-          </button>
-        </div>
-        {mobileMenuOpen && (
-          <nav
-            id="northline-mobile-menu"
-            className="nl-mobile-menu"
-            aria-label="Mobile"
-            style={{
-              background: "rgba(255, 255, 255, 0.7)", 
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
-            }}
-          >
-            <a href="#" onClick={() => setMobileMenuOpen(false)}>
-              Shop
-            </a>
-            <a href="#" onClick={() => setMobileMenuOpen(false)}>
-              Materials
-            </a>
-            <a href="#" onClick={() => setMobileMenuOpen(false)}>
-              Journal
-            </a>
-          </nav>
-        )}
+
+      <header className="shell flex items-center gap-4 py-4" style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(255,255,255,0.45)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+        <span className="text-[1.15rem] font-black tracking-[-0.05em]">FIELDTRIP</span>
+        <span className="lbl hidden sm:inline" style={{ color: "var(--dim)" }}>
+          Drop 04
+        </span>
+        <span className="flex-1" />
+        <button
+          type="button"
+          onClick={() => setBagOpen(true)}
+          className="btn"
+          style={{
+            background: "color-mix(in srgb, var(--ink) 10%, transparent)",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+            border: "1px solid color-mix(in srgb, var(--ink) 20%, transparent)",
+            color: "var(--ink)",
+          }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          {bag.length > 0 && <span style={{ marginLeft: '0.4rem' }}>{bag.length}</span>}
+        </button>
       </header>
 
       <main className="nl-shop-container" style={{ position: 'relative', zIndex: 10, display: 'flex', minHeight: '100vh', padding: '4rem 5vw', gap: '4rem' }}>
