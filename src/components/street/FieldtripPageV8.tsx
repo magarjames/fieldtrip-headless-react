@@ -254,7 +254,10 @@ export function FieldtripPageV8({
           {theme === "dark" ? " · After dark" : ""}
         </span>
         <span className="flex-1" />
-        <div className="absolute right-4 top-4 z-50 sm:right-6 lg:right-8">
+        <div className="absolute right-4 top-4 z-50 sm:right-6 lg:right-8 flex items-center gap-4">
+          <a href="/lookbook" className="lbl hidden sm:inline hover:opacity-70 transition-opacity" style={{ color: "var(--ink)", textDecoration: "none" }}>
+            Lookbook
+          </a>
           {onShopClick ? (
             <button
               type="button"
