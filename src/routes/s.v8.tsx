@@ -22,7 +22,7 @@ function FieldtripNorthlineV8Page() {
           backdrop={<FoldBackdropV8 />}
           figurePlacement="edge"
           content="landing"
-          primaryHref="#"
+          primaryHref="/s/v8/lookbook"
           secondaryHref="/s/v8/shop"
           shopHref="#"
           shopText={<ShoppingCart size={20} />}
