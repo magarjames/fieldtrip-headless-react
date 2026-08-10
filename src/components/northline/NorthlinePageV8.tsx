@@ -153,6 +153,16 @@ export function NorthlinePageV8({
   }, []);
 
   useEffect(() => {
+    if (activeProduct || bagOpen || mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [activeProduct, bagOpen, mobileMenuOpen]);
+
+
+  useEffect(() => {
     const video = materialsVideoRef.current;
     if (!video || !materialsVideoSrc) return;
 
