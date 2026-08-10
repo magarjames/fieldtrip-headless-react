@@ -1547,6 +1547,7 @@
   align-items: center;
   justify-content: center;
   background: transparent;
+  min-width: 0;
 }
 
 .nl-dialog-sideable-images {
