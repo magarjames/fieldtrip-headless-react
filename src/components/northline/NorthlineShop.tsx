@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { shopifyClient } from "@/lib/shopify";
 import "./northline.css";
-import heroDawn from "./assets/hero-dawn.jpg";
+import heroDawn from "@/assets/northline/hero-dawn.png";
 
 // Interface for our mapped local product state
 interface Product {
