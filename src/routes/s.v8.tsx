@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ScanRunwayHero } from "@/components/street/ScanRunwayHero";
-import { NorthlinePageV8 } from "@/components/northline/NorthlinePageV8";
 import { pageMeta } from "@/components/northline/parts";
 
 export const Route = createFileRoute("/s/v8")({
@@ -14,24 +13,14 @@ export const Route = createFileRoute("/s/v8")({
 
 function FieldtripNorthlineV8Page() {
   return (
-    <>
-      <div id="fieldtrip-top">
-        <ScanRunwayHero
-          primaryHref="#collection"
-          secondaryHref="#materials"
-          shopHref="#collection"
-          showPrimaryNavigation={false}
-          onBagClick={() => window.dispatchEvent(new Event("open-northline-bag"))}
-        />
-      </div>
-      <NorthlinePageV8
-        showHeader={false}
-        showHero={false}
-        homeHref="#fieldtrip-top"
-        continuation
-        splitNavigation
-        risingEdge
+    <div id="fieldtrip-top">
+      <ScanRunwayHero
+        primaryHref="/lookbook"
+        secondaryHref="/s/v8/shop"
+        shopHref="/s/v8/shop"
+        showPrimaryNavigation={false}
+        onBagClick={() => window.dispatchEvent(new Event("open-northline-bag"))}
       />
-    </>
+    </div>
   );
 }

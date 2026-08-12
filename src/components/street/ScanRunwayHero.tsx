@@ -12,7 +12,7 @@ import "./scan-runway-hero.css";
 const FRAME_NAMES = ["a", "b", "c", "d", "e", "f", "g"] as const;
 const ANGLES = ["000", "045", "090", "135", "180", "225", "360"];
 const SCAN_ASSET_VERSION = "hair-edge-3";
-const SEQUENCE_END = 0.9;
+const SEQUENCE_END = 1.0;
 
 const LOOKS = [
   {
