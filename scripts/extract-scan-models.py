@@ -13,8 +13,10 @@ ROOT = PROJECT_ROOT / "public" / "fieldtrip"
 MODEL_HOME = PROJECT_ROOT / ".tools" / "rembg-models"
 os.environ.setdefault("U2NET_HOME", str(MODEL_HOME))
 
-EDGE_FEATHER_SIGMA = 0.42
 EDGE_BLEED_RADIUS = 5.0
+HAIR_REGION_RATIO = 0.28
+HAIR_EDGE_DEPTH = 10.0
+HAIR_NEIGHBOURHOOD_RADIUS = 16.0
 
 
 def load_extractor(model_name: str):
@@ -55,23 +57,99 @@ def isolate_subject(mask: Image.Image, ndimage) -> Image.Image:
     subject = labels == subject_label
     alpha = np.where(subject, source_alpha, 0).astype(np.float32)
 
-    # Keep the photographed model opaque while retaining the extractor's fine
-    # detail at the silhouette. A sub-pixel blur removes stair-stepping without
-    # turning the clothing or hair translucent.
+    # Keep the photographed model opaque. Only the extractor's original outer
+    # alpha ramp remains, matching the sharper scanned silhouette.
     alpha = np.clip((alpha - 18.0) / 78.0, 0.0, 1.0)
     alpha = np.where(alpha >= 0.72, 1.0, alpha)
-    alpha = ndimage.gaussian_filter(alpha, sigma=EDGE_FEATHER_SIGMA)
-    allowed_edge = ndimage.binary_dilation(subject, iterations=2)
-    alpha = np.where(allowed_edge, alpha, 0.0)
-    alpha = np.where(alpha <= 0.008, 0.0, alpha)
-    alpha = np.where(alpha >= 0.992, 1.0, alpha)
-    return Image.fromarray(np.uint8(np.round(alpha * 255.0)), mode="L")
+    return Image.fromarray(np.uint8(alpha * 255.0), mode="L")
+
+
+def refine_female_hair_edge(
+    original: Image.Image,
+    matte: Image.Image,
+    ndimage,
+) -> Image.Image:
+    """Trim neutral studio backdrop retained around the female hair contour."""
+    rgb = np.asarray(original.convert("RGB"), dtype=np.float32)
+    alpha = np.asarray(matte, dtype=np.uint8)
+    visible = alpha > 0
+
+    y_positions, _ = np.where(visible)
+    if not y_positions.size:
+        return matte
+
+    top = int(y_positions.min())
+    bottom = int(y_positions.max())
+    head_end = top + int((bottom - top) * HAIR_REGION_RATIO)
+    rows = np.indices(alpha.shape)[0]
+    head = rows <= head_end
+
+    # Compare each inner contour pixel with its nearest known studio-background
+    # pixel. Red hair and skin remain distinct; neutral grey spill falls away.
+    edge_depth, nearest_background_index = ndimage.distance_transform_edt(
+        visible,
+        return_indices=True,
+    )
+    nearest_background = rgb[
+        nearest_background_index[0],
+        nearest_background_index[1],
+    ]
+    colour_distance = np.linalg.norm(rgb - nearest_background, axis=2)
+    chroma = rgb.max(axis=2) - rgb.min(axis=2)
+    warm_subject = (
+        head
+        & visible
+        & (rgb[..., 0] >= rgb[..., 1] + 4.0)
+        & (rgb[..., 0] >= rgb[..., 2] + 4.0)
+    )
+    warm_distance = ndimage.distance_transform_edt(~warm_subject)
+
+    distance_score = np.clip((colour_distance - 7.0) / 23.0, 0.0, 1.0)
+    chroma_score = np.clip((chroma - 7.0) / 20.0, 0.0, 1.0)
+    foreground_score = np.maximum(distance_score, chroma_score)
+    edge_weight = np.clip((HAIR_EDGE_DEPTH - edge_depth) / HAIR_EDGE_DEPTH, 0.0, 1.0)
+    correction = (
+        head
+        & visible
+        & (edge_depth <= HAIR_EDGE_DEPTH)
+        & (warm_distance <= HAIR_NEIGHBOURHOOD_RADIUS)
+    )
+
+    refined = alpha.astype(np.float32) / 255.0
+    refined_limit = 1.0 - edge_weight * (1.0 - foreground_score)
+    refined[correction] = np.minimum(refined[correction], refined_limit[correction])
+
+    # The low-alpha outer contour is where neutral studio grey can survive the
+    # person mask. Fully reject low-confidence pixels there while retaining
+    # high-chroma red/brown flyaways at their original scanned opacity.
+    outer_hair = correction & (edge_depth <= 6.0)
+    outer_confidence = np.clip((foreground_score - 0.18) / 0.5, 0.0, 1.0)
+    refined[outer_hair] *= outer_confidence[outer_hair]
+    refined = np.where(refined <= 0.025, 0.0, refined)
+
+    # Trimming grey spill can leave sub-pixel islands detached from the hair.
+    # Keep the connected model so those fragments cannot shimmer while rotating.
+    head_alpha = refined[:head_end]
+    labels, count = ndimage.label(
+        head_alpha > 0.0,
+        structure=np.ones((3, 3), dtype=np.uint8),
+    )
+    if count > 1:
+        sizes = np.bincount(labels.ravel())
+        sizes[0] = 0
+        refined[:head_end] = np.where(
+            labels == int(sizes.argmax()),
+            head_alpha,
+            0.0,
+        )
+    return Image.fromarray(np.uint8(np.round(refined * 255.0)), mode="L")
 
 
 def decontaminate_edge(
     original: Image.Image,
     matte: Image.Image,
     ndimage,
+    refine_hair: bool = False,
 ) -> Image.Image:
     """Remove studio-backdrop colour from the cut edge and hidden RGB pixels."""
     rgb = np.asarray(original.convert("RGB"), dtype=np.uint8)
@@ -105,6 +183,35 @@ def decontaminate_edge(
     cleaned[transparent] = 0.0
     cleaned[bleed] = nearest_foreground[bleed]
 
+    if refine_hair:
+        visible = alpha > 0
+        y_positions, _ = np.where(visible)
+        if y_positions.size:
+            top = int(y_positions.min())
+            bottom = int(y_positions.max())
+            head_end = top + int((bottom - top) * HAIR_REGION_RATIO)
+            rows = np.indices(alpha.shape)[0]
+            head = rows <= head_end
+            warm_interior = (
+                head
+                & (alpha >= 252)
+                & (rgb[..., 0] >= rgb[..., 1] + 4.0)
+                & (rgb[..., 0] >= rgb[..., 2] + 4.0)
+            )
+            if warm_interior.any():
+                warm_distance, warm_index = ndimage.distance_transform_edt(
+                    ~warm_interior,
+                    return_indices=True,
+                )
+                nearest_warm = rgb[warm_index[0], warm_index[1]].astype(np.float32)
+                hair_fringe = (
+                    head
+                    & (alpha > 0)
+                    & (alpha < 252)
+                    & (warm_distance <= HAIR_NEIGHBOURHOOD_RADIUS)
+                )
+                cleaned[hair_fringe] = nearest_warm[hair_fringe]
+
     rgba = np.dstack((np.uint8(np.round(cleaned)), alpha))
     return Image.fromarray(rgba, mode="RGBA")
 
@@ -125,8 +232,15 @@ def extract(
         post_process_mask=False,
     )
     matte = isolate_subject(raw_mask, ndimage)
+    if source.parent.name.startswith("scan-f"):
+        matte = refine_female_hair_edge(original, matte, ndimage)
 
-    result = decontaminate_edge(original, matte, ndimage)
+    result = decontaminate_edge(
+        original,
+        matte,
+        ndimage,
+        refine_hair=source.parent.name.startswith("scan-f"),
+    )
     destination.parent.mkdir(parents=True, exist_ok=True)
     result.save(destination, "WEBP", lossless=True, method=6, exact=True)
 
