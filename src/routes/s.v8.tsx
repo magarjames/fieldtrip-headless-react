@@ -17,9 +17,9 @@ function FieldtripNorthlineV8Page() {
     <>
       <div id="fieldtrip-top">
         <ScanRunwayHero
-          primaryHref="/lookbook"
-          secondaryHref="/s/v8/shop"
-          shopHref="/s/v8/shop"
+          primaryHref="#collection"
+          secondaryHref="#materials"
+          shopHref="#collection"
         />
       </div>
       <NorthlinePageV8
