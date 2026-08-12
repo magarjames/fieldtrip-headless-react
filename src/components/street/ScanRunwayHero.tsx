@@ -3,7 +3,7 @@ import "./scan-runway-hero.css";
 
 const FRAME_NAMES = ["a", "b", "c", "d", "e", "f", "g"] as const;
 const ANGLES = ["000", "045", "090", "135", "180", "225", "360"];
-const SCAN_ASSET_VERSION = "original-cutout-1";
+const SCAN_ASSET_VERSION = "seamless-edge-2";
 
 const LOOKS = [
   { id: "f4", name: "Skyline zip", note: "Pale blue zip / washed wide cargo" },

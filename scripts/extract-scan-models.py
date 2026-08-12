@@ -13,6 +13,9 @@ ROOT = PROJECT_ROOT / "public" / "fieldtrip"
 MODEL_HOME = PROJECT_ROOT / ".tools" / "rembg-models"
 os.environ.setdefault("U2NET_HOME", str(MODEL_HOME))
 
+EDGE_FEATHER_SIGMA = 0.42
+EDGE_BLEED_RADIUS = 5.0
+
 
 def load_extractor(model_name: str):
     try:
@@ -52,11 +55,58 @@ def isolate_subject(mask: Image.Image, ndimage) -> Image.Image:
     subject = labels == subject_label
     alpha = np.where(subject, source_alpha, 0).astype(np.float32)
 
-    # The photographed model remains fully opaque. Only the outer edge keeps a
-    # short alpha ramp for clean compositing against the runway background.
+    # Keep the photographed model opaque while retaining the extractor's fine
+    # detail at the silhouette. A sub-pixel blur removes stair-stepping without
+    # turning the clothing or hair translucent.
     alpha = np.clip((alpha - 18.0) / 78.0, 0.0, 1.0)
     alpha = np.where(alpha >= 0.72, 1.0, alpha)
-    return Image.fromarray(np.uint8(alpha * 255.0), mode="L")
+    alpha = ndimage.gaussian_filter(alpha, sigma=EDGE_FEATHER_SIGMA)
+    allowed_edge = ndimage.binary_dilation(subject, iterations=2)
+    alpha = np.where(allowed_edge, alpha, 0.0)
+    alpha = np.where(alpha <= 0.008, 0.0, alpha)
+    alpha = np.where(alpha >= 0.992, 1.0, alpha)
+    return Image.fromarray(np.uint8(np.round(alpha * 255.0)), mode="L")
+
+
+def decontaminate_edge(
+    original: Image.Image,
+    matte: Image.Image,
+    ndimage,
+) -> Image.Image:
+    """Remove studio-backdrop colour from the cut edge and hidden RGB pixels."""
+    rgb = np.asarray(original.convert("RGB"), dtype=np.uint8)
+    alpha = np.asarray(matte, dtype=np.uint8)
+    solid = alpha >= 252
+
+    if not solid.any():
+        raise RuntimeError("The extracted subject has no opaque interior pixels.")
+
+    distance, nearest_index = ndimage.distance_transform_edt(
+        ~solid,
+        return_indices=True,
+    )
+    nearest_foreground = rgb[nearest_index[0], nearest_index[1]].astype(np.float32)
+    cleaned = rgb.astype(np.float32)
+
+    # Edge pixels in the original JPG are a mix of subject and studio backdrop.
+    # Pull their colour toward the nearest opaque foreground as transparency rises.
+    alpha_unit = alpha.astype(np.float32) / 255.0
+    fringe = (alpha > 0) & (alpha < 252)
+    correction = np.clip((0.98 - alpha_unit) / 0.75, 0.0, 1.0)
+    cleaned[fringe] = (
+        cleaned[fringe] * (1.0 - correction[fringe, None])
+        + nearest_foreground[fringe] * correction[fringe, None]
+    )
+
+    # Transparent pixels can contribute colour during image scaling. Extend the
+    # foreground a few pixels beyond the matte, then clear all remaining RGB data.
+    transparent = alpha == 0
+    bleed = transparent & (distance <= EDGE_BLEED_RADIUS)
+    cleaned[transparent] = 0.0
+    cleaned[bleed] = nearest_foreground[bleed]
+
+    rgba = np.dstack((np.uint8(np.round(cleaned)), alpha))
+    return Image.fromarray(rgba, mode="RGBA")
 
 
 def extract(
@@ -76,10 +126,9 @@ def extract(
     )
     matte = isolate_subject(raw_mask, ndimage)
 
-    result = original.convert("RGBA")
-    result.putalpha(matte)
+    result = decontaminate_edge(original, matte, ndimage)
     destination.parent.mkdir(parents=True, exist_ok=True)
-    result.save(destination, "WEBP", lossless=True, method=6)
+    result.save(destination, "WEBP", lossless=True, method=6, exact=True)
 
 
 def parse_args() -> argparse.Namespace:
