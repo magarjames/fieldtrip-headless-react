@@ -1,69 +1,133 @@
+from __future__ import annotations
+
+import argparse
+import os
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image
 
 
-ROOT = Path(__file__).resolve().parents[1] / "public" / "fieldtrip"
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+ROOT = PROJECT_ROOT / "public" / "fieldtrip"
+MODEL_HOME = PROJECT_ROOT / ".tools" / "rembg-models"
+os.environ.setdefault("U2NET_HOME", str(MODEL_HOME))
 
 
-def restore_enclosed_upper_body(matte: Image.Image) -> Image.Image:
-    closed = matte.point(lambda value: 255 if value >= 150 else 0)
-    closed = closed.filter(ImageFilter.MaxFilter(13)).filter(ImageFilter.MinFilter(13))
-    outside = closed.copy()
-    ImageDraw.floodfill(outside, (0, 0), 128, thresh=0)
+def load_extractor(model_name: str):
+    try:
+        from rembg import new_session, remove
+        from scipy import ndimage
+    except ImportError as error:
+        raise SystemExit(
+            "Install the cutout dependencies with "
+            "`.tools/rembg-venv/Scripts/python.exe -m pip install rembg onnxruntime`."
+        ) from error
 
-    alpha = np.asarray(matte, dtype=np.uint8).copy()
-    enclosed = np.asarray(outside) == 0
-    y, x = np.ogrid[: matte.height, : matte.width]
-    upper_body = (
-        (y < int(matte.height * 0.64))
-        & (x > int(matte.width * 0.2))
-        & (x < int(matte.width * 0.8))
+    return new_session(model_name), remove, ndimage
+
+
+def isolate_subject(mask: Image.Image, ndimage) -> Image.Image:
+    """Keep the central person and discard shadows or other disconnected pixels."""
+    source_alpha = np.asarray(mask.convert("L"), dtype=np.uint8)
+    candidate = source_alpha >= 24
+    labels, count = ndimage.label(candidate, structure=np.ones((3, 3), dtype=np.uint8))
+
+    if count == 0:
+        raise RuntimeError("The person extractor returned an empty mask.")
+
+    height, width = source_alpha.shape
+    center = labels[
+        int(height * 0.08) : int(height * 0.92),
+        int(width * 0.18) : int(width * 0.82),
+    ]
+    center_labels = center[center > 0]
+    if center_labels.size:
+        sizes = np.bincount(center_labels)
+    else:
+        sizes = np.bincount(labels.ravel())
+    sizes[0] = 0
+    subject_label = int(sizes.argmax())
+
+    subject = labels == subject_label
+    alpha = np.where(subject, source_alpha, 0).astype(np.float32)
+
+    # The photographed model remains fully opaque. Only the outer edge keeps a
+    # short alpha ramp for clean compositing against the runway background.
+    alpha = np.clip((alpha - 18.0) / 78.0, 0.0, 1.0)
+    alpha = np.where(alpha >= 0.72, 1.0, alpha)
+    return Image.fromarray(np.uint8(alpha * 255.0), mode="L")
+
+
+def extract(
+    source: Path,
+    destination: Path,
+    session,
+    remove,
+    ndimage,
+) -> None:
+    original = Image.open(source).convert("RGB")
+    raw_mask = remove(
+        original,
+        session=session,
+        only_mask=True,
+        alpha_matting=False,
+        post_process_mask=False,
     )
-    alpha[enclosed & upper_body] = 255
-    return Image.fromarray(alpha, mode="L")
+    matte = isolate_subject(raw_mask, ndimage)
 
-
-def extract(source: Path) -> None:
-    image = Image.open(source).convert("RGB")
-    rgb = np.asarray(image, dtype=np.float32)
-    height, width, _ = rgb.shape
-    sample_width = max(40, width // 10)
-
-    # The generated turntable frames use a neutral studio sweep. Sampling both
-    # edges per row preserves the model while following that sweep's gradient.
-    edge_samples = np.concatenate(
-        (rgb[:, :sample_width], rgb[:, -sample_width:]), axis=1
-    )
-    background = np.median(edge_samples, axis=1)
-
-    distance = np.linalg.norm(rgb - background[:, None, :], axis=2)
-    alpha = np.clip((distance - 25.0) / 28.0, 0.0, 1.0)
-    alpha = np.power(alpha, 0.56)
-
-    # Generated clothing often sits close to the neutral backdrop in colour.
-    # Once a pixel is confidently part of the subject, make it fully opaque so
-    # pale fabric and skin do not inherit a ghosted, semi-transparent look.
-    alpha = np.where(alpha >= 0.43, 1.0, alpha)
-
-    # Suppress isolated texture outside the portrait's useful center zone.
-    x = np.linspace(-1.0, 1.0, width, dtype=np.float32)
-    horizontal_gate = np.clip((0.98 - np.abs(x)) / 0.16, 0.0, 1.0)
-    alpha *= horizontal_gate[None, :]
-
-    matte = Image.fromarray(np.uint8(alpha * 255), mode="L")
-    matte = matte.filter(ImageFilter.GaussianBlur(radius=0.7))
-    if source.parent.name == "scan-f4":
-        matte = restore_enclosed_upper_body(matte)
-    result = image.convert("RGBA")
+    result = original.convert("RGBA")
     result.putalpha(matte)
-    result.save(source.with_suffix(".webp"), "WEBP", quality=89, method=1)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    result.save(destination, "WEBP", lossless=True, method=6)
 
 
-for folder in sorted(ROOT.glob("scan-*")):
-    if not folder.is_dir():
-        continue
-    for source_file in sorted(folder.glob("*.jpg")):
-        extract(source_file)
-        print(source_file.with_suffix(".webp").relative_to(ROOT))
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Cut the photographed models from the original studio JPGs."
+    )
+    parser.add_argument(
+        "--model",
+        default="u2net_human_seg",
+        help="rembg person-segmentation model (default: u2net_human_seg)",
+    )
+    parser.add_argument(
+        "--source",
+        type=Path,
+        help="Process one source image instead of every scan folder.",
+    )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        help="Destination used with --source; defaults to the adjacent WebP.",
+    )
+    return parser.parse_args()
+
+
+def main() -> None:
+    args = parse_args()
+    session, remove, ndimage = load_extractor(args.model)
+
+    if args.source:
+        source = args.source.resolve()
+        destination = (
+            args.output.resolve() if args.output else source.with_suffix(".webp")
+        )
+        extract(source, destination, session, remove, ndimage)
+        print(destination)
+        return
+
+    sources = [
+        source
+        for folder in sorted(ROOT.glob("scan-*"))
+        if folder.is_dir()
+        for source in sorted(folder.glob("*.jpg"))
+    ]
+    for source in sources:
+        destination = source.with_suffix(".webp")
+        extract(source, destination, session, remove, ndimage)
+        print(destination.relative_to(ROOT))
+
+
+if __name__ == "__main__":
+    main()
