@@ -153,7 +153,7 @@ export function ScanRunwayHero({
         activeLookIndex < LOOKS.length - 1 ? smoothstep((lookProgress - 0.92) / 0.08) : 0;
       const travel = smoothstep(progress);
       const approach = smoothstep(progress / 0.08);
-      const depart = smoothstep((progress - SEQUENCE_END) / (1 - SEQUENCE_END));
+      const depart = SEQUENCE_END >= 1 ? 0 : smoothstep((progress - SEQUENCE_END) / (1 - SEQUENCE_END));
       const handoff = smoothstep((progress - 0.94) / 0.06);
       const copyExit = smoothstep((progress - 0.025) / 0.13);
       const echoSpread = smoothstep(progress / 0.18);
@@ -550,7 +550,6 @@ export function ScanRunwayHero({
         <a className="scan-runway__runway-link" href={secondaryHref}>
           RUNWAY
         </a>
-        <div className="scan-runway__handoff" aria-hidden />
       </div>
     </section>
   );
