@@ -6,6 +6,7 @@ import {
   type KeyboardEvent,
   type PointerEvent,
 } from "react";
+import { ShoppingCart } from "lucide-react";
 import "./scan-runway-hero.css";
 
 const FRAME_NAMES = ["a", "b", "c", "d", "e", "f", "g"] as const;
@@ -73,10 +74,14 @@ export function ScanRunwayHero({
   primaryHref,
   secondaryHref,
   shopHref,
+  showPrimaryNavigation = true,
+  onBagClick,
 }: {
   primaryHref: string;
   secondaryHref: string;
   shopHref: string;
+  showPrimaryNavigation?: boolean;
+  onBagClick?: () => void;
 }) {
   const [lookIndex, setLookIndex] = useState(0);
   const [frameIndex, setFrameIndex] = useState(0);
@@ -343,18 +348,37 @@ export function ScanRunwayHero({
           See every side, then go somewhere
         </h1>
 
-        <nav className="scan-runway__nav" aria-label="Fieldtrip primary navigation">
+        <nav
+          className={`scan-runway__nav${
+            showPrimaryNavigation ? "" : " scan-runway__nav--minimal"
+          }`}
+          aria-label="Fieldtrip primary navigation"
+        >
           <a className="scan-runway__brand" href="#fieldtrip-top">
             FIELDTRIP <span>/ DROP 04</span>
           </a>
-          <div className="scan-runway__nav-links">
-            <a href={primaryHref}>SHOP</a>
-            <a href="#scan-controls">FIT LAB</a>
-            <a href="#journal">SOUND</a>
-          </div>
-          <a className="scan-runway__bag" href={shopHref}>
-            BAG <span>0</span>
-          </a>
+          {showPrimaryNavigation ? (
+            <div className="scan-runway__nav-links">
+              <a href={primaryHref}>SHOP</a>
+              <a href="#scan-controls">FIT LAB</a>
+              <a href="#journal">SOUND</a>
+            </div>
+          ) : null}
+          {onBagClick ? (
+            <button
+              type="button"
+              className="scan-runway__cart-button"
+              onClick={onBagClick}
+              aria-label="Open shopping bag"
+              aria-haspopup="dialog"
+            >
+              <ShoppingCart aria-hidden="true" size={20} strokeWidth={1.8} />
+            </button>
+          ) : (
+            <a className="scan-runway__bag" href={shopHref}>
+              BAG <span>0</span>
+            </a>
+          )}
         </nav>
 
         <div className="scan-runway__world" aria-hidden>

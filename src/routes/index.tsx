@@ -20,6 +20,8 @@ function FieldtripNorthlineV8Page() {
           primaryHref="#collection"
           secondaryHref="#materials"
           shopHref="#collection"
+          showPrimaryNavigation={false}
+          onBagClick={() => window.dispatchEvent(new Event("open-northline-bag"))}
         />
       </div>
       <NorthlinePageV8
