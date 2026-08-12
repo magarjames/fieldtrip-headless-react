@@ -667,11 +667,10 @@ export function NorthlinePageV8({
           <div className="nl-collection-intro nl-reveal">
             <div>
               <h2>
-                Less to carry.
-                <span>More to rely on.</span>
+                DROP 001
               </h2>
             </div>
-            <p>Every piece earns its place by keeping one part of a busy day simpler.</p>
+            <p>The shopify collection.</p>
           </div>
           <div className="nl-filter-row" aria-label="Filter the collection">
             {dynamicFilters.map((filter) => (
