@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { FieldtripPage } from "@/components/street/FieldtripPage";
-import { FoldBackdrop } from "@/components/street/FoldBackdrop";
+import { ScanRunwayHero } from "@/components/street/ScanRunwayHero";
 import { NorthlinePage } from "@/components/northline/NorthlinePage";
 import { pageMeta } from "@/components/northline/parts";
 
@@ -8,15 +7,14 @@ export const Route = createFileRoute("/s/v6")({
   component: FieldtripNorthlinePage,
   head: () => ({
     ...pageMeta(
-      "Fieldtrip x Northline | Dress for the long way home",
-      "A playful Fieldtrip fitting room opening into Northline utility layers, materials, and motion.",
+      "Fieldtrip Drop 04 | Scan every angle",
+      "Rotate seven streetwear looks inside the Fieldtrip scan chamber, then enter the Drop 04 collection.",
     ),
     links: [
       {
         rel: "preload",
-        href: "/fieldtrip/mascot-euro.glb",
-        as: "fetch",
-        type: "model/gltf-binary",
+        href: "/fieldtrip/scan-f4/a.jpg",
+        as: "image",
         fetchPriority: "high",
       },
     ],
@@ -27,10 +25,7 @@ function FieldtripNorthlinePage() {
   return (
     <>
       <div id="fieldtrip-top">
-        <FieldtripPage
-          backdrop={<FoldBackdrop />}
-          figurePlacement="edge"
-          content="landing"
+        <ScanRunwayHero
           primaryHref="#collection"
           secondaryHref="#materials"
           shopHref="#collection"

@@ -1,0 +1,750 @@
+.scan-runway {
+  --scan-white: #f2f1ed;
+  --scan-black: #090a0b;
+  position: relative;
+  z-index: 2;
+  height: 100svh;
+  color: var(--scan-white);
+  background: var(--scan-black);
+  view-timeline-name: --scan-runway;
+  view-timeline-axis: block;
+}
+
+.scan-runway__stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 42rem;
+  overflow: hidden;
+  isolation: isolate;
+  background: #0a0b0c;
+}
+
+.scan-runway__stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 58% 68% at 50% 58%, transparent 42%, rgba(0, 0, 0, 0.2) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.22), transparent 22% 76%, rgba(0, 0, 0, 0.32));
+}
+
+.scan-runway__stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 21;
+  pointer-events: none;
+  opacity: 0.12;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.83' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.38'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
+}
+
+.scan-runway__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.scan-runway__nav {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  min-height: clamp(4rem, 7.5vh, 5.25rem);
+  padding: 0 clamp(1.35rem, 2.2vw, 2.7rem);
+  font:
+    700 0.9rem/1 Archivo,
+    sans-serif;
+  letter-spacing: -0.025em;
+  text-shadow: 0 2px 22px rgba(0, 0, 0, 0.64);
+}
+
+.scan-runway__nav a {
+  color: inherit;
+}
+
+.scan-runway__brand {
+  justify-self: start;
+}
+
+.scan-runway__brand span {
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 500;
+}
+
+.scan-runway__nav-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.8rem, 3.2vw, 3.8rem);
+}
+
+.scan-runway__nav-links a,
+.scan-runway__bag {
+  position: relative;
+}
+
+.scan-runway__nav-links a::after,
+.scan-runway__bag::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -0.45rem;
+  left: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scan-runway__nav-links a:hover::after,
+.scan-runway__nav-links a:focus-visible::after,
+.scan-runway__bag:hover::after,
+.scan-runway__bag:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.scan-runway__bag {
+  justify-self: end;
+}
+
+.scan-runway__world {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.scan-runway__environment {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: contrast(1.035) saturate(0.72) brightness(0.94);
+  transform: scale(1.004);
+  transform-origin: 50% 56%;
+}
+
+.scan-runway__curtain-copy {
+  position: absolute;
+  z-index: 4;
+  top: 7.5%;
+  width: 37%;
+  height: 42%;
+  overflow: hidden;
+  color: rgba(8, 9, 10, 0.66);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.scan-runway__curtain-copy span {
+  position: absolute;
+  display: block;
+  white-space: nowrap;
+  font:
+    900 clamp(3.7rem, 6.55vw, 8rem) / 0.8 "Archivo Black",
+    Archivo,
+    sans-serif;
+  letter-spacing: -0.09em;
+  word-spacing: 0.1em;
+}
+
+.scan-runway__curtain-copy--left {
+  left: 8.4%;
+  transform: rotate(5.3deg) skewY(0.6deg);
+}
+
+.scan-runway__curtain-copy--left span {
+  top: 2%;
+  left: 1%;
+  transform: scaleX(0.62);
+  transform-origin: left top;
+}
+
+.scan-runway__curtain-copy--right {
+  right: 7.8%;
+  transform: rotate(-5deg) skewY(-0.6deg);
+}
+
+.scan-runway__curtain-copy--right span {
+  top: 11%;
+  left: 2%;
+  transform: scaleX(0.43);
+  transform-origin: left top;
+}
+
+.scan-runway__distant-look,
+.scan-runway__echo,
+.scan-runway__model img {
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+.scan-runway__distant-look {
+  position: absolute;
+  bottom: 39%;
+  left: 59.5%;
+  z-index: 3;
+  width: 2.8rem;
+  height: 7.5rem;
+  transform: translateX(-50%);
+  opacity: 0.5;
+  filter: grayscale(0.55) contrast(1.15) brightness(0.84);
+}
+
+.scan-runway__echo {
+  position: absolute;
+  z-index: 6;
+  bottom: 13%;
+  width: min(18vw, 21rem);
+  height: 63%;
+  opacity: 0.42;
+  filter: grayscale(0.48) contrast(0.96) saturate(0.7) brightness(1.07);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.scan-runway__echo--left {
+  left: 9%;
+  width: min(18vw, 21rem);
+  height: 63%;
+  opacity: 0.31;
+}
+
+.scan-runway__echo--rear {
+  left: 20%;
+  opacity: 0.46;
+}
+
+.scan-runway__echo--right {
+  right: 20%;
+  width: min(18vw, 21rem);
+  height: 63%;
+  opacity: 0.31;
+}
+
+.scan-runway__model {
+  position: absolute;
+  bottom: 11.2%;
+  left: 50%;
+  z-index: 24;
+  width: min(25vw, 28rem);
+  height: 72%;
+  transform: translateX(-50%);
+  outline: none;
+  cursor: ew-resize;
+  touch-action: pan-y;
+  user-select: none;
+  filter: drop-shadow(0 24px 28px rgba(0, 0, 0, 0.28));
+}
+
+.scan-runway__model::after {
+  content: "";
+  position: absolute;
+  right: 24%;
+  bottom: 0.5%;
+  left: 24%;
+  height: 2.5%;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.3);
+  filter: blur(9px);
+}
+
+.scan-runway__model:focus-visible {
+  outline: 1px solid rgba(255, 255, 255, 0.92);
+  outline-offset: 0.35rem;
+}
+
+.scan-runway__model img {
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+  filter: contrast(1.01) saturate(0.94) brightness(1.08);
+  mix-blend-mode: normal;
+  transform: scale(1.015);
+  transition:
+    opacity 180ms ease,
+    transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.scan-runway__model.is-loaded img {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.scan-runway__floor-ring {
+  position: absolute;
+  right: 10%;
+  bottom: 3.8%;
+  left: 10%;
+  z-index: 10;
+  height: 8%;
+  pointer-events: none;
+}
+
+.scan-runway__floor-ring span {
+  position: absolute;
+  bottom: calc((var(--tick) % 2) * 0.35rem);
+  left: calc(16% + (var(--tick) * 21%));
+  color: rgba(17, 18, 19, 0.76);
+  font:
+    500 0.7rem/1 "JetBrains Mono",
+    monospace;
+  text-shadow: 0 1px 4px rgba(255, 255, 255, 0.35);
+}
+
+.scan-runway__look-rail {
+  position: absolute;
+  top: 24.5%;
+  right: clamp(1.15rem, 2vw, 2.5rem);
+  z-index: 40;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.scan-runway__look-rail::before {
+  content: "";
+  position: absolute;
+  top: 1rem;
+  bottom: 1rem;
+  left: 50%;
+  z-index: -1;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.scan-runway__look-rail button {
+  display: grid;
+  width: 2.35rem;
+  min-height: 2.35rem;
+  place-items: center;
+  border: 0;
+  color: rgba(255, 255, 255, 0.53);
+  background: transparent;
+  font:
+    600 0.72rem/1 "JetBrains Mono",
+    monospace;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.78);
+  cursor: pointer;
+  transition:
+    color 220ms ease,
+    transform 220ms ease;
+}
+
+.scan-runway__look-rail button:hover,
+.scan-runway__look-rail button:focus-visible,
+.scan-runway__look-rail button.is-active {
+  color: #fff;
+  transform: scale(1.12);
+}
+
+.scan-runway__look-rail button.is-active::after {
+  content: "";
+  position: absolute;
+  right: 0.1rem;
+  bottom: -0.2rem;
+  left: 0.1rem;
+  height: 1px;
+  background: currentColor;
+}
+
+.scan-runway__look-rail button:focus-visible {
+  outline: 1px solid #fff;
+  outline-offset: 2px;
+}
+
+.scan-runway__meta {
+  display: none;
+}
+
+.scan-runway__scan-hint,
+.scan-runway__runway-link,
+.scan-runway__command-bar {
+  position: absolute;
+  z-index: 40;
+  bottom: 3.7%;
+  font:
+    600 0.74rem/1 Archivo,
+    sans-serif;
+  letter-spacing: 0.025em;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.58);
+}
+
+.scan-runway__scan-hint {
+  left: clamp(1.35rem, 2.4vw, 2.8rem);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.scan-runway__reticle {
+  position: relative;
+  width: 2.15rem;
+  height: 2.15rem;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+.scan-runway__reticle::before,
+.scan-runway__reticle::after {
+  content: "";
+  position: absolute;
+  background: currentColor;
+}
+
+.scan-runway__reticle::before {
+  top: 50%;
+  right: -0.42rem;
+  left: -0.42rem;
+  height: 1px;
+}
+
+.scan-runway__reticle::after {
+  top: -0.42rem;
+  bottom: -0.42rem;
+  left: 50%;
+  width: 1px;
+}
+
+.scan-runway__command-bar {
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-height: 2.45rem;
+  padding: 0 1.5rem;
+  color: #141517;
+  background: rgba(247, 247, 244, 0.9);
+  border-radius: 999px;
+  transform: translateX(-50%);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 12px 38px rgba(0, 0, 0, 0.19);
+  text-shadow: none;
+}
+
+.scan-runway__command-bar button,
+.scan-runway__command-bar a {
+  display: grid;
+  min-height: 2.45rem;
+  place-items: center;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.scan-runway__command-bar span {
+  color: rgba(17, 18, 20, 0.36);
+}
+
+.scan-runway__runway-link {
+  right: clamp(4.6rem, 7.4vw, 9rem);
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.scan-runway__handoff {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  background: #fff;
+  transform: translateY(102%);
+}
+
+@supports (animation-timeline: view()) {
+  .scan-runway {
+    height: 182svh;
+  }
+
+  .scan-runway__environment {
+    animation: scan-environment-enter linear both;
+    animation-timeline: --scan-runway;
+    animation-range: exit 0% exit 80%;
+  }
+
+  .scan-runway__curtain-copy--left {
+    animation: scan-copy-left linear both;
+    animation-timeline: --scan-runway;
+    animation-range: exit 0% exit 64%;
+  }
+
+  .scan-runway__curtain-copy--right {
+    animation: scan-copy-right linear both;
+    animation-timeline: --scan-runway;
+    animation-range: exit 0% exit 64%;
+  }
+
+  .scan-runway__echo {
+    animation: scan-echo-exit linear both;
+    animation-timeline: --scan-runway;
+    animation-range: exit 0% exit 58%;
+  }
+
+  .scan-runway__distant-look {
+    animation: scan-distant-enter linear both;
+    animation-timeline: --scan-runway;
+    animation-range: exit 0% exit 72%;
+  }
+
+  .scan-runway__model {
+    animation: scan-model-enter linear both;
+    animation-timeline: --scan-runway;
+    animation-range: exit 0% exit 70%;
+  }
+
+  .scan-runway__handoff {
+    animation: scan-page-handoff linear both;
+    animation-timeline: --scan-runway;
+    animation-range: exit 67% exit 100%;
+  }
+}
+
+@keyframes scan-environment-enter {
+  to {
+    transform: translateY(-2.5%) scale(1.14);
+    filter: contrast(1.06) saturate(0.64) brightness(1.06);
+  }
+}
+
+@keyframes scan-copy-left {
+  to {
+    transform: translateX(-25vw) rotate(1deg) skewY(0.6deg);
+    opacity: 0;
+  }
+}
+
+@keyframes scan-copy-right {
+  to {
+    transform: translateX(25vw) rotate(-1deg) skewY(-0.6deg);
+    opacity: 0;
+  }
+}
+
+@keyframes scan-echo-exit {
+  to {
+    opacity: 0;
+    filter: grayscale(1) blur(8px);
+  }
+}
+
+@keyframes scan-distant-enter {
+  to {
+    bottom: 23%;
+    width: 5rem;
+    height: 13rem;
+    opacity: 0.12;
+  }
+}
+
+@keyframes scan-model-enter {
+  to {
+    bottom: 20%;
+    transform: translateX(-50%) scale(0.62);
+    opacity: 0.24;
+    filter: drop-shadow(0 18px 22px rgba(0, 0, 0, 0.18)) blur(1px);
+  }
+}
+
+@keyframes scan-page-handoff {
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 900px) {
+  .scan-runway {
+    height: 100svh;
+  }
+
+  @supports (animation-timeline: view()) {
+    .scan-runway {
+      height: 150svh;
+    }
+  }
+
+  .scan-runway__stage {
+    min-height: 39rem;
+  }
+
+  .scan-runway__nav {
+    grid-template-columns: 1fr auto;
+    min-height: 4.25rem;
+    padding-inline: 1rem;
+    font-size: 0.76rem;
+  }
+
+  .scan-runway__nav-links {
+    display: none;
+  }
+
+  .scan-runway__environment {
+    object-position: 50% center;
+  }
+
+  .scan-runway__curtain-copy {
+    top: 11%;
+    width: 55%;
+    opacity: 0.5;
+  }
+
+  .scan-runway__curtain-copy span {
+    font-size: clamp(3.2rem, 14vw, 5.5rem);
+  }
+
+  .scan-runway__curtain-copy--left {
+    left: -8%;
+  }
+
+  .scan-runway__curtain-copy--right {
+    right: -8%;
+  }
+
+  .scan-runway__echo {
+    bottom: 18%;
+    width: 29vw;
+    height: 49%;
+    opacity: 0.2;
+  }
+
+  .scan-runway__echo--left {
+    left: -2%;
+  }
+
+  .scan-runway__echo--rear {
+    left: 15%;
+  }
+
+  .scan-runway__echo--right {
+    right: -2%;
+  }
+
+  .scan-runway__distant-look {
+    display: none;
+  }
+
+  .scan-runway__model {
+    bottom: 16%;
+    width: min(67vw, 25rem);
+    height: 64%;
+  }
+
+  .scan-runway__floor-ring span {
+    display: none;
+  }
+
+  .scan-runway__look-rail {
+    top: auto;
+    right: 50%;
+    bottom: 6.4rem;
+    display: flex;
+    gap: 0.15rem;
+    transform: translateX(50%);
+  }
+
+  .scan-runway__look-rail::before {
+    top: 50%;
+    right: 0.7rem;
+    bottom: auto;
+    left: 0.7rem;
+    width: auto;
+    height: 1px;
+  }
+
+  .scan-runway__look-rail button {
+    width: 2rem;
+    min-height: 2rem;
+    font-size: 0.62rem;
+  }
+
+  .scan-runway__scan-hint {
+    bottom: 2rem;
+    left: 1rem;
+    gap: 0.6rem;
+    font-size: 0.62rem;
+  }
+
+  .scan-runway__reticle {
+    width: 1.7rem;
+    height: 1.7rem;
+  }
+
+  .scan-runway__command-bar {
+    bottom: 1.4rem;
+    min-height: 2.35rem;
+    padding-inline: 1rem;
+    font-size: 0.64rem;
+  }
+
+  .scan-runway__command-bar button,
+  .scan-runway__command-bar a {
+    min-height: 2.35rem;
+  }
+
+  .scan-runway__runway-link {
+    right: 1rem;
+    bottom: 2rem;
+    font-size: 0.62rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .scan-runway__brand span {
+    display: none;
+  }
+
+  .scan-runway__curtain-copy {
+    display: none;
+  }
+
+  .scan-runway__echo--rear {
+    display: none;
+  }
+
+  .scan-runway__model {
+    width: 82vw;
+  }
+
+  .scan-runway__look-rail {
+    bottom: 5.8rem;
+  }
+
+  .scan-runway__scan-hint {
+    max-width: 4.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scan-runway {
+    height: 100svh;
+  }
+
+  .scan-runway__environment,
+  .scan-runway__curtain-copy,
+  .scan-runway__echo,
+  .scan-runway__distant-look,
+  .scan-runway__model,
+  .scan-runway__handoff {
+    animation: none !important;
+  }
+
+  .scan-runway__model img {
+    transition: opacity 1ms linear;
+  }
+}
