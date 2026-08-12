@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ShoppingCart } from "lucide-react";
-import { FieldtripPageV8 } from "@/components/street/FieldtripPageV8";
-import { FoldBackdropV8 } from "@/components/street/FoldBackdropV8";
+import { ScanRunwayHero } from "@/components/street/ScanRunwayHero";
 import { NorthlinePageV8 } from "@/components/northline/NorthlinePageV8";
 import { pageMeta } from "@/components/northline/parts";
 
@@ -18,19 +16,10 @@ function FieldtripNorthlineV8Page() {
   return (
     <>
       <div id="fieldtrip-top">
-        <FieldtripPageV8
-          backdrop={<FoldBackdropV8 />}
-          figurePlacement="edge"
-          content="landing"
+        <ScanRunwayHero
           primaryHref="/lookbook"
           secondaryHref="/s/v8/shop"
-          shopHref="#"
-          shopText={<ShoppingCart size={20} />}
-          onShopClick={() => {
-            if (typeof window !== "undefined") {
-              window.dispatchEvent(new Event("open-northline-bag"));
-            }
-          }}
+          shopHref="/s/v8/shop"
         />
       </div>
       <NorthlinePageV8

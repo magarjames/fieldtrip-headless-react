@@ -4,6 +4,7 @@ import { ContactShadows, Environment, Lightformer, RoundedBox } from "@react-thr
 import * as THREE from "three";
 import { Stage, useReducedMotion } from "@/components/world/stage";
 import { preloadFigureModel, VrmFigure, useModelAvailable, VRM_URL } from "./Vrm";
+import { OrbitVideo, useClipsAvailable } from "./OrbitVideo";
 import { fabricTexture, disposeFabrics, type Fabric } from "./textures";
 import { activeOutfit } from "./outfitSync";
 
@@ -621,11 +622,20 @@ export function ChibiHero({
   // the fabric canvases are cached module-wide, so release them on unmount
   useEffect(() => () => disposeFabrics(), []);
 
-  /* Five tiers, best first: a shared rigged VRM if one has been dropped in,
-     then this fit's VRM replica, then the fit's sculpted GLB, then the
-     procedural chibi, and a still image if there is no GL at all or the
-     visitor asked for reduced motion. A model file can also fail at parse
-     time, and `vrmBroken` demotes it for the rest of the session. */
+  /* Six tiers, best first: a real filmed orbit if every fit has a matching
+     clip, then a shared rigged VRM if one has been dropped in, then this
+     fit's VRM replica, then the fit's sculpted GLB, then the procedural
+     chibi, and a still image if there is no GL at all or the visitor asked
+     for reduced motion. A model file can also fail at parse time, and
+     `vrmBroken` demotes it for the rest of the session.
+
+     The video tier is gated on the FULL set, not per-fit: a hero that plays
+     real footage for two outfits and silently reverts to the toy for a
+     third would read as broken, not as a graceful fallback. */
+  const clipProbe = useClipsAvailable(OUTFITS.map((o) => o.fitId));
+  const useVideo =
+    clipProbe.state === "ready" && OUTFITS.every((o) => clipProbe.present.has(o.fitId));
+
   const candidates = useMemo(() => [VRM_URL, ...(vrmUrls ?? []), ...GLB_CANDIDATES], [vrmUrls]);
   const modelProbe = useModelAvailable(candidates);
   const [vrmBroken, setVrmBroken] = useState(false);
@@ -678,6 +688,9 @@ export function ChibiHero({
             : "ft-chibi-stage relative aspect-[3/4] w-full overflow-hidden"
         }
       >
+        {useVideo ? (
+          <OrbitVideo fits={OUTFITS} activeIndex={i} reduced={reduced} onPick={next} />
+        ) : (
         <Stage
           /* the stage layout has more viewport to fill, so the camera moves in.
              The framed camera is tuned for the sculpted GLBs (2.35 units); the
@@ -776,8 +789,11 @@ export function ChibiHero({
             <Figure outfit={outfit} onPick={next} still={reduced} />
           ) : null}
         </Stage>
+        )}
 
-        {/* the hint. Decorative: the button below does the same job. */}
+        {/* the hint. Decorative: the button below does the same job, and
+            applies just as well to the video tier — tapping it advances the
+            outfit there too. */}
         {layout === "framed" && (
           <p
             className="lbl pointer-events-none absolute bottom-3 left-3 px-2 py-1"

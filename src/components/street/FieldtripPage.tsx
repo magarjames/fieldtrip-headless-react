@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { BRAND, TAGLINE, DROP, PIECE_COUNT, PIECES, CATS, FITS, money, type CatId } from "./data";
 import { shot, shotFor } from "./media";
 import { ChibiHero } from "./Chibi";
+import { HeroFigureSequence, HeroPin, useIntroClipsAvailable } from "./HeroWalkIn";
 import { useReveal } from "@/components/northline/parts";
+import { useReducedMotion } from "@/components/world/stage";
 
 /* ============================================================================
    FIELDTRIP — the shop page (v1 layout), in two themes.
@@ -55,6 +57,13 @@ export function FieldtripPage({
   const [cat, setCat] = useState<CatId | "all">("all");
   const shown = cat === "all" ? PIECES : PIECES.filter((p) => p.cat === cat);
   const byId = (id: string) => PIECES.find((p) => p.id === id);
+
+  // the walk-in only pins the hero when both clips exist and motion is
+  // wanted; either way the docked figure at the end is the same ChibiHero
+  const heroWrapRef = useRef<HTMLDivElement>(null);
+  const introReady = useIntroClipsAvailable();
+  const reducedMotion = useReducedMotion();
+  const pinIntro = introReady && !reducedMotion;
 
   return (
     <div
@@ -221,6 +230,7 @@ export function FieldtripPage({
           which pushed the chibi panel clean off the right edge. The vw
           coefficient is sized so the longest word still fits the left track
           at every width from the lg breakpoint up. */}
+      <HeroPin active={pinIntro} wrapRef={heroWrapRef}>
       <section className="ft-hero shell grid items-end gap-8 pb-10 pt-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
         <div className="min-w-0">
           <h1 className="text-[clamp(2.9rem,7.5vw,10rem)]">{TAGLINE}</h1>
@@ -243,9 +253,14 @@ export function FieldtripPage({
         {/* the mascot wears the drop, and changing its fit is the same data the
             fits section is merchandised from */}
         <div className={`ft-figure${figurePlacement === "edge" ? " ft-figure-edge" : ""}`}>
-          <ChibiHero fallbackSrc={shot("ft-hero", 900, 1200)} />
+          {pinIntro ? (
+            <HeroFigureSequence wrapRef={heroWrapRef} fallbackSrc={shot("ft-hero", 900, 1200)} />
+          ) : (
+            <ChibiHero fallbackSrc={shot("ft-hero", 900, 1200)} />
+          )}
         </div>
       </section>
+      </HeroPin>
 
       {content === "full" && (
         <>

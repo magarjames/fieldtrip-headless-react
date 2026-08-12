@@ -27,6 +27,7 @@ import { Route as WCorridorRouteImport } from './routes/w.corridor'
 import { Route as WClothRouteImport } from './routes/w.cloth'
 import { Route as WBloomRouteImport } from './routes/w.bloom'
 import { Route as WAtlasRouteImport } from './routes/w.atlas'
+import { Route as SWorldRouteImport } from './routes/s.world'
 import { Route as SV8RouteImport } from './routes/s.v8'
 import { Route as SV7RouteImport } from './routes/s.v7'
 import { Route as SV6RouteImport } from './routes/s.v6'
@@ -133,6 +134,11 @@ const WAtlasRoute = WAtlasRouteImport.update({
   path: '/w/atlas',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SWorldRoute = SWorldRouteImport.update({
+  id: '/s/world',
+  path: '/s/world',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SV8Route = SV8RouteImport.update({
   id: '/s/v8',
   path: '/s/v8',
@@ -229,6 +235,7 @@ export interface FileRoutesByFullPath {
   '/s/v6': typeof SV6Route
   '/s/v7': typeof SV7Route
   '/s/v8': typeof SV8Route
+  '/s/world': typeof SWorldRoute
   '/w/atlas': typeof WAtlasRoute
   '/w/bloom': typeof WBloomRoute
   '/w/cloth': typeof WClothRoute
@@ -264,6 +271,7 @@ export interface FileRoutesByTo {
   '/s/v6': typeof SV6Route
   '/s/v7': typeof SV7Route
   '/s/v8': typeof SV8Route
+  '/s/world': typeof SWorldRoute
   '/w/atlas': typeof WAtlasRoute
   '/w/bloom': typeof WBloomRoute
   '/w/cloth': typeof WClothRoute
@@ -300,6 +308,7 @@ export interface FileRoutesById {
   '/s/v6': typeof SV6Route
   '/s/v7': typeof SV7Route
   '/s/v8': typeof SV8Route
+  '/s/world': typeof SWorldRoute
   '/w/atlas': typeof WAtlasRoute
   '/w/bloom': typeof WBloomRoute
   '/w/cloth': typeof WClothRoute
@@ -337,6 +346,7 @@ export interface FileRouteTypes {
     | '/s/v6'
     | '/s/v7'
     | '/s/v8'
+    | '/s/world'
     | '/w/atlas'
     | '/w/bloom'
     | '/w/cloth'
@@ -372,6 +382,7 @@ export interface FileRouteTypes {
     | '/s/v6'
     | '/s/v7'
     | '/s/v8'
+    | '/s/world'
     | '/w/atlas'
     | '/w/bloom'
     | '/w/cloth'
@@ -407,6 +418,7 @@ export interface FileRouteTypes {
     | '/s/v6'
     | '/s/v7'
     | '/s/v8'
+    | '/s/world'
     | '/w/atlas'
     | '/w/bloom'
     | '/w/cloth'
@@ -443,6 +455,7 @@ export interface RootRouteChildren {
   SV6Route: typeof SV6Route
   SV7Route: typeof SV7Route
   SV8Route: typeof SV8Route
+  SWorldRoute: typeof SWorldRoute
   WAtlasRoute: typeof WAtlasRoute
   WBloomRoute: typeof WBloomRoute
   WClothRoute: typeof WClothRoute
@@ -587,6 +600,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WAtlasRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/s/world': {
+      id: '/s/world'
+      path: '/s/world'
+      fullPath: '/s/world'
+      preLoaderRoute: typeof SWorldRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/s/v8': {
       id: '/s/v8'
       path: '/s/v8'
@@ -715,6 +735,7 @@ const rootRouteChildren: RootRouteChildren = {
   SV6Route: SV6Route,
   SV7Route: SV7Route,
   SV8Route: SV8Route,
+  SWorldRoute: SWorldRoute,
   WAtlasRoute: WAtlasRoute,
   WBloomRoute: WBloomRoute,
   WClothRoute: WClothRoute,
