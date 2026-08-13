@@ -238,12 +238,24 @@ export function NorthlinePageV8({
     return () => observer.disconnect();
   }, []);
 
-  // Fetch real products from Shopify
+  // Fetch real products from Shopify collection DROP 001
   useEffect(() => {
     if (import.meta.env.VITE_SHOPIFY_DOMAIN && import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN) {
-      shopifyClient.product.fetchAll().then((fetchedProducts) => {
-        setShopifyProducts(fetchedProducts as any); // Cast to any to avoid strict type mismatch with local typings
-      }).catch(err => console.error("Shopify fetch error:", err));
+      shopifyClient.collection.fetchAllWithProducts().then((collections) => {
+        const dropCollection = collections.find((c: any) => c.title.toLowerCase().includes("drop 001")) || collections[0];
+        if (dropCollection && dropCollection.products) {
+          setShopifyProducts(dropCollection.products as any);
+        } else {
+          shopifyClient.product.fetchAll().then((fetchedProducts) => {
+            setShopifyProducts(fetchedProducts as any);
+          });
+        }
+      }).catch(err => {
+        console.error("Shopify fetch error:", err);
+        shopifyClient.product.fetchAll().then((fetchedProducts) => {
+          setShopifyProducts(fetchedProducts as any);
+        });
+      });
     }
   }, []);
 
