@@ -239,14 +239,12 @@ export function NorthlineShop() {
         </button>
       </header>
 
-      <main className="nl-shop-container" style={{ position: 'relative', zIndex: 10, display: 'flex', minHeight: '100vh', padding: '4rem 5vw', gap: '4rem' }}>
+      <main className="nl-shop-container" style={{ position: 'relative', zIndex: 10, minHeight: '100vh' }}>
         
         {/* Sticky Sidebar for Categories and Filters */}
         <aside className="nl-shop-sidebar" style={{ 
-          width: '250px', 
           position: 'sticky', 
           top: '120px', 
-          height: 'max-content', 
           display: 'flex', 
           flexDirection: 'column', 
           gap: '3rem',
@@ -347,7 +345,7 @@ export function NorthlineShop() {
         </aside>
 
         {/* Product Grid Area */}
-        <section className="nl-shop-content" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <section className="nl-shop-content" style={{ display: 'flex', flexDirection: 'column' }}>
           
           {/* Header & Sort Controls */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', paddingBottom: '1rem', borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
@@ -383,7 +381,7 @@ export function NorthlineShop() {
             <p style={{ color: '#666' }}>No products match your filters.</p>
           ) : (
             <>
-              <div className="nl-product-grid" style={{ padding: 0, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '3rem 2rem' }}>
+              <div className="nl-product-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '3rem 2rem' }}>
                 {displayedProducts.map((product, index) => (
                   <article 
                     className="nl-product" 
