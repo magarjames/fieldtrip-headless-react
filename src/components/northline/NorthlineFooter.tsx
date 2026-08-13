@@ -26,8 +26,8 @@ export function NorthlineFooter() {
       <div className="nl-footer-ripped-edge">
         <NorthlineScrollEdge 
           motion={motionRef} 
-          colour="#0f0f1c" 
-          toneStrength={0.1} 
+          colour="#12131c" 
+          toneStrength={0.3} 
           className="nl-footer-scroll-edge" 
         />
       </div>
