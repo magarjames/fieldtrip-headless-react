@@ -13,7 +13,7 @@
 
 export const BRAND = "VIVRE";
 export const TAGLINE = "Dress like you have somewhere to be";
-export const DROP = "Drop 04";
+export const DROP = "Drop 001";
 export const PIECE_COUNT = 18;
 
 export type CatId = "tops" | "bottoms" | "layers" | "shorts" | "caps" | "sport";

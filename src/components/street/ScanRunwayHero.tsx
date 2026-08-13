@@ -395,7 +395,7 @@ export function ScanRunwayHero({
           aria-label="Vivre primary navigation"
         >
           <a className="scan-runway__brand" href="#fieldtrip-top">
-            VIVRE <span>/ DROP 04</span>
+            VIVRE <span>/ DROP 001</span>
           </a>
           {showPrimaryNavigation ? (
             <div className="scan-runway__nav-links">

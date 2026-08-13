@@ -7,8 +7,8 @@ export const Route = createFileRoute("/s/v6")({
   component: FieldtripNorthlinePage,
   head: () => ({
     ...pageMeta(
-      "Vivre Drop 04 | Scan every angle",
-      "Rotate seven streetwear looks inside the Vivre scan chamber, then enter the Drop 04 collection.",
+      "Vivre Drop 001 | Scan every angle",
+      "Rotate seven streetwear looks inside the Vivre scan chamber, then enter the Drop 001 collection.",
     ),
     links: [
       {
