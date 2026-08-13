@@ -2647,11 +2647,17 @@
 
 /* NEW FOOTER REFERENCE STYLES */
 .nl-footer-ref {
-  background-color: #99958c;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  ), rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(64px) saturate(180%) brightness(0.95);
+  -webkit-backdrop-filter: blur(64px) saturate(180%) brightness(0.95);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
   color: #fff;
   position: relative;
   font-family: Archivo, "Helvetica Neue", sans-serif;
-  margin-top: clamp(6.5rem, 8vw, 8.5rem);
 }
 
 .nl-footer-ripped-edge {
