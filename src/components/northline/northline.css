@@ -2651,8 +2651,7 @@
   color: #fff;
   position: relative;
   font-family: Archivo, "Helvetica Neue", sans-serif;
-  margin-top: 5rem;
-  overflow: hidden;
+  margin-top: clamp(6.5rem, 8vw, 8.5rem);
 }
 
 .nl-footer-ripped-edge {
