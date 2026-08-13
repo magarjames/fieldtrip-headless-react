@@ -3035,7 +3035,7 @@
 .nl-shop-container {
   display: flex;
   flex-direction: column;
-  padding: 2rem 5vw;
+  padding: 2rem 5vw calc(2rem + clamp(5.125rem, 6.4vw, 7.875rem));
   gap: 2rem;
 }
 
