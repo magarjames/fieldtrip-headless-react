@@ -526,7 +526,7 @@ export function NorthlinePage({
       return;
     }
 
-    setSignupMessage("Thanks. Northline notes will go to " + email + ".");
+    setSignupMessage("Thanks. Vivre notes will go to " + email + ".");
     setEmail("");
   }
 
@@ -541,8 +541,8 @@ export function NorthlinePage({
 
       {showHeader && (
         <header className="nl-header">
-          <a className="nl-wordmark" href={homeHref} aria-label="Northline home">
-            Northline
+          <a className="nl-wordmark" href={homeHref} aria-label="Vivre home">
+            Vivre
           </a>
           <nav className="nl-nav" aria-label="Primary navigation">
             <a href="#collection">Shop</a>
@@ -594,15 +594,15 @@ export function NorthlinePage({
             <img
               className="nl-hero-image"
               src={heroDawn}
-              alt="Model wearing Northline-inspired black utility outerwear against a pale dawn sky."
+              alt="Model wearing Vivre-inspired black utility outerwear against a pale dawn sky."
               decoding="async"
             />
             <div className="nl-hero-scrim" />
             <p className="nl-hero-wordmark" aria-hidden="true">
-              Northline
+              Vivre
             </p>
             <div className="nl-hero-content">
-              <p className="nl-hero-place">Northline goods for city weather</p>
+              <p className="nl-hero-place">Vivre goods for city weather</p>
               <h1>
                 Built for the
                 <span>long way home.</span>
@@ -867,7 +867,7 @@ export function NorthlinePage({
       <footer className="nl-footer">
         <div>
           <a className="nl-footer-wordmark" href={homeHref}>
-            Northline
+            Vivre
           </a>
           <p>Utility layers for the long way home.</p>
         </div>

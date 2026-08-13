@@ -120,8 +120,8 @@ export function NorthlineWorld() {
       </a>
 
       <header className="nlw-header">
-        <a className="nlw-brand" href="#top" aria-label="Northline World home">
-          <span>Northline</span>
+        <a className="nlw-brand" href="#top" aria-label="Vivre World home">
+          <span>Vivre</span>
           <small>World</small>
         </a>
         <nav className="nlw-nav" aria-label="World route">
@@ -138,7 +138,7 @@ export function NorthlineWorld() {
 
       <main id="top">
         <div className="nlw-prelude" aria-hidden="true">
-          <span>Scroll world / Northline field notes</span>
+          <span>Scroll world / Vivre field notes</span>
           <i />
           <span>Desktop draft</span>
         </div>
@@ -205,7 +205,7 @@ export function NorthlineWorld() {
       </main>
 
       <footer className="nlw-footer">
-        <p>Northline World is a scroll-world preview.</p>
+        <p>Vivre World is a scroll-world preview.</p>
         <p>
           Frame-locked video clips can replace these staged posters when the render chain is
           connected.

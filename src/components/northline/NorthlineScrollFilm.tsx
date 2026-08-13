@@ -22,7 +22,7 @@ export function NorthlineScrollFilm({
   messages,
 }: NorthlineScrollFilmProps) {
   return (
-    <section id="journal" className="nl-film" aria-label="Northline campaign journal">
+    <section id="journal" className="nl-film" aria-label="Vivre campaign journal">
       <article className="nl-film-step nl-film-step-dawn nl-film-step-sequence">
         <div className="nl-film-frame">
           <NorthlineFrameSequence sequence={frameSequence} poster={image} alt={alt} eager />
