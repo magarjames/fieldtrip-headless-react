@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import { createPortal } from "react-dom";
+import { Link } from "@tanstack/react-router";
 
 import "@/components/northline/northline.css";
 import {
@@ -617,7 +618,7 @@ export function NorthlinePageV8({
             Northline
           </a>
           <nav className="nl-header-nav" aria-label="Main">
-            <a href="#">Shop All</a>
+            <Link to="/s/v8/shop">Shop All</Link>
             <a href="#">Lookbook</a>
             <a href="#">Capsule</a>
           </nav>
@@ -646,9 +647,9 @@ export function NorthlinePageV8({
               className="nl-mobile-menu"
               aria-label="Mobile"
             >
-              <a href="#" onClick={() => setMobileMenuOpen(false)}>
+              <Link to="/s/v8/shop" onClick={() => setMobileMenuOpen(false)}>
                 Shop All
-              </a>
+              </Link>
               <a href="#" onClick={() => setMobileMenuOpen(false)}>
                 Lookbook
               </a>
@@ -702,14 +703,14 @@ export function NorthlinePageV8({
               className="nl-continuation-nav"
               aria-label="Collection navigation"
             >
-              <a href="#">Shop All</a>
+              <Link to="/s/v8/shop">Shop All</Link>
               <a href="#">Lookbook</a>
               <a href="#">Capsule</a>
             </nav>
           )}
           {!splitNavigation && (
             <nav className="nl-footer-nav" aria-label="Footer">
-              <a href="#">Shop All</a>
+              <Link to="/s/v8/shop">Shop All</Link>
               <a href="#">Lookbook</a>
               <a href="#">Capsule</a>
             </nav>
