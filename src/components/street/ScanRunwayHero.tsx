@@ -40,7 +40,7 @@ const LOOKS = [
     note: "Fitted white long sleeve with ink-washed wide denim.",
     pieces: [
       { name: "Fitted Long Sleeve", hue: "#f7f7f7", keyword: "Long Sleeve" },
-      { name: "Ink-Washed Denim", hue: "#21283d", keyword: "Denim" },
+      { name: "Longform Wide Leg Jeans – Deep Blue", hue: "#21283d", keyword: "Longform Wide" },
     ]
   },
   {
@@ -48,7 +48,7 @@ const LOOKS = [
     name: "Archive layer",
     note: "Cream graphic knit paired with relaxed dark denim.",
     pieces: [
-      { name: "Cream Graphic Knit", hue: "#ece3cc", keyword: "Knit" },
+      { name: "Graphic Crew Sweatshirt", hue: "#ece3cc", keyword: "Graphic Crew Sweatshirt" },
       { name: "Relaxed Dark Denim", hue: "#263045", keyword: "Denim" },
     ]
   },
@@ -58,7 +58,7 @@ const LOOKS = [
     note: "Oversized black graphic tee with faded wide-leg jeans.",
     pieces: [
       { name: "Oversized Graphic Tee", hue: "#1c1c1c", keyword: "Tee" },
-      { name: "Faded Wide-Leg Jeans", hue: "#748fba", keyword: "Jeans" },
+      { name: "Razorcut Ripped Wide Leg Jeans – Dark Blue", hue: "#748fba", keyword: "Razorcut" },
     ]
   },
   {
@@ -67,7 +67,7 @@ const LOOKS = [
     note: "Grey ribbed henley layered over washed wide denim.",
     pieces: [
       { name: "Grey Ribbed Henley", hue: "#878a8f", keyword: "Henley" },
-      { name: "Washed Wide Denim", hue: "#6a82a6", keyword: "Denim" },
+      { name: "Wide-Leg Denim Jeans", hue: "#6a82a6", keyword: "Wide-Leg Denim" },
     ]
   },
   {
@@ -76,7 +76,7 @@ const LOOKS = [
     note: "Sand suede jacket over a striped shirt and dark trousers.",
     pieces: [
       { name: "Sand Suede Jacket", hue: "#c9b699", keyword: "Jacket" },
-      { name: "Dark Trousers", hue: "#2b2b2b", keyword: "Trousers" },
+      { name: "Ironwork 15oz Raw Denim Jeans – Black", hue: "#2b2b2b", keyword: "Ironwork" },
     ]
   },
 ] as const;
