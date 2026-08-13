@@ -17,11 +17,17 @@ export function NorthlineFooter() {
 
   return (
     <footer className="nl-footer-ref">
+      <div 
+        className="nl-footer-bg-image" 
+        style={{ backgroundImage: `url(${heroDawn})` }} 
+      />
+      <div className="nl-footer-glass-overlay" />
+
       <div className="nl-footer-ripped-edge">
         <NorthlineScrollEdge 
           motion={motionRef} 
-          colour="#1a1a1a" 
-          toneStrength={0.2} 
+          colour="#12131c" 
+          toneStrength={0.3} 
           className="nl-footer-scroll-edge" 
         />
       </div>
@@ -48,7 +54,6 @@ export function NorthlineFooter() {
         </div>
 
         <div className="nl-footer-center">
-          <div className="nl-footer-center-image" style={{ backgroundImage: `url(${heroDawn})` }} />
           <h1 className="nl-footer-center-text">VIVRE</h1>
         </div>
 
