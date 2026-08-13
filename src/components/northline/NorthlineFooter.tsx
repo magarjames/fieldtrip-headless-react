@@ -34,28 +34,12 @@ export function NorthlineFooter() {
         <div className="nl-footer-top">
           <nav className="nl-footer-nav-left">
             <a href="/s/v8/shop">SHOP ALL</a>
-            <a href="#">CATEGORIES</a>
-            <a href="#">WHO WE ARE</a>
-            <a href="#">CAMPAIGN</a>
             <a href="#">CONTACT</a>
-            <a href="#">COLLECTIONS</a>
-            <a href="#">SALE</a>
-            <a href="#">5-HT</a>
           </nav>
-          
-          <nav className="nl-footer-nav-right">
-            <a href="#">RETURN</a>
-            <a href="#">IMPRESSUM</a>
-            <a href="#">SHIPPING AND PAYMENT</a>
-            <a href="#">FAQ</a>
-          </nav>
-        </div>
-
-        <div className="nl-footer-center">
-          <h1 className="nl-footer-center-text">VIVRE</h1>
         </div>
 
         <div className="nl-footer-bottom-actions">
+          <h1 className="nl-footer-center-text">VIVRE</h1>
           <div className="nl-footer-subscribe-wrapper">
             <h2>SUBSCRIBE <span>(LATEST NEWS)</span></h2>
             <form className="nl-footer-subscribe" onSubmit={submitSignup}>
@@ -78,7 +62,6 @@ export function NorthlineFooter() {
           <p>©2026_VIVRE</p>
           <div className="nl-footer-bottom-links">
             <a href="#">PRIVACY POLICY (DSGVO)</a>
-            <a href="#">CREDITS</a>
             <a href="#">IG</a>
           </div>
         </div>

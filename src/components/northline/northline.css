@@ -2715,22 +2715,6 @@
   opacity: 1;
 }
 
-.nl-footer-center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  text-align: center;
-  pointer-events: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.nl-footer-center-image {
-  /* Removed since we made the whole background the image */
-}
 
 .nl-footer-center-text {
   font-size: clamp(4rem, 15vw, 12rem);
@@ -2746,7 +2730,8 @@
 
 .nl-footer-bottom-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: flex-end;
   margin-top: auto;
   margin-bottom: 4rem;
   z-index: 10;
@@ -2839,9 +2824,10 @@
   .nl-footer-nav-left {
     grid-template-columns: repeat(2, 1fr);
   }
-  .nl-footer-nav-right {
-    flex-wrap: wrap;
-    gap: 1rem 2rem;
+  .nl-footer-bottom-actions {
+    flex-direction: column;
+    gap: 2rem;
+    align-items: flex-start;
   }
   .nl-footer-bottom-bar {
     flex-direction: column;
