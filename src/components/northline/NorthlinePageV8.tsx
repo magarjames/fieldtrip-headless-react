@@ -617,9 +617,9 @@ export function NorthlinePageV8({
             Northline
           </a>
           <nav className="nl-header-nav" aria-label="Main">
-            <a href="#">Shop</a>
-            <a href="#">Materials</a>
-            <a href="#">Journal</a>
+            <a href="#">Shop All</a>
+            <a href="#">Lookbook</a>
+            <a href="#">Capsule</a>
           </nav>
           <div className="nl-header-actions">
             <button
@@ -647,13 +647,13 @@ export function NorthlinePageV8({
               aria-label="Mobile"
             >
               <a href="#" onClick={() => setMobileMenuOpen(false)}>
-                Shop
+                Shop All
               </a>
               <a href="#" onClick={() => setMobileMenuOpen(false)}>
-                Materials
+                Lookbook
               </a>
               <a href="#" onClick={() => setMobileMenuOpen(false)}>
-                Journal
+                Capsule
               </a>
             </nav>
           )}
@@ -702,16 +702,16 @@ export function NorthlinePageV8({
               className="nl-continuation-nav"
               aria-label="Collection navigation"
             >
-              <a href="#">Shop</a>
-              <a href="#">Materials</a>
-              <a href="#">Journal</a>
+              <a href="#">Shop All</a>
+              <a href="#">Lookbook</a>
+              <a href="#">Capsule</a>
             </nav>
           )}
           {!splitNavigation && (
             <nav className="nl-footer-nav" aria-label="Footer">
-              <a href="#">Shop</a>
-              <a href="#">Materials</a>
-              <a href="#">Journal</a>
+              <a href="#">Shop All</a>
+              <a href="#">Lookbook</a>
+              <a href="#">Capsule</a>
             </nav>
           )}
           <div className="nl-collection-intro nl-reveal">
