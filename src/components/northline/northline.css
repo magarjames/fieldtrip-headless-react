@@ -2657,19 +2657,26 @@
 
 .nl-footer-ripped-edge {
   position: absolute;
-  top: -1px;
+  top: calc(-1 * clamp(6.5rem, 8vw, 8.5rem) + 1px);
   left: 0;
   width: 100%;
-  height: 60px;
-  color: #fff; /* or whatever background color is above it */
+  height: clamp(6.5rem, 8vw, 8.5rem);
   z-index: 10;
   pointer-events: none;
 }
-.nl-footer-ripped-edge svg {
+.nl-footer-ripped-edge .nl-footer-scroll-edge {
   display: block;
   width: 100%;
   height: 100%;
-  fill: var(--paper, #fff);
+  position: relative;
+}
+.nl-footer-ripped-edge .nl-footer-scroll-edge > div,
+.nl-footer-ripped-edge .nl-footer-scroll-edge canvas {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .nl-footer-content {
