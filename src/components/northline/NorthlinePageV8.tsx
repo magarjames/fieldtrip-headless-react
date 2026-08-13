@@ -105,6 +105,7 @@ export function NorthlinePageV8({
   const [collectionDetails, setCollectionDetails] = useState<{title: string, description: string} | null>(null);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
+  const productGridRef = useRef<HTMLDivElement>(null);
   const continuationNavRef = useRef<HTMLElement>(null);
   const edgeMotionRef = useRef<NorthlineEdgeMotion>({ progress: 0 });
   const materialsRef = useRef<HTMLElement>(null);
@@ -237,6 +238,36 @@ export function NorthlinePageV8({
 
     observer.observe(copy);
     return () => observer.disconnect();
+  }, []);
+
+  // Handle horizontal scrolling on product grid using vertical mouse wheel
+  useEffect(() => {
+    const grid = productGridRef.current;
+    if (!grid) return;
+    
+    const onWheel = (e: WheelEvent) => {
+      // Ignore if it's already a horizontal scroll event (e.g. from trackpad)
+      if (e.deltaX !== 0 && Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      if (e.deltaY === 0) return;
+      
+      const isScrollableX = grid.scrollWidth > grid.clientWidth;
+      if (!isScrollableX) return;
+      
+      const isAtLeftEdge = grid.scrollLeft === 0;
+      // Use a small tolerance (1px) for right edge check
+      const isAtRightEdge = Math.ceil(grid.scrollLeft + grid.clientWidth) >= grid.scrollWidth - 1;
+      
+      // If we are at the left edge and scrolling up, let the page scroll vertically
+      if (isAtLeftEdge && e.deltaY < 0) return;
+      // If we are at the right edge and scrolling down, let the page scroll vertically
+      if (isAtRightEdge && e.deltaY > 0) return;
+      
+      e.preventDefault();
+      grid.scrollLeft += e.deltaY;
+    };
+    
+    grid.addEventListener("wheel", onWheel, { passive: false });
+    return () => grid.removeEventListener("wheel", onWheel);
   }, []);
 
   // Fetch real products from Shopify collection DROP 001
@@ -704,7 +735,7 @@ export function NorthlinePageV8({
               </button>
             ))}
           </div>
-          <div className="nl-product-grid">
+          <div className="nl-product-grid" ref={productGridRef}>
             {shownProducts.map((product, index) => (
               <article className="nl-product nl-reveal" key={product.id} data-product-index={index}>
                 <button
