@@ -450,6 +450,35 @@
   content: "";
 }
 
+.scan-runway__wardrobe {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.scan-runway__wardrobe-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.scan-runway__wardrobe-item .scan-runway__wardrobe-swatch {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+}
+
+.scan-runway__wardrobe-item span {
+  font: 500 0.75rem/1.3 Archivo, sans-serif !important;
+  color: var(--scan-white) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  max-width: none !important;
+}
+
 .scan-runway__meta small {
   color: var(--scan-ui-muted);
   font:
@@ -827,3 +856,4 @@
     display: none;
   }
 }
+

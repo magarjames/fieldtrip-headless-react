@@ -7,6 +7,7 @@ import {
   type PointerEvent,
 } from "react";
 import { ShoppingCart } from "lucide-react";
+import { shopifyClient } from "@/lib/shopify";
 import "./scan-runway-hero.css";
 
 const FRAME_NAMES = ["a", "b", "c", "d", "e", "f", "g"] as const;
@@ -19,36 +20,64 @@ const LOOKS = [
     id: "f4",
     name: "Skyline zip",
     note: "Pale blue zip hoodie with washed charcoal wide-leg denim.",
+    pieces: [
+      { name: "Skyline Zip Hoodie", hue: "#9fb9c9", keyword: "Hoodie" },
+      { name: "Washed Charcoal Denim", hue: "#424246", keyword: "Denim" },
+    ]
   },
   {
     id: "f1",
     name: "Mouth tee",
     note: "White mouth-print tee with relaxed olive cargo trousers.",
+    pieces: [
+      { name: "Mouth Tee", hue: "#f2f2f2", keyword: "Tee" },
+      { name: "Olive Cargo Trousers", hue: "#575e46", keyword: "Cargo" },
+    ]
   },
   {
     id: "f2",
     name: "Second skin",
     note: "Fitted white long sleeve with ink-washed wide denim.",
+    pieces: [
+      { name: "Fitted Long Sleeve", hue: "#f7f7f7", keyword: "Long Sleeve" },
+      { name: "Ink-Washed Denim", hue: "#21283d", keyword: "Denim" },
+    ]
   },
   {
     id: "f3",
     name: "Archive layer",
     note: "Cream graphic knit paired with relaxed dark denim.",
+    pieces: [
+      { name: "Cream Graphic Knit", hue: "#ece3cc", keyword: "Knit" },
+      { name: "Relaxed Dark Denim", hue: "#263045", keyword: "Denim" },
+    ]
   },
   {
     id: "m1",
     name: "After hours",
     note: "Oversized black graphic tee with faded wide-leg jeans.",
+    pieces: [
+      { name: "Oversized Graphic Tee", hue: "#1c1c1c", keyword: "Tee" },
+      { name: "Faded Wide-Leg Jeans", hue: "#748fba", keyword: "Jeans" },
+    ]
   },
   {
     id: "m2",
     name: "Layered henley",
     note: "Grey ribbed henley layered over washed wide denim.",
+    pieces: [
+      { name: "Grey Ribbed Henley", hue: "#878a8f", keyword: "Henley" },
+      { name: "Washed Wide Denim", hue: "#6a82a6", keyword: "Denim" },
+    ]
   },
   {
     id: "m3",
     name: "Suede shift",
     note: "Sand suede jacket over a striped shirt and dark trousers.",
+    pieces: [
+      { name: "Sand Suede Jacket", hue: "#c9b699", keyword: "Jacket" },
+      { name: "Dark Trousers", hue: "#2b2b2b", keyword: "Trousers" },
+    ]
   },
 ] as const;
 
@@ -85,6 +114,7 @@ export function ScanRunwayHero({
 }) {
   const [lookIndex, setLookIndex] = useState(0);
   const [frameIndex, setFrameIndex] = useState(0);
+  const [shopifyProducts, setShopifyProducts] = useState<any[]>([]);
   const sectionRef = useRef<HTMLElement>(null);
   const lookIndexRef = useRef(0);
   const frameIndexRef = useRef(0);
@@ -130,6 +160,16 @@ export function ScanRunwayHero({
       if (fallback !== undefined) window.clearTimeout(fallback);
     };
   }, [look.id, nextLook.id]);
+
+  useEffect(() => {
+    if (import.meta.env.VITE_SHOPIFY_DOMAIN && import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN) {
+      shopifyClient.product.fetchAll().then((fetchedProducts) => {
+        setShopifyProducts(fetchedProducts as any);
+      }).catch(err => {
+        console.error("Shopify fetch error:", err);
+      });
+    }
+  }, []);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -518,6 +558,29 @@ export function ScanRunwayHero({
               LOOK {String(lookIndex + 1).padStart(2, "0")} /{" "}
               {String(LOOKS.length).padStart(2, "0")}
             </small>
+
+            <div className="scan-runway__wardrobe">
+              {look.pieces?.map((piece, i) => {
+                let displayName = piece.name;
+                if (shopifyProducts.length > 0) {
+                  // Try to find a Shopify product that matches the keyword
+                  const matched = shopifyProducts.find(sp => 
+                    sp.title.toLowerCase().includes(piece.keyword.toLowerCase())
+                  );
+                  if (matched) {
+                    displayName = matched.title;
+                  }
+                }
+                
+                return (
+                  <div key={i} className="scan-runway__wardrobe-item">
+                    <div className="scan-runway__wardrobe-swatch" style={{ backgroundColor: piece.hue }} />
+                    <span>{displayName}</span>
+                  </div>
+                );
+              })}
+            </div>
+
             <strong>{look.name}</strong>
             <span>{look.note}</span>
           </div>
