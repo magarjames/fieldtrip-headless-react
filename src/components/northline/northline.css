@@ -684,18 +684,30 @@
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
   gap: clamp(1.2rem, 3.8vw, 2.5rem);
   margin-top: 2.3rem;
   padding-bottom: 2rem;
+  /* Add padding to the right so the last item doesn't touch the edge */
+  padding-right: clamp(1.2rem, 3.8vw, 2.5rem);
 }
 
+/* Custom subtle scrollbar for desktop users */
 .nl-product-grid::-webkit-scrollbar {
-  display: none;
+  height: 6px;
+}
+.nl-product-grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+.nl-product-grid::-webkit-scrollbar-thumb {
+  background: var(--nl-pebble);
+  border-radius: 10px;
+}
+.nl-product-grid::-webkit-scrollbar-thumb:hover {
+  background: var(--nl-ash);
 }
 
 .nl-product {
-  flex: 0 0 calc(33.333% - 1.66rem);
+  flex: 0 0 clamp(280px, 32%, 420px);
   scroll-snap-align: start;
   min-width: 0;
   padding-top: 1rem;
