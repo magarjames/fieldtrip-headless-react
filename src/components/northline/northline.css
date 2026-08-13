@@ -2675,12 +2675,13 @@
 
 .nl-footer-ripped-edge {
   position: absolute;
-  top: calc(-1 * clamp(6.5rem, 8vw, 8.5rem) + 1px);
+  top: -1px;
   left: 0;
   width: 100%;
   height: clamp(6.5rem, 8vw, 8.5rem);
   z-index: 10;
   pointer-events: none;
+  transform: scaleY(-1);
 }
 .nl-footer-ripped-edge .nl-footer-scroll-edge {
   display: block;
