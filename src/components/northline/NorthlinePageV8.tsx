@@ -102,6 +102,7 @@ export function NorthlinePageV8({
   const [email, setEmail] = useState("");
   const [signupMessage, setSignupMessage] = useState("");
   const [shopifyProducts, setShopifyProducts] = useState<ShopifyProduct[]>([]);
+  const [collectionDetails, setCollectionDetails] = useState<{title: string, description: string} | null>(null);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const continuationNavRef = useRef<HTMLElement>(null);
@@ -243,8 +244,14 @@ export function NorthlinePageV8({
     if (import.meta.env.VITE_SHOPIFY_DOMAIN && import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN) {
       shopifyClient.collection.fetchAllWithProducts().then((collections) => {
         const dropCollection = collections.find((c: any) => c.title.toLowerCase().includes("drop 001")) || collections[0];
-        if (dropCollection && dropCollection.products) {
-          setShopifyProducts(dropCollection.products as any);
+        if (dropCollection) {
+          setCollectionDetails({
+            title: dropCollection.title,
+            description: dropCollection.description || "",
+          });
+          if (dropCollection.products) {
+            setShopifyProducts(dropCollection.products as any);
+          }
         } else {
           shopifyClient.product.fetchAll().then((fetchedProducts) => {
             setShopifyProducts(fetchedProducts as any);
@@ -679,10 +686,10 @@ export function NorthlinePageV8({
           <div className="nl-collection-intro nl-reveal">
             <div>
               <h2>
-                DROP 001
+                {collectionDetails?.title || "DROP 001"}
               </h2>
             </div>
-            <p>The shopify collection.</p>
+            {collectionDetails?.description && <p>{collectionDetails.description}</p>}
           </div>
           <div className="nl-filter-row" aria-label="Filter the collection">
             {dynamicFilters.map((filter) => (
