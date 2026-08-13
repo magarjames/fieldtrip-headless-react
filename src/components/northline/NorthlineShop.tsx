@@ -4,6 +4,7 @@ import { Link } from "@tanstack/react-router";
 import { shopifyClient } from "@/lib/shopify";
 import "./northline.css";
 import { FoldBackdropV8 } from "@/components/street/FoldBackdropV8";
+import { NorthlineFooter } from "@/components/northline/NorthlineFooter";
 
 // Interface for our mapped local product state
 interface Product {
@@ -461,6 +462,8 @@ export function NorthlineShop() {
         </section>
 
       </main>
+
+      <NorthlineFooter />
 
       {/* Product Modal overlay */}
       {activeProduct && typeof document !== "undefined" && createPortal(

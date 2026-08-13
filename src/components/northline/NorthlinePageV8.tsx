@@ -17,6 +17,7 @@ import {
 import { shopifyClient } from "@/lib/shopify";
 import type { Product as ShopifyProduct } from "shopify-buy";
 import { NorthlineScrollFilm } from "@/components/northline/NorthlineScrollFilm";
+import { NorthlineFooter } from "@/components/northline/NorthlineFooter";
 import detailBlue from "@/assets/northline/detail-blue.jpg";
 import flatlay from "@/assets/northline/flatlay.jpg";
 import heroDawn from "@/assets/northline/hero-dawn.png";
@@ -871,49 +872,9 @@ export function NorthlinePageV8({
           </div>
         </section>
 
-
-        <section id="journal" className="nl-signup">
-          <div className="nl-signup-content nl-reveal">
-            <h2>Keep the line open.</h2>
-            <p>New releases, restocks, and useful notes. Nothing daily.</p>
-            <form className="nl-signup-form" onSubmit={submitSignup}>
-              <label htmlFor="northline-email">Email address</label>
-              <div>
-                <input
-                  id="northline-email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  required
-                />
-                <button type="submit">Join</button>
-              </div>
-              <p className="nl-form-message" aria-live="polite">
-                {signupMessage}
-              </p>
-            </form>
-          </div>
-        </section>
       </main>
 
-      <footer className="nl-footer">
-        <div>
-          <a className="nl-footer-wordmark" href={homeHref}>
-            Vivre
-          </a>
-          <p>Utility layers for the long way home.</p>
-        </div>
-        <div className="nl-footer-links">
-          <a href="#collection">Shop</a>
-          <a href="#materials">Materials</a>
-          <a href="#journal">Journal</a>
-        </div>
-        <p className="nl-footer-note">
-          Concept storefront. Connect real supplier copy, pricing, availability, and checkout before
-          launch.
-        </p>
-      </footer>
+      <NorthlineFooter />
 
       {activeProduct && typeof document !== "undefined" && createPortal(
         <div className="nl-layer is-immersive">
