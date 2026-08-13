@@ -413,7 +413,7 @@ export function ScanRunwayHero({
             <defs>
               <path
                 id="scan-curtain-path"
-                d="M 145 180 C 470 180, 690 255, 960 265 C 1230 255, 1450 180, 1775 180"
+                d="M 145 220 C 470 220, 690 80, 960 70 C 1230 80, 1450 220, 1775 220"
               />
             </defs>
             <text
