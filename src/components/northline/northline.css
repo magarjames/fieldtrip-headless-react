@@ -150,7 +150,7 @@
   transform: translateY(-1px);
 }
 
-/* ── Persistent floating cart button ── */
+/* â”€â”€ Persistent floating cart button â”€â”€ */
 .nl-floating-bag {
   position: fixed;
   bottom: 1.5rem;
@@ -169,7 +169,7 @@
   color: #fff;
   cursor: pointer;
   box-shadow:
-    0 4px 24px rgba(0, 0, 0, 0.25),
+    0 4px 24px rgba(0, 0, 0, 0.55),
     0 0 0 1px rgba(255, 255, 255, 0.06) inset;
   transition:
     transform 200ms ease,
@@ -1517,7 +1517,7 @@
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
   border-radius: 24px;
   overflow: hidden;
-  width: min(100%, 55rem);
+  width: min(100%, 75rem);
   max-height: calc(100dvh - 4rem);
   display: flex;
   flex-direction: column;
@@ -1530,9 +1530,9 @@
     135deg,
     rgba(255, 255, 255, 0.22) 0%,
     rgba(255, 255, 255, 0.06) 100%
-  ), rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(45px) saturate(210%) brightness(1.05);
-  -webkit-backdrop-filter: blur(45px) saturate(210%) brightness(1.05);
+  ), rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(64px) saturate(180%) brightness(0.95);
+  -webkit-backdrop-filter: blur(64px) saturate(180%) brightness(0.95);
   border-left: 1px solid rgba(255, 255, 255, 0.4);
   box-shadow: -10px 0 60px rgba(0, 0, 0, 0.35), inset 1px 0 0 rgba(255, 255, 255, 0.6);
   color: rgba(255, 255, 255, 0.95);
@@ -1567,6 +1567,26 @@
   justify-content: center;
   background: transparent;
   min-width: 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.nl-dialog-glass-description {
+  flex: 1.2;
+  padding: 3rem 2.5rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 1024px) {
+  .nl-dialog-glass-content {
+    flex-direction: column;
+  }
+  .nl-dialog-glass-right,
+  .nl-dialog-glass-description {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+  }
 }
 
 .nl-dialog-sideable-images {
@@ -1589,7 +1609,7 @@
   background: #ffffff;
   padding: 0.4rem;
   flex-shrink: 0;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
 }
 
 .nl-dialog-divider {
@@ -1849,7 +1869,7 @@
   font-weight: 700;
   background: var(--nl-white) !important;
   color: var(--nl-ink) !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.55);
   transition: all 0.2s ease;
 }
 
@@ -2547,4 +2567,80 @@
   font-size: 1.5rem;
   font-weight: 300;
   margin-right: 0.5rem;
+}
+
+/* Product Page Layout */
+.nl-product-page-container {
+  position: relative;
+  min-height: 100dvh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: #000;
+}
+
+.nl-product-page-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1400px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.nl-product-page-back {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-family: var(--nl-mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  align-self: flex-start;
+  transition: color 0.2s;
+}
+
+.nl-product-page-back:hover {
+  color: #fff;
+}
+
+.nl-product-page-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.nl-product-dialog-left, .nl-product-dialog-right {
+  width: 100%;
+  max-height: none;
+}
+
+.nl-dialog-description-long {
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
+.nl-dialog-description-long p {
+  margin-bottom: 1.5rem;
+}
+
+.nl-product-page-loading {
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-family: var(--nl-mono);
+  background-color: #000;
+}
+
+@media (max-width: 1024px) {
+  .nl-product-page-split {
+    grid-template-columns: 1fr;
+  }
 }

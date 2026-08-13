@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { Link } from "@tanstack/react-router";
 import { shopifyClient } from "@/lib/shopify";
 import "./northline.css";
 import { FoldBackdropV8 } from "@/components/street/FoldBackdropV8";
@@ -497,7 +498,6 @@ export function NorthlineShop() {
                     <span className="nl-dialog-option-label">PRICE</span>
                     <span className="nl-dialog-option-value">{activeProduct.price}</span>
                   </div>
-                  <p className="nl-dialog-description">{activeProduct.description}</p>
                   <fieldset className="nl-dialog-option-fieldset">
                     <legend className="nl-dialog-option-label">COLOR</legend>
                     <div className="nl-option-row">
@@ -549,6 +549,13 @@ export function NorthlineShop() {
                     <img key={i} src={img} alt={`${activeProduct.alt} view ${i + 1}`} loading="lazy" />
                   ))}
                 </div>
+              </div>
+              <div className="nl-dialog-glass-description">
+                <h3 className="nl-dialog-group" style={{ marginBottom: '1rem', border: 'none' }}>Description</h3>
+                <div 
+                  className="nl-dialog-description-long"
+                  dangerouslySetInnerHTML={{ __html: activeProduct.description }}
+                />
               </div>
             </div>
             <div className="nl-dialog-glass-footer">

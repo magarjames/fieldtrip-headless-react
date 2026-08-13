@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as NorthlineWorldRouteImport } from './routes/northline-world'
 import { Route as NorthlineRouteImport } from './routes/northline'
-import { Route as LookbookRouteImport } from './routes/lookbook'
 import { Route as EditionsRouteImport } from './routes/editions'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WIndexRouteImport } from './routes/w.index'
@@ -52,11 +51,6 @@ const NorthlineWorldRoute = NorthlineWorldRouteImport.update({
 const NorthlineRoute = NorthlineRouteImport.update({
   id: '/northline',
   path: '/northline',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LookbookRoute = LookbookRouteImport.update({
-  id: '/lookbook',
-  path: '/lookbook',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EditionsRoute = EditionsRouteImport.update({
@@ -218,7 +212,6 @@ const SV8ShopRoute = SV8ShopRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/editions': typeof EditionsRoute
-  '/lookbook': typeof LookbookRoute
   '/northline': typeof NorthlineRoute
   '/northline-world': typeof NorthlineWorldRoute
   '/nl/brutalist': typeof NlBrutalistRoute
@@ -254,7 +247,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/editions': typeof EditionsRoute
-  '/lookbook': typeof LookbookRoute
   '/northline': typeof NorthlineRoute
   '/northline-world': typeof NorthlineWorldRoute
   '/nl/brutalist': typeof NlBrutalistRoute
@@ -291,7 +283,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/editions': typeof EditionsRoute
-  '/lookbook': typeof LookbookRoute
   '/northline': typeof NorthlineRoute
   '/northline-world': typeof NorthlineWorldRoute
   '/nl/brutalist': typeof NlBrutalistRoute
@@ -329,7 +320,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/editions'
-    | '/lookbook'
     | '/northline'
     | '/northline-world'
     | '/nl/brutalist'
@@ -365,7 +355,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/editions'
-    | '/lookbook'
     | '/northline'
     | '/northline-world'
     | '/nl/brutalist'
@@ -401,7 +390,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/editions'
-    | '/lookbook'
     | '/northline'
     | '/northline-world'
     | '/nl/brutalist'
@@ -438,7 +426,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   EditionsRoute: typeof EditionsRoute
-  LookbookRoute: typeof LookbookRoute
   NorthlineRoute: typeof NorthlineRoute
   NorthlineWorldRoute: typeof NorthlineWorldRoute
   NlBrutalistRoute: typeof NlBrutalistRoute
@@ -486,13 +473,6 @@ declare module '@tanstack/react-router' {
       path: '/northline'
       fullPath: '/northline'
       preLoaderRoute: typeof NorthlineRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/lookbook': {
-      id: '/lookbook'
-      path: '/lookbook'
-      fullPath: '/lookbook'
-      preLoaderRoute: typeof LookbookRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/editions': {
@@ -718,7 +698,6 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   EditionsRoute: EditionsRoute,
-  LookbookRoute: LookbookRoute,
   NorthlineRoute: NorthlineRoute,
   NorthlineWorldRoute: NorthlineWorldRoute,
   NlBrutalistRoute: NlBrutalistRoute,
