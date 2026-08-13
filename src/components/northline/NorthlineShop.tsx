@@ -241,108 +241,19 @@ export function NorthlineShop() {
 
       <main className="nl-shop-container" style={{ position: 'relative', zIndex: 10, minHeight: '100vh' }}>
         
-        {/* Sticky Sidebar for Categories and Filters */}
-        <aside className="nl-shop-sidebar" style={{ 
-          position: 'sticky', 
-          top: '120px', 
-          display: 'flex', 
-          flexDirection: 'column', 
-          gap: '3rem',
-          background: 'rgba(255, 255, 255, 0.35)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-          border: '1px solid rgba(0, 0, 0, 0.06)',
-          borderRadius: '16px',
-          padding: '2rem'
-        }}>
-          
-          {/* Category List */}
-          <section>
-            <h2 style={{ fontSize: '0.85rem', marginBottom: '1rem', color: '#666', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Categories</h2>
-            <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              {dynamicCategories.map(filter => (
-                <li key={filter}>
-                  <button
-                    type="button"
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      padding: 0,
-                      color: activeFilter === filter ? '#1a1a1a' : '#555',
-                      fontSize: '1rem',
-                      cursor: 'pointer',
-                      transition: 'color 0.2s ease',
-                      textAlign: 'left',
-                      fontWeight: activeFilter === filter ? '600' : '400'
-                    }}
-                    onClick={() => setActiveFilter(filter)}
-                  >
-                    {filter}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </section>
-
-          {/* Size Filter */}
-          {dynamicSizes.length > 0 && (
-            <section>
-              <h2 style={{ fontSize: '0.85rem', marginBottom: '1rem', color: '#666', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Size</h2>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                {dynamicSizes.map(size => (
-                  <button
-                    key={size}
-                    type="button"
-                    onClick={() => toggleSize(size)}
-                    style={{
-                      background: activeSizes.includes(size) ? '#1a1a1a' : 'transparent',
-                      color: activeSizes.includes(size) ? '#fff' : '#1a1a1a',
-                      border: '1px solid rgba(0,0,0,0.15)',
-                      borderRadius: '2px',
-                      padding: '0.25rem 0.5rem',
-                      fontSize: '0.85rem',
-                      cursor: 'pointer',
-                      minWidth: '40px',
-                      textAlign: 'center',
-                      transition: 'all 0.2s ease'
-                    }}
-                  >
-                    {size}
-                  </button>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {/* Color Filter */}
-          {dynamicColors.length > 0 && (
-            <section>
-              <h2 style={{ fontSize: '0.85rem', marginBottom: '1rem', color: '#666', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Color</h2>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                {dynamicColors.map(color => (
-                  <button
-                    key={color}
-                    type="button"
-                    onClick={() => toggleColor(color)}
-                    aria-label={`Filter by ${color}`}
-                    title={color}
-                    style={{
-                      width: '24px',
-                      height: '24px',
-                      borderRadius: '50%',
-                      backgroundColor: color.toLowerCase().replace(/\s/g, ''),
-                      border: activeColors.includes(color) ? '2px solid #1a1a1a' : '1px solid rgba(0,0,0,0.15)',
-                      cursor: 'pointer',
-                      padding: 0,
-                      outlineOffset: '2px',
-                      transition: 'border 0.2s ease'
-                    }}
-                  />
-                ))}
-              </div>
-            </section>
-          )}
-        </aside>
+        {/* Top Category Nav (Urban Contrive style) */}
+        <nav className="nl-shop-categories-nav">
+          {dynamicCategories.map(filter => (
+            <button
+              key={filter}
+              type="button"
+              className={`nl-shop-category-pill ${activeFilter === filter ? 'active' : ''}`}
+              onClick={() => setActiveFilter(filter)}
+            >
+              {filter}
+            </button>
+          ))}
+        </nav>
 
         {/* Product Grid Area */}
         <section className="nl-shop-content" style={{ display: 'flex', flexDirection: 'column' }}>

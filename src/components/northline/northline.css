@@ -3034,13 +3034,47 @@
 /* Shop Layout Responsiveness */
 .nl-shop-container {
   display: flex;
-  padding: 4rem 5vw;
-  gap: 4rem;
+  flex-direction: column;
+  padding: 2rem 5vw;
+  gap: 2rem;
 }
 
-.nl-shop-sidebar {
-  width: 250px;
-  flex-shrink: 0;
+.nl-shop-categories-nav {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  /* Hide scrollbar but allow scroll */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.nl-shop-categories-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.nl-shop-category-pill {
+  white-space: nowrap;
+  padding: 0.75rem 1.5rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  color: #555;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nl-shop-category-pill:hover {
+  background: rgba(255, 255, 255, 0.5);
+  color: #1a1a1a;
+}
+
+.nl-shop-category-pill.active {
+  background: #1a1a1a;
+  color: #fff;
+  border-color: #1a1a1a;
 }
 
 .nl-shop-content {
@@ -3048,16 +3082,3 @@
   min-width: 0;
 }
 
-@media (max-width: 1024px) {
-  .nl-shop-container {
-    flex-direction: column;
-    padding: 2rem 5vw;
-    gap: 2rem;
-  }
-  
-  .nl-shop-sidebar {
-    width: 100% !important;
-    position: static !important;
-    height: auto !important;
-  }
-}
