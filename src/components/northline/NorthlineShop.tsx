@@ -64,7 +64,7 @@ export function NorthlineShop() {
     price: `GBP ${sp.variants?.[0]?.price?.amount || '0'}`,
     image: sp.images?.[0]?.src || "/northline-motion/v8/chibi-still-3.webp",
     alt: sp.title,
-    description: sp.vendor || "A purposeful new addition to the line.",
+    description: sp.descriptionHtml || sp.description || sp.vendor || "A purposeful new addition to the line.",
     colors: sp.options?.find((o: any) => o.name.toLowerCase() === 'color' || o.name.toLowerCase() === 'colour')
       ?.values.map((v: any) => v.value) || ["Default"],
     sizes: sp.options?.find((o: any) => o.name.toLowerCase() === 'size')

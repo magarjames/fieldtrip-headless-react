@@ -306,7 +306,7 @@ export function NorthlinePageV8({
     price: `GBP ${sp.variants?.[0]?.price?.amount || '0'}`,
     image: sp.images?.[0]?.src || flatlay,
     alt: sp.title,
-    description: sp.vendor || "A purposeful new addition to the line.",
+    description: sp.descriptionHtml || sp.description || sp.vendor || "A purposeful new addition to the line.",
     colors: (sp.options?.find((o: any) => o.name.toLowerCase() === 'color' || o.name.toLowerCase() === 'colour')
       ?.values as unknown as any[])?.map((v: any) => typeof v === 'object' && v !== null ? v.value : v) || ["Default"],
     sizes: (sp.options?.find((o: any) => o.name.toLowerCase() === 'size')
