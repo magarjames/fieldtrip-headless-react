@@ -216,7 +216,7 @@ export function NorthlineShop() {
       </div>
 
       <header className="shell flex items-center gap-4 py-4" style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(255,255,255,0.45)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
-        <a href="/s/v8" className="text-[1.15rem] font-black tracking-[-0.05em]" style={{ color: 'var(--ink)', textDecoration: 'none' }}>FIELDTRIP</a>
+        <a href="/s/v8" className="text-[1.15rem] font-black tracking-[-0.05em]" style={{ color: 'var(--ink)', textDecoration: 'none' }}>VIVRE</a>
         <span className="lbl hidden sm:inline" style={{ color: "var(--dim)" }}>
           Drop 04
         </span>

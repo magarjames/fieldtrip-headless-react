@@ -7,8 +7,8 @@ export const Route = createFileRoute("/s/v8")({
   component: FieldtripNorthlineV8Page,
   head: () =>
     pageMeta(
-      "Fieldtrip x Northline V8 | Dress for the long way home",
-      "A playful Fieldtrip fitting room opening into Northline utility layers, materials, and motion.",
+      "Vivre x Northline V8 | Dress for the long way home",
+      "A playful Vivre fitting room opening into Northline utility layers, materials, and motion.",
     ),
 });
 

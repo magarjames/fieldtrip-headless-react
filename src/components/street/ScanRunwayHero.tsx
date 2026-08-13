@@ -392,10 +392,10 @@ export function ScanRunwayHero({
           className={`scan-runway__nav${
             showPrimaryNavigation ? "" : " scan-runway__nav--minimal"
           }`}
-          aria-label="Fieldtrip primary navigation"
+          aria-label="Vivre primary navigation"
         >
           <a className="scan-runway__brand" href="#fieldtrip-top">
-            FIELDTRIP <span>/ DROP 04</span>
+            VIVRE <span>/ DROP 04</span>
           </a>
           {showPrimaryNavigation ? (
             <div className="scan-runway__nav-links">

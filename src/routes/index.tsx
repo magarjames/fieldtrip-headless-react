@@ -4,15 +4,15 @@ import { NorthlinePageV8 } from "@/components/northline/NorthlinePageV8";
 import { pageMeta } from "@/components/northline/parts";
 
 export const Route = createFileRoute("/")({
-  component: FieldtripNorthlineV8Page,
+  component: VivreNorthlineV8Page,
   head: () =>
     pageMeta(
-      "Fieldtrip x Northline V8 | Dress for the long way home",
-      "A playful Fieldtrip fitting room opening into Northline utility layers, materials, and motion.",
+      "Vivre x Northline V8 | Dress for the long way home",
+      "A playful Vivre fitting room opening into Northline utility layers, materials, and motion.",
     ),
 });
 
-function FieldtripNorthlineV8Page() {
+function VivreNorthlineV8Page() {
   return (
     <>
       <div id="fieldtrip-top">

@@ -11,7 +11,7 @@
  * person or likeness is referenced, and no third-party imagery is used.
  */
 
-export const BRAND = "FIELDTRIP";
+export const BRAND = "VIVRE";
 export const TAGLINE = "Dress like you have somewhere to be";
 export const DROP = "Drop 04";
 export const PIECE_COUNT = 18;

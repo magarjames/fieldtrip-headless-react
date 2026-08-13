@@ -159,7 +159,7 @@ export function NorthlineLookbook() {
     <div className="ft nl-lookbook-container">
       {/* Header */}
       <header className="shell flex items-center gap-4 py-4 nl-lookbook-header">
-        <a href="/s/v8" className="text-[1.15rem] font-black tracking-[-0.05em]" style={{ color: 'var(--ink)', textDecoration: 'none' }}>FIELDTRIP</a>
+        <a href="/s/v8" className="text-[1.15rem] font-black tracking-[-0.05em]" style={{ color: 'var(--ink)', textDecoration: 'none' }}>VIVRE</a>
         <span className="lbl hidden sm:inline" style={{ color: "var(--dim)" }}>
           Drop 04
         </span>
