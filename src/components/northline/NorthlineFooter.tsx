@@ -27,29 +27,60 @@ export function NorthlineFooter() {
       </svg>
       <FooterShader />
       
-      {/* Centered 2D VIVRE Text */}
+      {/* Centered Arched VIVRE Text (Outlined) */}
       <div style={{
         position: 'absolute',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
         pointerEvents: 'none',
-        zIndex: 0
+        zIndex: 0,
+        width: 'clamp(20rem, 80vw, 60rem)'
       }}>
-        <h2 style={{ fontSize: 'clamp(5rem, 15vw, 12rem)', margin: 0, lineHeight: 0.8, letterSpacing: '-0.05em', color: 'var(--ink)' }}>VIVRE</h2>
+        <svg viewBox="0 0 1000 300" style={{ width: '100%', height: 'auto', overflow: 'visible' }}>
+          {/* Shallow arc path for the text to follow */}
+          <path id="vivre-arc" fill="transparent" d="M 0,220 Q 500,20 1000,220" />
+          <text>
+            <textPath href="#vivre-arc" startOffset="50%" textAnchor="middle" style={{ 
+              fontSize: '220px', 
+              fontFamily: 'Helvetica, Arial, sans-serif',
+              fontWeight: 800, 
+              fill: 'transparent',
+              stroke: 'var(--ink)',
+              strokeWidth: '4px',
+              letterSpacing: '0.02em'
+            }}>
+              VIVRE
+            </textPath>
+          </text>
+        </svg>
       </div>
 
       <div className="nl-footer-content">
-        <div className="nl-footer-top">
+        <div className="nl-footer-top" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '2rem' }}>
           <nav className="nl-footer-nav-left">
             <Link to="/s/v8/shop">SHOP ALL</Link>
             <Link to="/about">ABOUT US</Link>
             <Link to="/faq">FAQ</Link>
             <Link to="/returns">SHIPPING & RETURNS</Link>
           </nav>
+          {/* Core Palette from Living Proof board */}
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ width: '24px', height: '24px', background: '#1646DB', border: '1px solid var(--ink)' }} title="#1646DB"></div>
+            <div style={{ width: '24px', height: '24px', background: '#DCEEFF', border: '1px solid var(--ink)' }} title="#DCEEFF"></div>
+            <div style={{ width: '24px', height: '24px', background: '#F13B32', border: '1px solid var(--ink)' }} title="#F13B32"></div>
+            <div style={{ width: '24px', height: '24px', background: '#111111', border: '1px solid var(--ink)' }} title="#111111"></div>
+            <div style={{ width: '24px', height: '24px', background: '#F4F0E8', border: '1px solid var(--ink)' }} title="#F4F0E8"></div>
+          </div>
         </div>
 
         <div className="nl-footer-bottom-actions">
+          {/* Secondary [v]. Symbol from Living Proof board */}
+          <div style={{ flex: 1, display: 'flex', alignItems: 'flex-end' }}>
+            <div style={{ fontSize: 'clamp(4rem, 12vw, 9rem)', fontWeight: 900, lineHeight: 0.8, letterSpacing: '-0.05em', color: 'var(--ink)' }}>
+              [v].
+            </div>
+          </div>
 
           <div className="nl-footer-subscribe-wrapper">
             <h2>SUBSCRIBE <span>(LATEST NEWS)</span></h2>
