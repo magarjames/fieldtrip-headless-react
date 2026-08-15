@@ -245,7 +245,6 @@ function GlassLetter({ letter, xOffset, yOffset, index, scale }: { letter: strin
           </Text3D>
         </Center>
       </group>
-      </group>
   );
 }
 
