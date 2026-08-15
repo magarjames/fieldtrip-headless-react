@@ -8,7 +8,6 @@ import {
 } from "react";
 import { ShoppingCart } from "lucide-react";
 import { shopifyClient } from "@/lib/shopify";
-import { useVivre } from "@/components/northline/VivreContext";
 import "./scan-runway-hero.css";
 
 const FRAME_NAMES = ["a", "b", "c", "d", "e", "f", "g"] as const;
@@ -101,19 +100,18 @@ declare global {
 }
 
 export function ScanRunwayHero({
-  primaryHref = "#",
-  secondaryHref = "#",
-  shopHref = "#",
+  primaryHref,
+  secondaryHref,
+  shopHref,
   showPrimaryNavigation = true,
   onBagClick,
 }: {
-  primaryHref?: string;
-  secondaryHref?: string;
-  shopHref?: string;
+  primaryHref: string;
+  secondaryHref: string;
+  shopHref: string;
   showPrimaryNavigation?: boolean;
   onBagClick?: () => void;
 }) {
-  const { bag } = useVivre();
   const [lookIndex, setLookIndex] = useState(0);
   const [frameIndex, setFrameIndex] = useState(0);
   const [shopifyProducts, setShopifyProducts] = useState<any[]>([]);
@@ -175,7 +173,6 @@ export function ScanRunwayHero({
 
   useEffect(() => {
     const section = sectionRef.current;
-
     if (!section) return;
 
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -410,11 +407,12 @@ export function ScanRunwayHero({
           {onBagClick ? (
             <button
               type="button"
-              className="scan-runway__bag"
+              className="scan-runway__cart-button"
               onClick={onBagClick}
-              style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}
+              aria-label="Open shopping bag"
+              aria-haspopup="dialog"
             >
-              BAG <span>{bag?.length || 0}</span>
+              <ShoppingCart aria-hidden="true" size={20} strokeWidth={1.8} />
             </button>
           ) : (
             <a className="scan-runway__bag" href={shopHref}>
