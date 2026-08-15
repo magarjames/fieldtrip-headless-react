@@ -72,8 +72,8 @@ const fragmentShader = `
     
     vec3 finalColor = mix(baseColor, inkColor, ink);
     
-    // Set base background alpha to 0.7 for glass effect, and ink to 1.0
-    float alpha = mix(0.7, 1.0, ink);
+    // Set alpha to 1.0 for 100% opacity as requested
+    float alpha = 1.0;
     
     gl_FragColor = vec4(finalColor, alpha);
   }
@@ -210,32 +210,13 @@ function CalligraphyMesh({ pointerPos }: { pointerPos: React.MutableRefObject<{x
   );
 }
 
-function GlassLetter({ letter, xOffset, yOffset, pointerPos, index, scale }: { letter: string, xOffset: number, yOffset: number, pointerPos: any, index: number, scale: number }) {
-  const textRef = useRef<THREE.Mesh>(null);
+function GlassLetter({ letter, xOffset, yOffset, index, scale }: { letter: string, xOffset: number, yOffset: number, index: number, scale: number }) {
   const { size } = useThree();
-  
-  useFrame(() => {
-    if (textRef.current && pointerPos.current.active) {
-      const px = (pointerPos.current.x / size.width) * 2 - 1;
-      const py = -(pointerPos.current.y / size.height) * 2 + 1;
-      
-      const offset = index * 0.05; // Subtle ripple effect
-      
-      // Make the interactive rotation very subtle
-      textRef.current.rotation.x = THREE.MathUtils.lerp(textRef.current.rotation.x, py * 0.1, 0.05);
-      textRef.current.rotation.y = THREE.MathUtils.lerp(textRef.current.rotation.y, px * 0.15 + offset, 0.05);
-    } else if (textRef.current) {
-      textRef.current.rotation.x = THREE.MathUtils.lerp(textRef.current.rotation.x, 0, 0.05);
-      textRef.current.rotation.y = THREE.MathUtils.lerp(textRef.current.rotation.y, 0, 0.05);
-    }
-  });
 
   return (
-    <Float floatIntensity={1} speed={2 + index * 0.3} rotationIntensity={0.1}>
-      <group position={[xOffset, yOffset, 0]} rotation={[0, 0, -yOffset * 0.2]}>
+    <group position={[xOffset, 0, 0]}>
         <Center>
           <Text3D
-            ref={textRef as any}
             font="https://unpkg.com/three@0.77.0/examples/fonts/helvetiker_bold.typeface.json"
             size={2.5 * scale}
             height={0.4 * scale}
@@ -264,11 +245,11 @@ function GlassLetter({ letter, xOffset, yOffset, pointerPos, index, scale }: { l
           </Text3D>
         </Center>
       </group>
-    </Float>
+      </group>
   );
 }
 
-function GlassText({ pointerPos }: { pointerPos: React.MutableRefObject<{x: number, y: number, active: boolean}> }) {
+function GlassText() {
   const { viewport } = useThree();
   const scale = viewport.width > 8 ? 0.9 : 0.45;
   const letters = ["V", "I", "V", "R", "E"];
@@ -293,8 +274,7 @@ function GlassText({ pointerPos }: { pointerPos: React.MutableRefObject<{x: numb
             key={i} 
             letter={letter} 
             xOffset={xPos}
-            yOffset={arcY}
-            pointerPos={pointerPos} 
+            yOffset={0}
             index={i}
             scale={scale}
           />
@@ -338,7 +318,8 @@ export function FooterShader() {
         <directionalLight position={[5, 5, 5]} intensity={2} />
         <CalligraphyMesh pointerPos={pointerPos} />
         <React.Suspense fallback={null}>
-          {/* GlassText and Environment removed for performance */}
+          <Environment preset="city" />
+          <GlassText />
         </React.Suspense>
       </Canvas>
     </div>
