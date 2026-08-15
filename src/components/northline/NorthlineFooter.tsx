@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
-import heroDawn from "@/assets/northline/hero-dawn.png";
+import { Link } from "@tanstack/react-router";
+import { FooterShader } from "./FooterShader";
 
 export function NorthlineFooter() {
   const [email, setEmail] = useState("");
@@ -24,22 +25,20 @@ export function NorthlineFooter() {
           </clipPath>
         </defs>
       </svg>
-      <div 
-        className="nl-footer-bg-image" 
-        style={{ backgroundImage: `url(${heroDawn})` }} 
-      />
-      <div className="nl-footer-glass-overlay" />
+      <FooterShader />
       
       <div className="nl-footer-content">
         <div className="nl-footer-top">
           <nav className="nl-footer-nav-left">
-            <a href="/s/v8/shop">SHOP ALL</a>
-            <a href="#">CONTACT</a>
+            <Link to="/s/v8/shop">SHOP ALL</Link>
+            <Link to="/about">ABOUT US</Link>
+            <Link to="/faq">FAQ</Link>
+            <Link to="/returns">SHIPPING & RETURNS</Link>
           </nav>
         </div>
 
         <div className="nl-footer-bottom-actions">
-          <h1 className="nl-footer-center-text">VIVRE</h1>
+          {/* VIVRE text is now rendered by FooterShader in 3D */}
           <div className="nl-footer-subscribe-wrapper">
             <h2>SUBSCRIBE <span>(LATEST NEWS)</span></h2>
             <form className="nl-footer-subscribe" onSubmit={submitSignup}>
@@ -61,7 +60,7 @@ export function NorthlineFooter() {
         <div className="nl-footer-bottom-bar">
           <p>©2026_VIVRE</p>
           <div className="nl-footer-bottom-links">
-            <a href="#">PRIVACY POLICY (DSGVO)</a>
+            <Link to="/privacy">PRIVACY POLICY (DSGVO)</Link>
             <a href="#">IG</a>
           </div>
         </div>

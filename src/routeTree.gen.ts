@@ -9,9 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ReturnsRouteImport } from './routes/returns'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as NorthlineWorldRouteImport } from './routes/northline-world'
 import { Route as NorthlineRouteImport } from './routes/northline'
+import { Route as LogoGeneratorRouteImport } from './routes/logo-generator'
+import { Route as FaqRouteImport } from './routes/faq'
 import { Route as EditionsRouteImport } from './routes/editions'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WIndexRouteImport } from './routes/w.index'
 import { Route as SIndexRouteImport } from './routes/s.index'
@@ -34,6 +39,7 @@ import { Route as SV5RouteImport } from './routes/s.v5'
 import { Route as SV4RouteImport } from './routes/s.v4'
 import { Route as SV3RouteImport } from './routes/s.v3'
 import { Route as SV2RouteImport } from './routes/s.v2'
+import { Route as ProductsProductIdRouteImport } from './routes/products.$productId'
 import { Route as NlTasteRouteImport } from './routes/nl.taste'
 import { Route as NlMinimalRouteImport } from './routes/nl.minimal'
 import { Route as NlImpeccableRouteImport } from './routes/nl.impeccable'
@@ -43,6 +49,16 @@ import { Route as NlFlightRouteImport } from './routes/nl.flight'
 import { Route as NlBrutalistRouteImport } from './routes/nl.brutalist'
 import { Route as SV8ShopRouteImport } from './routes/s_.v8_.shop'
 
+const ReturnsRoute = ReturnsRouteImport.update({
+  id: '/returns',
+  path: '/returns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NorthlineWorldRoute = NorthlineWorldRouteImport.update({
   id: '/northline-world',
   path: '/northline-world',
@@ -53,9 +69,24 @@ const NorthlineRoute = NorthlineRouteImport.update({
   path: '/northline',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LogoGeneratorRoute = LogoGeneratorRouteImport.update({
+  id: '/logo-generator',
+  path: '/logo-generator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EditionsRoute = EditionsRouteImport.update({
   id: '/editions',
   path: '/editions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -168,6 +199,11 @@ const SV2Route = SV2RouteImport.update({
   path: '/s/v2',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProductsProductIdRoute = ProductsProductIdRouteImport.update({
+  id: '/products/$productId',
+  path: '/products/$productId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NlTasteRoute = NlTasteRouteImport.update({
   id: '/nl/taste',
   path: '/nl/taste',
@@ -211,9 +247,14 @@ const SV8ShopRoute = SV8ShopRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/editions': typeof EditionsRoute
+  '/faq': typeof FaqRoute
+  '/logo-generator': typeof LogoGeneratorRoute
   '/northline': typeof NorthlineRoute
   '/northline-world': typeof NorthlineWorldRoute
+  '/privacy': typeof PrivacyRoute
+  '/returns': typeof ReturnsRoute
   '/nl/brutalist': typeof NlBrutalistRoute
   '/nl/flight': typeof NlFlightRoute
   '/nl/gallery': typeof NlGalleryRoute
@@ -221,6 +262,7 @@ export interface FileRoutesByFullPath {
   '/nl/impeccable': typeof NlImpeccableRoute
   '/nl/minimal': typeof NlMinimalRoute
   '/nl/taste': typeof NlTasteRoute
+  '/products/$productId': typeof ProductsProductIdRoute
   '/s/v2': typeof SV2Route
   '/s/v3': typeof SV3Route
   '/s/v4': typeof SV4Route
@@ -246,9 +288,14 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/editions': typeof EditionsRoute
+  '/faq': typeof FaqRoute
+  '/logo-generator': typeof LogoGeneratorRoute
   '/northline': typeof NorthlineRoute
   '/northline-world': typeof NorthlineWorldRoute
+  '/privacy': typeof PrivacyRoute
+  '/returns': typeof ReturnsRoute
   '/nl/brutalist': typeof NlBrutalistRoute
   '/nl/flight': typeof NlFlightRoute
   '/nl/gallery': typeof NlGalleryRoute
@@ -256,6 +303,7 @@ export interface FileRoutesByTo {
   '/nl/impeccable': typeof NlImpeccableRoute
   '/nl/minimal': typeof NlMinimalRoute
   '/nl/taste': typeof NlTasteRoute
+  '/products/$productId': typeof ProductsProductIdRoute
   '/s/v2': typeof SV2Route
   '/s/v3': typeof SV3Route
   '/s/v4': typeof SV4Route
@@ -282,9 +330,14 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/editions': typeof EditionsRoute
+  '/faq': typeof FaqRoute
+  '/logo-generator': typeof LogoGeneratorRoute
   '/northline': typeof NorthlineRoute
   '/northline-world': typeof NorthlineWorldRoute
+  '/privacy': typeof PrivacyRoute
+  '/returns': typeof ReturnsRoute
   '/nl/brutalist': typeof NlBrutalistRoute
   '/nl/flight': typeof NlFlightRoute
   '/nl/gallery': typeof NlGalleryRoute
@@ -292,6 +345,7 @@ export interface FileRoutesById {
   '/nl/impeccable': typeof NlImpeccableRoute
   '/nl/minimal': typeof NlMinimalRoute
   '/nl/taste': typeof NlTasteRoute
+  '/products/$productId': typeof ProductsProductIdRoute
   '/s/v2': typeof SV2Route
   '/s/v3': typeof SV3Route
   '/s/v4': typeof SV4Route
@@ -319,9 +373,14 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/editions'
+    | '/faq'
+    | '/logo-generator'
     | '/northline'
     | '/northline-world'
+    | '/privacy'
+    | '/returns'
     | '/nl/brutalist'
     | '/nl/flight'
     | '/nl/gallery'
@@ -329,6 +388,7 @@ export interface FileRouteTypes {
     | '/nl/impeccable'
     | '/nl/minimal'
     | '/nl/taste'
+    | '/products/$productId'
     | '/s/v2'
     | '/s/v3'
     | '/s/v4'
@@ -354,9 +414,14 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/editions'
+    | '/faq'
+    | '/logo-generator'
     | '/northline'
     | '/northline-world'
+    | '/privacy'
+    | '/returns'
     | '/nl/brutalist'
     | '/nl/flight'
     | '/nl/gallery'
@@ -364,6 +429,7 @@ export interface FileRouteTypes {
     | '/nl/impeccable'
     | '/nl/minimal'
     | '/nl/taste'
+    | '/products/$productId'
     | '/s/v2'
     | '/s/v3'
     | '/s/v4'
@@ -389,9 +455,14 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/about'
     | '/editions'
+    | '/faq'
+    | '/logo-generator'
     | '/northline'
     | '/northline-world'
+    | '/privacy'
+    | '/returns'
     | '/nl/brutalist'
     | '/nl/flight'
     | '/nl/gallery'
@@ -399,6 +470,7 @@ export interface FileRouteTypes {
     | '/nl/impeccable'
     | '/nl/minimal'
     | '/nl/taste'
+    | '/products/$productId'
     | '/s/v2'
     | '/s/v3'
     | '/s/v4'
@@ -425,9 +497,14 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   EditionsRoute: typeof EditionsRoute
+  FaqRoute: typeof FaqRoute
+  LogoGeneratorRoute: typeof LogoGeneratorRoute
   NorthlineRoute: typeof NorthlineRoute
   NorthlineWorldRoute: typeof NorthlineWorldRoute
+  PrivacyRoute: typeof PrivacyRoute
+  ReturnsRoute: typeof ReturnsRoute
   NlBrutalistRoute: typeof NlBrutalistRoute
   NlFlightRoute: typeof NlFlightRoute
   NlGalleryRoute: typeof NlGalleryRoute
@@ -435,6 +512,7 @@ export interface RootRouteChildren {
   NlImpeccableRoute: typeof NlImpeccableRoute
   NlMinimalRoute: typeof NlMinimalRoute
   NlTasteRoute: typeof NlTasteRoute
+  ProductsProductIdRoute: typeof ProductsProductIdRoute
   SV2Route: typeof SV2Route
   SV3Route: typeof SV3Route
   SV4Route: typeof SV4Route
@@ -461,6 +539,20 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/returns': {
+      id: '/returns'
+      path: '/returns'
+      fullPath: '/returns'
+      preLoaderRoute: typeof ReturnsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/northline-world': {
       id: '/northline-world'
       path: '/northline-world'
@@ -475,11 +567,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NorthlineRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/logo-generator': {
+      id: '/logo-generator'
+      path: '/logo-generator'
+      fullPath: '/logo-generator'
+      preLoaderRoute: typeof LogoGeneratorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/editions': {
       id: '/editions'
       path: '/editions'
       fullPath: '/editions'
       preLoaderRoute: typeof EditionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -636,6 +749,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SV2RouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/products/$productId': {
+      id: '/products/$productId'
+      path: '/products/$productId'
+      fullPath: '/products/$productId'
+      preLoaderRoute: typeof ProductsProductIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/nl/taste': {
       id: '/nl/taste'
       path: '/nl/taste'
@@ -697,9 +817,14 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   EditionsRoute: EditionsRoute,
+  FaqRoute: FaqRoute,
+  LogoGeneratorRoute: LogoGeneratorRoute,
   NorthlineRoute: NorthlineRoute,
   NorthlineWorldRoute: NorthlineWorldRoute,
+  PrivacyRoute: PrivacyRoute,
+  ReturnsRoute: ReturnsRoute,
   NlBrutalistRoute: NlBrutalistRoute,
   NlFlightRoute: NlFlightRoute,
   NlGalleryRoute: NlGalleryRoute,
@@ -707,6 +832,7 @@ const rootRouteChildren: RootRouteChildren = {
   NlImpeccableRoute: NlImpeccableRoute,
   NlMinimalRoute: NlMinimalRoute,
   NlTasteRoute: NlTasteRoute,
+  ProductsProductIdRoute: ProductsProductIdRoute,
   SV2Route: SV2Route,
   SV3Route: SV3Route,
   SV4Route: SV4Route,
