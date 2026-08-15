@@ -79,7 +79,7 @@ export function VivreLayout({ children }: { children: React.ReactNode }) {
         WebkitBackdropFilter: 'blur(24px) saturate(150%)', 
         borderBottom: '1px solid rgba(0, 0, 0, 0.2)' 
       }}>
-        <Link to="/s/v8/shop" className="text-[1.15rem] font-black tracking-[-0.05em]" style={{ color: 'var(--ink)', textDecoration: 'none' }}>
+        <Link to="/" className="text-[1.15rem] font-black tracking-[-0.05em]" style={{ color: 'var(--ink)', textDecoration: 'none' }}>
           <img src="/logos/vivre-wordmark.svg" alt="Vivre" className="h-5" />
         </Link>
         <span className="lbl hidden sm:inline" style={{ color: "var(--dim)" }}>
