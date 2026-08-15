@@ -14,7 +14,7 @@ export function NorthlineFooter() {
   };
 
   return (
-    <footer className="nl-footer-ref">
+    <footer className="nl-footer-ref nl-footer-editorial">
       <svg className="nl-material-video-mask-defs" aria-hidden="true" style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}>
         <defs>
           <clipPath id="nl-footer-flow-clip" clipPathUnits="objectBoundingBox">
@@ -26,85 +26,81 @@ export function NorthlineFooter() {
         </defs>
       </svg>
       <FooterShader />
-      
-      {/* Centered Arched VIVRE Text (Outlined) */}
-      <div style={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        pointerEvents: 'none',
-        zIndex: 0,
-        width: 'clamp(20rem, 80vw, 60rem)'
-      }}>
-        <svg viewBox="0 0 1000 300" style={{ width: '100%', height: 'auto', overflow: 'visible' }}>
-          {/* Shallow arc path for the text to follow */}
-          <path id="vivre-arc" fill="transparent" d="M 0,220 Q 500,20 1000,220" />
-          <text>
-            <textPath href="#vivre-arc" startOffset="50%" textAnchor="middle" style={{ 
-              fontSize: '220px', 
-              fontFamily: 'Helvetica, Arial, sans-serif',
-              fontWeight: 800, 
-              fill: 'transparent',
-              stroke: 'var(--ink)',
-              strokeWidth: '4px',
-              letterSpacing: '0.02em'
-            }}>
-              VIVRE
-            </textPath>
-          </text>
-        </svg>
-      </div>
 
-      <div className="nl-footer-content">
-        <div className="nl-footer-top" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '2rem' }}>
-          <nav className="nl-footer-nav-left">
+      <div className="nl-footer-content nl-footer-editorial-content">
+
+        {/* ── TOP: Navigation + Palette ─────────────────────── */}
+        <div className="nl-footer-editorial-top">
+          <nav className="nl-footer-editorial-nav">
             <Link to="/s/v8/shop">SHOP ALL</Link>
             <Link to="/about">ABOUT US</Link>
             <Link to="/faq">FAQ</Link>
             <Link to="/returns">SHIPPING & RETURNS</Link>
           </nav>
-          {/* Core Palette from Living Proof board */}
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <div style={{ width: '24px', height: '24px', background: '#1646DB', border: '1px solid var(--ink)' }} title="#1646DB"></div>
-            <div style={{ width: '24px', height: '24px', background: '#DCEEFF', border: '1px solid var(--ink)' }} title="#DCEEFF"></div>
-            <div style={{ width: '24px', height: '24px', background: '#F13B32', border: '1px solid var(--ink)' }} title="#F13B32"></div>
-            <div style={{ width: '24px', height: '24px', background: '#111111', border: '1px solid var(--ink)' }} title="#111111"></div>
-            <div style={{ width: '24px', height: '24px', background: '#F4F0E8', border: '1px solid var(--ink)' }} title="#F4F0E8"></div>
+          <div className="nl-footer-palette">
+            <div className="nl-footer-swatch" style={{ background: '#1646DB' }} title="Blue" />
+            <div className="nl-footer-swatch" style={{ background: '#0CEEFF' }} title="Cyan" />
+            <div className="nl-footer-swatch" style={{ background: '#F13B32' }} title="Red" />
+            <div className="nl-footer-swatch" style={{ background: '#111111' }} title="Black" />
+            <div className="nl-footer-swatch" style={{ background: '#F4F0E8' }} title="Paper" />
           </div>
         </div>
 
-        <div className="nl-footer-bottom-actions">
-          {/* Secondary [v]. Symbol from Living Proof board */}
-          <div style={{ flex: 1, display: 'flex', alignItems: 'flex-end' }}>
-            <div style={{ fontSize: 'clamp(4rem, 12vw, 9rem)', fontWeight: 900, lineHeight: 0.8, letterSpacing: '-0.05em', color: 'var(--ink)' }}>
-              [v].
-            </div>
+        {/* ── MAIN: Arched VIVRE + [v]. + Subscribe ─────────── */}
+        <div className="nl-footer-editorial-main">
+          {/* Arched VIVRE in center */}
+          <div className="nl-footer-arc-wrapper">
+            <svg viewBox="0 0 900 260" className="nl-footer-arc-svg">
+              <path id="vivre-arc-ed" fill="none" d="M 30,230 Q 450,0 870,230" />
+              <text>
+                <textPath
+                  href="#vivre-arc-ed"
+                  startOffset="50%"
+                  textAnchor="middle"
+                  className="nl-footer-arc-text"
+                >
+                  VIVRE
+                </textPath>
+              </text>
+            </svg>
+            <p className="nl-footer-tagline">THE LIVING ARCHIVE</p>
+            <p className="nl-footer-sub-tagline">DRESS LIKE YOU HAVE SOMEWHERE TO BE.</p>
+          </div>
+        </div>
+
+        {/* ── BOTTOM: [v]. logo + Subscribe + Drop Tag ──────── */}
+        <div className="nl-footer-editorial-bottom">
+
+          <div className="nl-footer-logo-mark">
+            <span className="nl-footer-bracket">[</span>v<span className="nl-footer-bracket">]</span><span className="nl-footer-dot">.</span>
           </div>
 
-          <div className="nl-footer-subscribe-wrapper">
-            <h2>SUBSCRIBE <span>(LATEST NEWS)</span></h2>
-            <form className="nl-footer-subscribe" onSubmit={submitSignup}>
-              <div className="nl-footer-input-row">
-                <input 
-                  type="email" 
-                  placeholder="EMAIL" 
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  required
-                />
-                <button type="submit">SUBSCRIBE</button>
-              </div>
-              {signupMessage && <p className="nl-footer-msg">{signupMessage}</p>}
+          <div className="nl-footer-subscribe-editorial">
+            <p className="nl-footer-subscribe-label">SUBSCRIBE <span>(LATEST NEWS)</span></p>
+            <form className="nl-footer-subscribe-form" onSubmit={submitSignup}>
+              <input
+                type="email"
+                placeholder="EMAIL"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+              />
+              <button type="submit">SUBSCRIBE →</button>
             </form>
+            {signupMessage && <p className="nl-footer-msg">{signupMessage}</p>}
+          </div>
+
+          <div className="nl-footer-drop-tag">
+            DROP 001 — AFTER HOURS — Live Now
           </div>
         </div>
 
-        <div className="nl-footer-bottom-bar">
-          <p>©2026_VIVRE</p>
-          <div className="nl-footer-bottom-links">
+        {/* ── LEGAL BAR ────────────────────────────────────── */}
+        <div className="nl-footer-legal-bar">
+          <p>©2026 VIVRE-CLUB</p>
+          <div className="nl-footer-legal-links">
             <Link to="/privacy">PRIVACY POLICY (DSGVO)</Link>
-            <a href="#">IG</a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">IG</a>
           </div>
         </div>
       </div>
