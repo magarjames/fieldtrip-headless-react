@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { FooterShader } from "./FooterShader";
 
 export function NorthlineFooter() {
   const [email, setEmail] = useState("");
@@ -14,7 +15,17 @@ export function NorthlineFooter() {
 
   return (
     <footer className="nl-footer-ref">
-
+      <svg className="nl-material-video-mask-defs" aria-hidden="true" style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}>
+        <defs>
+          <clipPath id="nl-footer-flow-clip" clipPathUnits="objectBoundingBox">
+            <path
+              className="nl-material-video-flow-path"
+              d="M0 .068 C.07 .035 .12 .084 .19 .052 C.27 .022 .33 .088 .42 .049 C.51 .026 .58 .082 .67 .045 C.76 .02 .84 .075 .92 .041 C.96 .03 .98 .054 1 .05 L1 1 L0 1 Z"
+            />
+          </clipPath>
+        </defs>
+      </svg>
+      <FooterShader />
       
       <div className="nl-footer-content">
         <div className="nl-footer-top">

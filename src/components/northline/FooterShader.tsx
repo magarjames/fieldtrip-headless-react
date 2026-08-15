@@ -338,8 +338,7 @@ export function FooterShader() {
         <directionalLight position={[5, 5, 5]} intensity={2} />
         <CalligraphyMesh pointerPos={pointerPos} />
         <React.Suspense fallback={null}>
-          <Environment preset="city" />
-          <GlassText pointerPos={pointerPos} />
+          {/* GlassText and Environment removed for performance */}
         </React.Suspense>
       </Canvas>
     </div>
