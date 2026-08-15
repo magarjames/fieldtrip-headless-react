@@ -210,78 +210,7 @@ function CalligraphyMesh({ pointerPos }: { pointerPos: React.MutableRefObject<{x
   );
 }
 
-function GlassLetter({ letter, xOffset, yOffset, index, scale }: { letter: string, xOffset: number, yOffset: number, index: number, scale: number }) {
-  const { size } = useThree();
-
-  return (
-    <group position={[xOffset, 0, 0]}>
-        <Center>
-          <Text3D
-            font="https://unpkg.com/three@0.77.0/examples/fonts/helvetiker_bold.typeface.json"
-            size={2.5 * scale}
-            height={0.4 * scale}
-            curveSegments={32}
-            bevelEnabled
-            bevelThickness={0.1 * scale}
-            bevelSize={0.05 * scale}
-            bevelOffset={0}
-            bevelSegments={8}
-          >
-            {letter}
-            <MeshTransmissionMaterial
-              backside
-              samples={4}
-              thickness={1.5 * scale}
-              chromaticAberration={0.08}
-              anisotropy={0.2}
-              distortion={0.2}
-              distortionScale={0.3}
-              temporalDistortion={0.1}
-              transmission={1}
-              roughness={0.15}
-              ior={1.3}
-              color="#0933ba" // Vibrant blue glass
-            />
-          </Text3D>
-        </Center>
-      </group>
-  );
-}
-
-function GlassText() {
-  const { viewport } = useThree();
-  const scale = viewport.width > 8 ? 0.9 : 0.45;
-  const letters = ["V", "I", "V", "R", "E"];
-  
-  // Left-aligned kerning
-  const offsets = [0, 2.0, 3.8, 5.9, 7.8].map(x => x * scale);
-  
-  // Perfectly center the text horizontally and vertically
-  const totalWidth = 7.8 * scale;
-  const startX = -totalWidth / 2;
-  const startY = 0;
-
-  return (
-    <group position={[startX, startY, 1]}>
-      {letters.map((letter, i) => {
-        const xPos = offsets[i];
-        const dx = xPos - (3.8 * scale); // distance from center 'V'
-        const arcY = -(dx * dx) * 0.08; // upward arc curve
-        
-        return (
-          <GlassLetter 
-            key={i} 
-            letter={letter} 
-            xOffset={xPos}
-            yOffset={0}
-            index={i}
-            scale={scale}
-          />
-        );
-      })}
-    </group>
-  );
-}
+// 3D Glass text removed for performance
 
 export function FooterShader() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -317,8 +246,7 @@ export function FooterShader() {
         <directionalLight position={[5, 5, 5]} intensity={2} />
         <CalligraphyMesh pointerPos={pointerPos} />
         <React.Suspense fallback={null}>
-          <Environment preset="city" />
-          <GlassText />
+          {/* GlassText removed for performance */}
         </React.Suspense>
       </Canvas>
     </div>

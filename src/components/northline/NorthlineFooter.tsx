@@ -27,6 +27,18 @@ export function NorthlineFooter() {
       </svg>
       <FooterShader />
       
+      {/* Centered 2D VIVRE Text */}
+      <div style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        pointerEvents: 'none',
+        zIndex: 0
+      }}>
+        <h2 style={{ fontSize: 'clamp(5rem, 15vw, 12rem)', margin: 0, lineHeight: 0.8, letterSpacing: '-0.05em', color: 'var(--ink)' }}>VIVRE</h2>
+      </div>
+
       <div className="nl-footer-content">
         <div className="nl-footer-top">
           <nav className="nl-footer-nav-left">
@@ -38,7 +50,7 @@ export function NorthlineFooter() {
         </div>
 
         <div className="nl-footer-bottom-actions">
-          {/* VIVRE text is now rendered by FooterShader in 3D */}
+
           <div className="nl-footer-subscribe-wrapper">
             <h2>SUBSCRIBE <span>(LATEST NEWS)</span></h2>
             <form className="nl-footer-subscribe" onSubmit={submitSignup}>
