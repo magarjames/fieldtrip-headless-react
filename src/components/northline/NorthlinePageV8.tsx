@@ -991,21 +991,57 @@ export function NorthlinePageV8({
             type="button"
             aria-label="Close bag"
             onClick={() => setBagOpen(false)}
+            style={{
+              background: 'rgba(255, 255, 255, 0.05)',
+              backdropFilter: 'blur(24px) saturate(150%)',
+              WebkitBackdropFilter: 'blur(24px) saturate(150%)',
+              transform: 'translateZ(0)',
+              willChange: 'transform, backdrop-filter',
+            }}
           />
           <aside
             className="nl-bag-drawer"
             role="dialog"
             aria-modal="true"
             aria-labelledby="bag-title"
+            style={{ 
+              paddingTop: '3rem', 
+              paddingLeft: '1.5rem', 
+              paddingRight: '1.5rem',
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(24px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+              color: '#000000',
+              boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.4), inset 0 0 0 1px rgba(255,255,255,0.15), -20px 0 60px rgba(0, 0, 0, 0.15)'
+            }}
           >
-            <button
-              className="nl-dialog-close"
-              type="button"
-              onClick={() => setBagOpen(false)}
-            >
-              Close
-            </button>
-            <h2 id="bag-title">Your bag</h2>
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'flex-start', 
+              width: '100%',
+              paddingBottom: '1.5rem',
+              borderBottom: '1px solid rgba(0, 0, 0, 0.2)',
+              marginBottom: '1.5rem'
+            }}>
+              <h2 id="bag-title" style={{ margin: 0, color: '#000000', fontSize: '3.5rem', fontWeight: 800, letterSpacing: '-0.05em', lineHeight: 1 }}>Your bag</h2>
+              <button
+                className="nl-dialog-close"
+                type="button"
+                onClick={() => setBagOpen(false)}
+                style={{ 
+                  position: 'relative', 
+                  top: 'auto', 
+                  right: 'auto', 
+                  flexShrink: 0,
+                  color: '#000000',
+                  borderColor: 'rgba(0,0,0,0.1)',
+                  background: 'rgba(255,255,255,0.8)'
+                }}
+              >
+                Close
+              </button>
+            </div>
             {bag.length > 0 ? (
               <>
                 <ul className="nl-bag-list">
