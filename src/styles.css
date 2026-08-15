@@ -17,6 +17,12 @@
   --color-leaf: var(--leaf);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--ink);
+  /* Vivre Brand Colors */
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-ice: var(--brand-ice);
+  --color-brand-red: var(--brand-red);
+  --color-brand-black: var(--brand-black);
+  --color-brand-paper: var(--brand-paper);
   --font-display: "Archivo Black", "Helvetica Neue", sans-serif;
   --font-sans: "Inter", "Helvetica Neue", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
@@ -32,6 +38,13 @@
   --yellow: oklch(0.90 0.14 96);
   --leaf: oklch(0.80 0.12 150);
   --muted-foreground: oklch(0.44 0.02 86);
+  
+  /* Vivre Brand Colors */
+  --brand-blue: #1646DB;
+  --brand-ice: #DCEEFF;
+  --brand-red: #F13B32;
+  --brand-black: #111111;
+  --brand-paper: #F4F0E8;
 }
 
 @layer base {

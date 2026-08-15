@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 100" width="100%" height="100%">
+  <defs>
+    <style>
+      .ink-black { fill: #111111; }
+      .warning-red { fill: #F13B32; }
+    </style>
+  </defs>
+  
+  <g transform="translate(0, 10)">
+    <!-- [ Bracket -->
+    <path class="ink-black" d="M 20,0 L 35,0 L 35,10 L 20,10 L 20,70 L 35,70 L 35,80 L 10,80 L 10,0 Z" />
+    
+    <!-- v -->
+    <polygon class="ink-black" points="40,25 54,25 65,70 55,70" />
+    <polygon class="ink-black" points="90,25 76,25 65,70 75,70" />
+    
+    <!-- ] Bracket -->
+    <path class="ink-black" d="M 110,0 L 95,0 L 95,10 L 110,10 L 110,70 L 95,70 L 95,80 L 120,80 L 120,0 Z" />
+    
+    <!-- . Red Dot -->
+    <circle class="warning-red" cx="135" cy="70" r="8" />
+  </g>
+</svg>
