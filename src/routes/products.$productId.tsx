@@ -22,7 +22,7 @@ function ProductDetailsPage() {
 
   useEffect(() => {
     if (import.meta.env.VITE_SHOPIFY_DOMAIN && import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN) {
-      shopifyClient.product.fetch(productId).then((fetchedProduct) => {
+      shopifyClient.product.fetchByHandle(productId).then((fetchedProduct) => {
         setProduct(fetchedProduct);
         
         // Auto-select first options if available
