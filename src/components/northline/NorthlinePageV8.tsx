@@ -614,6 +614,42 @@ export function NorthlinePageV8({
         Skip to collection
       </a>
 
+      {!showHeader && (
+        <button
+          className="scan-runway__cart-button"
+          style={{
+            position: 'fixed',
+            top: 'clamp(1rem, 4vw, 2.5rem)',
+            right: 'clamp(1rem, 4vw, 2.5rem)',
+            zIndex: 100,
+          }}
+          onClick={() => setBagOpen(true)}
+          aria-label="Open shopping bag"
+        >
+          <ShoppingCart size={20} strokeWidth={1.8} />
+          {bag.length > 0 && (
+            <span style={{
+              position: 'absolute',
+              top: '-4px',
+              right: '-4px',
+              background: '#000',
+              color: '#fff',
+              borderRadius: '50%',
+              minWidth: '18px',
+              height: '18px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '10px',
+              fontWeight: 700,
+              padding: '0 4px'
+            }}>
+              {bag.length}
+            </span>
+          )}
+        </button>
+      )}
+
       {showHeader && (
         <header className="nl-header">
           <a className="nl-wordmark" href="#" aria-label="Vivre home">
@@ -708,53 +744,6 @@ export function NorthlinePageV8({
               <Link to="/s/v8/shop">Shop All</Link>
               <a href="#">Lookbook</a>
               <a href="#materials">Capsule</a>
-              
-              <button 
-                type="button"
-                style={{
-                  position: 'absolute',
-                  top: 'clamp(1rem, 5vw, 1.5rem)',
-                  right: 'clamp(1.25rem, 5vw, 5rem)',
-                  zIndex: 50,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '3.5rem',
-                  height: '3.5rem',
-                  borderRadius: '50%',
-                  border: '1px solid rgba(0, 0, 0, 0.1)',
-                  background: 'rgba(255, 255, 255, 0.9)',
-                  backdropFilter: 'blur(10px)',
-                  color: '#000',
-                  pointerEvents: 'auto',
-                  transition: 'all 0.2s ease',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
-                }}
-                onClick={() => setBagOpen(true)}
-                aria-label="Open shopping bag"
-              >
-                <ShoppingCart size={20} strokeWidth={1.8} />
-                {bag.length > 0 && (
-                  <span style={{
-                    position: 'absolute',
-                    top: '0',
-                    right: '0',
-                    background: '#000',
-                    color: '#fff',
-                    borderRadius: '50%',
-                    minWidth: '20px',
-                    height: '20px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    padding: '0 4px'
-                  }}>
-                    {bag.length}
-                  </span>
-                )}
-              </button>
             </nav>
           )}
           {!splitNavigation && (

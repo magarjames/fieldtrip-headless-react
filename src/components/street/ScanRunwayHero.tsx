@@ -104,12 +104,14 @@ export function ScanRunwayHero({
   secondaryHref,
   shopHref,
   showPrimaryNavigation = true,
+  hideBag = false,
   onBagClick,
 }: {
   primaryHref: string;
   secondaryHref: string;
-  shopHref: string;
+  shopHref?: string;
   showPrimaryNavigation?: boolean;
+  hideBag?: boolean;
   onBagClick?: () => void;
 }) {
   const [lookIndex, setLookIndex] = useState(0);
@@ -404,20 +406,22 @@ export function ScanRunwayHero({
               <a href="#journal">SOUND</a>
             </div>
           ) : null}
-          {onBagClick ? (
-            <button
-              type="button"
-              className="scan-runway__cart-button"
-              onClick={onBagClick}
-              aria-label="Open shopping bag"
-              aria-haspopup="dialog"
-            >
-              <ShoppingCart aria-hidden="true" size={20} strokeWidth={1.8} />
-            </button>
-          ) : (
-            <a className="scan-runway__bag" href={shopHref}>
-              BAG <span>0</span>
-            </a>
+          {!hideBag && (
+            onBagClick ? (
+              <button
+                type="button"
+                className="scan-runway__cart-button"
+                onClick={onBagClick}
+                aria-label="Open shopping bag"
+                aria-haspopup="dialog"
+              >
+                <ShoppingCart aria-hidden="true" size={20} strokeWidth={1.8} />
+              </button>
+            ) : (
+              <a className="scan-runway__bag" href={shopHref}>
+                BAG <span>0</span>
+              </a>
+            )
           )}
         </nav>
 
