@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ShippingRouteImport } from './routes/shipping'
 import { Route as ReturnsRouteImport } from './routes/returns'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as NorthlineWorldRouteImport } from './routes/northline-world'
@@ -49,6 +50,11 @@ import { Route as NlFlightRouteImport } from './routes/nl.flight'
 import { Route as NlBrutalistRouteImport } from './routes/nl.brutalist'
 import { Route as SV8ShopRouteImport } from './routes/s_.v8_.shop'
 
+const ShippingRoute = ShippingRouteImport.update({
+  id: '/shipping',
+  path: '/shipping',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReturnsRoute = ReturnsRouteImport.update({
   id: '/returns',
   path: '/returns',
@@ -255,6 +261,7 @@ export interface FileRoutesByFullPath {
   '/northline-world': typeof NorthlineWorldRoute
   '/privacy': typeof PrivacyRoute
   '/returns': typeof ReturnsRoute
+  '/shipping': typeof ShippingRoute
   '/nl/brutalist': typeof NlBrutalistRoute
   '/nl/flight': typeof NlFlightRoute
   '/nl/gallery': typeof NlGalleryRoute
@@ -296,6 +303,7 @@ export interface FileRoutesByTo {
   '/northline-world': typeof NorthlineWorldRoute
   '/privacy': typeof PrivacyRoute
   '/returns': typeof ReturnsRoute
+  '/shipping': typeof ShippingRoute
   '/nl/brutalist': typeof NlBrutalistRoute
   '/nl/flight': typeof NlFlightRoute
   '/nl/gallery': typeof NlGalleryRoute
@@ -338,6 +346,7 @@ export interface FileRoutesById {
   '/northline-world': typeof NorthlineWorldRoute
   '/privacy': typeof PrivacyRoute
   '/returns': typeof ReturnsRoute
+  '/shipping': typeof ShippingRoute
   '/nl/brutalist': typeof NlBrutalistRoute
   '/nl/flight': typeof NlFlightRoute
   '/nl/gallery': typeof NlGalleryRoute
@@ -381,6 +390,7 @@ export interface FileRouteTypes {
     | '/northline-world'
     | '/privacy'
     | '/returns'
+    | '/shipping'
     | '/nl/brutalist'
     | '/nl/flight'
     | '/nl/gallery'
@@ -422,6 +432,7 @@ export interface FileRouteTypes {
     | '/northline-world'
     | '/privacy'
     | '/returns'
+    | '/shipping'
     | '/nl/brutalist'
     | '/nl/flight'
     | '/nl/gallery'
@@ -463,6 +474,7 @@ export interface FileRouteTypes {
     | '/northline-world'
     | '/privacy'
     | '/returns'
+    | '/shipping'
     | '/nl/brutalist'
     | '/nl/flight'
     | '/nl/gallery'
@@ -505,6 +517,7 @@ export interface RootRouteChildren {
   NorthlineWorldRoute: typeof NorthlineWorldRoute
   PrivacyRoute: typeof PrivacyRoute
   ReturnsRoute: typeof ReturnsRoute
+  ShippingRoute: typeof ShippingRoute
   NlBrutalistRoute: typeof NlBrutalistRoute
   NlFlightRoute: typeof NlFlightRoute
   NlGalleryRoute: typeof NlGalleryRoute
@@ -539,6 +552,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/shipping': {
+      id: '/shipping'
+      path: '/shipping'
+      fullPath: '/shipping'
+      preLoaderRoute: typeof ShippingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/returns': {
       id: '/returns'
       path: '/returns'
@@ -825,6 +845,7 @@ const rootRouteChildren: RootRouteChildren = {
   NorthlineWorldRoute: NorthlineWorldRoute,
   PrivacyRoute: PrivacyRoute,
   ReturnsRoute: ReturnsRoute,
+  ShippingRoute: ShippingRoute,
   NlBrutalistRoute: NlBrutalistRoute,
   NlFlightRoute: NlFlightRoute,
   NlGalleryRoute: NlGalleryRoute,
