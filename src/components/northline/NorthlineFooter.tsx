@@ -19,11 +19,13 @@ export function NorthlineFooter() {
   return (
     <footer className="vivre-footer" aria-labelledby="footer-heading">
       <svg className="proof-grid" viewBox="0 0 1824 864" preserveAspectRatio="none" aria-hidden="true">
-        <g fill="none" stroke="var(--grid-line)" strokeWidth="1" strokeDasharray="2 3">
+        <g fill="none" stroke="var(--grid-blue)" strokeWidth="1" strokeDasharray="2 3">
           <path d="M36 0V864M662 0V864M712 0V864M934 0V864M1782 0V864"></path>
           <path d="M0 58H1824M0 299H1824M0 784H1824"></path>
         </g>
       </svg>
+
+      <span className="proof-circle" aria-hidden="true"></span>
 
       <div className="footer-top">
         <h2 className="footer-heading" id="footer-heading">Dress like you have somewhere to be.</h2>
@@ -43,6 +45,7 @@ export function NorthlineFooter() {
               onChange={(e) => setEmail(e.target.value)}
             />
             <button className="archive-arrow" type="submit" aria-label="Submit email to the Living Archive"></button>
+            <span className="proof-caret" aria-hidden="true">^</span>
           </div>
           <p className="archive-status" id="archive-status" aria-live="polite">
             {signupMessage}
@@ -55,12 +58,12 @@ export function NorthlineFooter() {
       <nav className="footer-nav" aria-label="Footer">
         <ul>
           <li><Link to="/s/v8/shop">Shop</Link></li>
-          <li><Link to="/about">About Us</Link></li>
-          <li><Link to="/faq">FAQ</Link></li>
+          <li><a href="#">Lookbook</a></li>
+          <li><a href="#">Journal</a></li>
         </ul>
         <ul className="social-links">
-          <li><a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a></li>
-          <li><a href="https://tiktok.com" target="_blank" rel="noopener noreferrer">TikTok</a></li>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">TikTok</a></li>
         </ul>
       </nav>
 
@@ -75,6 +78,7 @@ export function NorthlineFooter() {
         </div>
 
         <div className="approved-mark" aria-hidden="true">Approved<br/>to live</div>
+        <span className="crop-corner" aria-hidden="true"></span>
 
         <div className="campaign-wordmark" aria-label="VIVRE">
           <span>V</span><span>I</span><span>V</span><span>R</span><span>E</span>
@@ -83,8 +87,9 @@ export function NorthlineFooter() {
         <div className="footer-legal">
           <span className="copyright">© VIVRE 2026</span>
           <ul>
-            <li><Link to="/returns">Shipping & Returns</Link></li>
-            <li><Link to="/privacy">Privacy Policy</Link></li>
+            <li><a href="#">Shipping</a></li>
+            <li><a href="#">Returns</a></li>
+            <li><a href="#">Privacy</a></li>
           </ul>
         </div>
 
