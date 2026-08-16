@@ -52,7 +52,7 @@ export function NorthlineFooter() {
           <div className="nl-footer-arc-wrapper">
             <svg viewBox="0 0 900 260" className="nl-footer-arc-svg">
               <path id="vivre-arc-ed" fill="none" d="M 30,230 Q 450,0 870,230" />
-              <text>
+              <text style={{ fill: 'var(--cobalt)' }}>
                 <textPath
                   href="#vivre-arc-ed"
                   startOffset="50%"
