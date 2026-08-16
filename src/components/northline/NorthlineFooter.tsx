@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { FooterShader } from "./FooterShader";
-import "./campaign-wordmark.css";
 
 export function NorthlineFooter() {
   const [email, setEmail] = useState("");
@@ -10,89 +8,115 @@ export function NorthlineFooter() {
   const submitSignup = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    setSignupMessage("Subscribed to Vivre notes.");
+    setSignupMessage("Transmission successful. Subscribed to terminal updates.");
     setEmail("");
   };
 
   return (
-    <footer className="nl-footer-ref nl-footer-editorial">
-      <svg className="nl-material-video-mask-defs" aria-hidden="true" style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}>
-        <defs>
-          <clipPath id="nl-footer-flow-clip" clipPathUnits="objectBoundingBox">
-            <path
-              className="nl-material-video-flow-path"
-              d="M0 .068 C.07 .035 .12 .084 .19 .052 C.27 .022 .33 .088 .42 .049 C.51 .026 .58 .082 .67 .045 C.76 .02 .84 .075 .92 .041 C.96 .03 .98 .054 1 .05 L1 1 L0 1 Z"
-            />
-          </clipPath>
-        </defs>
-      </svg>
-      <FooterShader />
-
-      <div className="nl-footer-content nl-footer-editorial-content">
-
-        {/* ── TOP: Navigation + Palette ─────────────────────── */}
-        <div className="nl-footer-editorial-top">
-          <nav className="nl-footer-editorial-nav">
-            <Link to="/s/v8/shop">SHOP ALL</Link>
-            <Link to="/about">ABOUT US</Link>
-            <Link to="/faq">FAQ</Link>
-            <Link to="/returns">SHIPPING & RETURNS</Link>
-          </nav>
-          <div className="nl-footer-palette">
-            <div className="nl-footer-swatch" style={{ background: '#1646DB' }} title="Blue" />
-            <div className="nl-footer-swatch" style={{ background: '#0CEEFF' }} title="Cyan" />
-            <div className="nl-footer-swatch" style={{ background: '#F13B32' }} title="Red" />
-            <div className="nl-footer-swatch" style={{ background: '#111111' }} title="Black" />
-            <div className="nl-footer-swatch" style={{ background: '#F4F0E8' }} title="Paper" />
-          </div>
-        </div>
-
-        {/* ── MAIN: Arched VIVRE + [v]. + Subscribe ─────────── */}
-        <div className="nl-footer-editorial-main">
-          {/* Arched VIVRE in center */}
-          <div className="nl-footer-arc-wrapper">
-            <div className="nl-campaign-wordmark" aria-label="VIVRE">
-              <span>V</span><span>I</span><span>V</span><span>R</span><span>E</span>
+    <footer className="nl-footer-ticket-ref">
+      <div className="nl-footer-ticket-container">
+        <div className="nl-footer-ticket-grid">
+          
+          {/* Top Header Row */}
+          <div className="nl-ticket-header-row">
+            <div className="nl-ticket-title-block">
+              <h2 className="nl-ticket-wordmark">VIVRE-CLUB //</h2>
+              <h3 className="nl-ticket-sub-wordmark">E-COM_SYSTEM_v2.1</h3>
+              <p className="nl-ticket-info-text">FONT: MONO_VTG // MAT: POLY/AL // COLOR: IRID-S</p>
             </div>
-            <p className="nl-footer-tagline">THE LIVING ARCHIVE</p>
-            <p className="nl-footer-sub-tagline">DRESS LIKE YOU HAVE SOMEWHERE TO BE.</p>
+            <div className="nl-ticket-barcode-block">
+              {/* Fake Barcode SVG */}
+              <svg className="nl-ticket-barcode-svg" viewBox="0 0 200 80" preserveAspectRatio="none" aria-hidden="true">
+                <rect x="0" y="0" width="4" height="80" />
+                <rect x="8" y="0" width="2" height="80" />
+                <rect x="14" y="0" width="8" height="80" />
+                <rect x="26" y="0" width="2" height="80" />
+                <rect x="32" y="0" width="6" height="80" />
+                <rect x="42" y="0" width="2" height="80" />
+                <rect x="48" y="0" width="10" height="80" />
+                <rect x="62" y="0" width="4" height="80" />
+                <rect x="70" y="0" width="2" height="80" />
+                <rect x="76" y="0" width="8" height="80" />
+                <rect x="88" y="0" width="6" height="80" />
+                <rect x="98" y="0" width="2" height="80" />
+                <rect x="104" y="0" width="10" height="80" />
+                <rect x="118" y="0" width="4" height="80" />
+                <rect x="126" y="0" width="2" height="80" />
+                <rect x="132" y="0" width="8" height="80" />
+                <rect x="144" y="0" width="6" height="80" />
+                <rect x="154" y="0" width="2" height="80" />
+                <rect x="160" y="0" width="10" height="80" />
+                <rect x="174" y="0" width="4" height="80" />
+                <rect x="182" y="0" width="2" height="80" />
+                <rect x="188" y="0" width="8" height="80" />
+                <rect x="198" y="0" width="2" height="80" />
+              </svg>
+              <div className="nl-ticket-barcode-text">184712093556-VCB</div>
+            </div>
           </div>
-        </div>
 
-        {/* ── BOTTOM: [v]. logo + Subscribe + Drop Tag ──────── */}
-        <div className="nl-footer-editorial-bottom">
-
-          <div className="nl-footer-logo-mark">
-            <span className="nl-footer-bracket">[</span>v<span className="nl-footer-bracket">]</span><span className="nl-footer-dot">.</span>
+          {/* Grid Columns */}
+          <div className="nl-ticket-cell nl-ticket-col-4">
+            <div className="nl-ticket-cell-header">COMPANY INFO // VC_CORP.DATA</div>
+            <div className="nl-ticket-links">
+              <Link to="/about">ABOUT US</Link>
+              <a href="#">CONTACT [HQ_SYDNEY // 13:00-18:00 AEST]</a>
+              <a href="#">CAREERS (VACANCIES: 04)</a>
+              <a href="#">PRESS/MEDIA</a>
+            </div>
           </div>
 
-          <div className="nl-footer-subscribe-editorial">
-            <p className="nl-footer-subscribe-label">SUBSCRIBE <span>(LATEST NEWS)</span></p>
-            <form className="nl-footer-subscribe-form" onSubmit={submitSignup}>
-              <input
-                type="email"
-                placeholder="EMAIL"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-              />
-              <button type="submit">SUBSCRIBE →</button>
-            </form>
-            {signupMessage && <p className="nl-footer-msg">{signupMessage}</p>}
+          <div className="nl-ticket-cell nl-ticket-col-4">
+            <div className="nl-ticket-cell-header">NAVIGATION // SYST_MAP</div>
+            <div className="nl-ticket-links">
+              <Link to="/s/v8/shop">SHOP ALL</Link>
+              <a href="#">NEW ARRIVALS</a>
+              <a href="#">TECH-WEAR [COLLECTIONS]</a>
+              <a href="#">ACCESSORIES</a>
+            </div>
           </div>
 
-          <div className="nl-footer-drop-tag">
-            DROP 001 — AFTER HOURS — Live Now
+          <div className="nl-ticket-cell nl-ticket-col-4">
+            <div className="nl-ticket-cell-header">CUSTOMER SERVICES // ASSIST_LOG</div>
+            <div className="nl-ticket-links">
+              <Link to="/shipping">SHIPPING POLICIES [DOM/INTL]</Link>
+              <Link to="/returns">RETURNS // REFUNDS [POLICY_V.4]</Link>
+              <Link to="/faq">FAQ [SYSTEM_HELP]</Link>
+              <a href="#">TRACK ORDER [INPUT_REQ]</a>
+            </div>
           </div>
-        </div>
 
-        {/* ── LEGAL BAR ────────────────────────────────────── */}
-        <div className="nl-footer-legal-bar">
-          <p>©2026 VIVRE-CLUB</p>
-          <div className="nl-footer-legal-links">
-            <Link to="/privacy">PRIVACY POLICY (DSGVO)</Link>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">IG</a>
+          {/* Newsletter / UPC Row */}
+          <div className="nl-ticket-cell nl-ticket-col-12" style={{ borderBottom: '2px solid var(--ticket-border)' }}>
+            <div className="nl-ticket-cell-header">UPC-A: DATA_STREAM_INPUT</div>
+            <div style={{ maxWidth: '600px', width: '100%' }}>
+              <form onSubmit={submitSignup} className="nl-ticket-input-group">
+                <input
+                  type="email"
+                  placeholder="ENTER_EMAIL_ADDRESS..."
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <button type="submit">TRANSMIT [ENTER]</button>
+              </form>
+              {signupMessage && <div className="nl-ticket-msg">{signupMessage}</div>}
+            </div>
           </div>
+
+          {/* Footer Bottom Row */}
+          <div className="nl-ticket-footer-row">
+            <div>
+              SPECIFICATION_LOG:<br/>
+              FOOTER_ID: VC_FW_F001 // VER: 4.1 // DATE: 2024-10-26<br/>
+              (C) 2026 VIVRE-CLUB_GLOBAL // ALL RIGHTS RESERVED
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              ISO 9001:2015 CERTIFIED<br/>
+              SECURITY_PROTOCOLS: SSL_ACTIVE
+            </div>
+          </div>
+
         </div>
       </div>
     </footer>

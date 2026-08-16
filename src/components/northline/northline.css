@@ -3267,3 +3267,226 @@
     align-items: flex-start;
   }
 }
+
+/* ── CONCEPT 7: HOLOGRAPHIC TICKET ─────────────────────── */
+
+.nl-footer-ticket-ref {
+  --ticket-ink: #000;
+  --ticket-bg-base: #e0e0e0;
+  --ticket-border: #000;
+  --ticket-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  position: relative;
+  width: 100%;
+  color: var(--ticket-ink);
+  font-family: var(--ticket-mono);
+  overflow: hidden;
+  /* Holographic iridescent background */
+  background: 
+    linear-gradient(125deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.4) 100%),
+    linear-gradient(45deg, #f3a183, #eeb678, #a8e063, #56ab2f, #00d2ff, #3a7bd5, #d53369, #cbad6d);
+  background-size: 400% 400%;
+  animation: holo-gradient 15s ease infinite;
+}
+
+@keyframes holo-gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Subtle noise overlay */
+.nl-footer-ticket-ref::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.15;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+.nl-footer-ticket-container {
+  position: relative;
+  z-index: 1;
+  max-width: 90rem;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+}
+
+.nl-footer-ticket-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  border: 2px solid var(--ticket-border);
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.nl-ticket-cell {
+  border: 1px solid var(--ticket-border);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.nl-ticket-cell-header {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-bottom: 1px solid var(--ticket-border);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.nl-ticket-header-row {
+  grid-column: span 12;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 2px solid var(--ticket-border);
+  padding: 2rem;
+  gap: 2rem;
+}
+
+.nl-ticket-title-block {
+  flex: 1;
+}
+
+.nl-ticket-wordmark {
+  font-size: clamp(2.5rem, 6vw, 5.5rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.nl-ticket-sub-wordmark {
+  font-size: clamp(1.2rem, 3vw, 2.5rem);
+  font-weight: 600;
+  margin: 0.5rem 0 0;
+}
+
+.nl-ticket-info-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 1rem 0 0;
+  text-transform: uppercase;
+}
+
+.nl-ticket-barcode-block {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.nl-ticket-barcode-svg {
+  height: 90px;
+  width: auto;
+  fill: var(--ticket-border);
+  margin-bottom: 0.5rem;
+}
+
+.nl-ticket-barcode-text {
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+/* Columns */
+.nl-ticket-col-4 { grid-column: span 4; }
+.nl-ticket-col-3 { grid-column: span 3; }
+.nl-ticket-col-5 { grid-column: span 5; }
+.nl-ticket-col-12 { grid-column: span 12; }
+
+@media (max-width: 768px) {
+  .nl-ticket-col-4, .nl-ticket-col-3, .nl-ticket-col-5 {
+    grid-column: span 12;
+  }
+  .nl-ticket-header-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .nl-ticket-barcode-block {
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+.nl-ticket-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.nl-ticket-links a {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--ticket-ink);
+  text-decoration: none;
+  display: inline-block;
+  width: fit-content;
+}
+
+.nl-ticket-links a:hover {
+  text-decoration: underline;
+}
+
+.nl-ticket-input-group {
+  display: flex;
+  width: 100%;
+  border: 2px solid var(--ticket-border);
+  margin-top: 1rem;
+}
+
+.nl-ticket-input-group input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 0.85rem 1rem;
+  font-family: var(--ticket-mono);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ticket-ink);
+  outline: none;
+}
+
+.nl-ticket-input-group input::placeholder {
+  color: rgba(0,0,0,0.5);
+}
+
+.nl-ticket-input-group button {
+  background: var(--ticket-ink);
+  color: var(--nl-white);
+  border: none;
+  padding: 0 1.5rem;
+  font-family: var(--ticket-mono);
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.nl-ticket-input-group button:hover {
+  opacity: 0.8;
+}
+
+.nl-ticket-footer-row {
+  grid-column: span 12;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 1.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.nl-ticket-msg {
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+  font-weight: 600;
+}
