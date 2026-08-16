@@ -8,6 +8,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "@tanstack/react-router";
+import { ShoppingCart } from "lucide-react";
 
 import "@/components/northline/northline.css";
 import {
@@ -707,6 +708,53 @@ export function NorthlinePageV8({
               <Link to="/s/v8/shop">Shop All</Link>
               <a href="#">Lookbook</a>
               <a href="#materials">Capsule</a>
+              
+              <button 
+                type="button"
+                style={{
+                  position: 'absolute',
+                  top: 'clamp(1rem, 5vw, 1.5rem)',
+                  right: 'clamp(1.25rem, 5vw, 5rem)',
+                  zIndex: 50,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '3.5rem',
+                  height: '3.5rem',
+                  borderRadius: '50%',
+                  border: '1px solid rgba(0, 0, 0, 0.1)',
+                  background: 'rgba(255, 255, 255, 0.9)',
+                  backdropFilter: 'blur(10px)',
+                  color: '#000',
+                  pointerEvents: 'auto',
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+                }}
+                onClick={() => setBagOpen(true)}
+                aria-label="Open shopping bag"
+              >
+                <ShoppingCart size={20} strokeWidth={1.8} />
+                {bag.length > 0 && (
+                  <span style={{
+                    position: 'absolute',
+                    top: '0',
+                    right: '0',
+                    background: '#000',
+                    color: '#fff',
+                    borderRadius: '50%',
+                    minWidth: '20px',
+                    height: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    padding: '0 4px'
+                  }}>
+                    {bag.length}
+                  </span>
+                )}
+              </button>
             </nav>
           )}
           {!splitNavigation && (
