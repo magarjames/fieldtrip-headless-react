@@ -710,6 +710,8 @@
   min-width: 0;
   padding-top: 1rem;
   border-top: 1px solid var(--nl-pebble);
+  display: flex;
+  flex-direction: column;
 }
 
 .nl-product-image {
@@ -776,7 +778,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.55rem;
-  margin-top: 1rem;
+  margin-top: auto;
+  padding-top: 1rem;
 }
 
 .nl-product-actions button,
