@@ -249,13 +249,13 @@ export function VivreLayout({ children }: { children: React.ReactNode }) {
                         key={product.id}
                         to={`/products/${product.handle}`}
                         onClick={() => setSearchOpen(false)}
-                        className="group flex flex-col p-4 rounded-2xl transition-colors hover:bg-black/5 border border-transparent hover:border-black/10"
+                        className="group flex flex-col h-full p-2 md:p-4 rounded-2xl transition-colors hover:bg-black/5 border border-transparent hover:border-black/10"
                       >
-                        <div className="aspect-[4/5] bg-black/5 rounded-xl overflow-hidden mb-4 relative">
+                        <div className="aspect-[4/5] bg-black/5 rounded-xl overflow-hidden mb-3 relative shrink-0">
                           {image && <img src={image} alt={product.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100 mix-blend-multiply" />}
                         </div>
                         <div 
-                          className="mt-2 p-3 rounded-xl flex flex-col gap-1 transition-all duration-300"
+                          className="mt-auto p-3 rounded-xl flex flex-col gap-1 transition-all duration-300 flex-grow"
                           style={{
                             background: 'rgba(255, 255, 255, 0.15)',
                             backdropFilter: 'blur(24px) saturate(180%)',
@@ -264,10 +264,10 @@ export function VivreLayout({ children }: { children: React.ReactNode }) {
                             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.3)'
                           }}
                         >
-                          <h3 className="font-bold text-base leading-tight text-black tracking-tight">{product.title}</h3>
-                          <div className="flex items-center justify-between">
-                            {product.vendor && <p className="text-black/60 text-xs font-medium uppercase tracking-wider">{product.vendor}</p>}
-                            <p className="text-black/90 text-sm font-medium">{price}</p>
+                          <h3 className="font-bold text-sm md:text-base leading-tight text-black tracking-tight line-clamp-2">{product.title}</h3>
+                          <div className="flex items-end justify-between mt-auto pt-2 gap-2">
+                            {product.vendor && <p className="text-black/60 text-[10px] md:text-xs font-bold uppercase tracking-widest whitespace-nowrap">{product.vendor}</p>}
+                            <p className="text-black/90 text-xs md:text-sm font-medium whitespace-nowrap">{price}</p>
                           </div>
                         </div>
                       </Link>
