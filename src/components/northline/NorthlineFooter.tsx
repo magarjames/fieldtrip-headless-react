@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { FooterShader } from "./FooterShader";
+import "./campaign-wordmark.css";
 
 export function NorthlineFooter() {
   const [email, setEmail] = useState("");
@@ -50,19 +51,9 @@ export function NorthlineFooter() {
         <div className="nl-footer-editorial-main">
           {/* Arched VIVRE in center */}
           <div className="nl-footer-arc-wrapper">
-            <svg viewBox="0 0 900 260" className="nl-footer-arc-svg">
-              <path id="vivre-arc-ed" fill="none" d="M 30,230 Q 450,0 870,230" />
-              <text style={{ fill: 'var(--cobalt)' }}>
-                <textPath
-                  href="#vivre-arc-ed"
-                  startOffset="50%"
-                  textAnchor="middle"
-                  className="nl-footer-arc-text"
-                >
-                  VIVRE
-                </textPath>
-              </text>
-            </svg>
+            <div className="nl-campaign-wordmark" aria-label="VIVRE">
+              <span>V</span><span>I</span><span>V</span><span>R</span><span>E</span>
+            </div>
             <p className="nl-footer-tagline">THE LIVING ARCHIVE</p>
             <p className="nl-footer-sub-tagline">DRESS LIKE YOU HAVE SOMEWHERE TO BE.</p>
           </div>

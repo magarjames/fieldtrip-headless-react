@@ -1,0 +1,42 @@
+.nl-campaign-wordmark {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  align-items: end;
+  color: var(--nl-cobalt, #1646d8);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: clamp(8rem, 16vw, 24rem);
+  font-weight: 700;
+  line-height: .75;
+  letter-spacing: -.06em;
+  text-align: center;
+  pointer-events: none;
+  user-select: none;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.nl-campaign-wordmark span {
+  display: block;
+  width: 100%;
+  transform-origin: center bottom;
+}
+
+.nl-campaign-wordmark span:nth-child(1) {
+  transform: translateY(4.2%) rotate(-7deg) scaleX(.82);
+}
+
+.nl-campaign-wordmark span:nth-child(2) {
+  transform: translateY(1.8%) rotate(-3deg) scaleX(.82);
+}
+
+.nl-campaign-wordmark span:nth-child(3) {
+  transform: translateY(0) scaleX(.82);
+}
+
+.nl-campaign-wordmark span:nth-child(4) {
+  transform: translateY(1.7%) rotate(3.2deg) scaleX(.82);
+}
+
+.nl-campaign-wordmark span:nth-child(5) {
+  transform: translateY(4.6%) rotate(7deg) scaleX(.82);
+}
