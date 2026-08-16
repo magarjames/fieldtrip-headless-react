@@ -220,7 +220,7 @@ export function VivreLayout({ children }: { children: React.ReactNode }) {
       {searchOpen && typeof document !== "undefined" && createPortal(
         <div className="nl-layer">
           <div
-            className="nl-layer-backdrop p-4 pb-[85svh] md:pb-0 md:p-[clamp(2rem,5vw,4rem)] md:pr-[max(460px,5vw)]"
+            className="nl-layer-backdrop p-4 pt-[35svh] md:pt-4 md:pb-0 md:p-[clamp(2rem,5vw,4rem)] md:pr-[max(460px,5vw)]"
             style={{
               background: 'rgba(255, 255, 255, 0.05)',
               backdropFilter: 'blur(24px) saturate(150%)',
@@ -279,7 +279,7 @@ export function VivreLayout({ children }: { children: React.ReactNode }) {
           </div>
           
           <aside
-            className="nl-bag-drawer"
+            className="nl-bag-drawer max-md:!h-auto max-md:!pt-6 max-md:!pb-10 max-md:self-start max-md:rounded-t-none max-md:rounded-b-3xl"
             role="dialog"
             aria-modal="true"
             aria-labelledby="search-title"
