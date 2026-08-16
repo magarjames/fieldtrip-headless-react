@@ -63,8 +63,8 @@ const fragmentShader = `
     vec2 gridLines = fract(gridUV);
     float grid = step(0.98, gridLines.x) + step(0.98, gridLines.y);
     
-    vec3 lightCobalt = vec3(0.90, 0.94, 1.0); // Very pale cobalt blue
-    vec3 gridLineColor = vec3(0.78, 0.84, 0.98); // Slightly deeper blue for grid
+    vec3 lightCobalt = vec3(0.02, 0.06, 0.16); // Dark navy blue
+    vec3 gridLineColor = vec3(0.04, 0.10, 0.22); // Slightly lighter navy for grid
     vec3 baseColor = mix(lightCobalt, gridLineColor, clamp(grid, 0.0, 1.0));
     
     vec3 redSpray = vec3(0.92, 0.23, 0.18);

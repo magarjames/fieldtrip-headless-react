@@ -2961,11 +2961,11 @@
    ═══════════════════════════════════════════════════════════════ */
 
 .nl-footer-editorial {
-  --footer-paper: #F4F1EB;
-  --footer-ink: #0B0B0B;
-  --footer-taupe: #8C7B68;
-  --footer-sub: #5A5450;
-  --footer-rule: rgba(0, 0, 0, 0.12);
+  --footer-paper: transparent;
+  --footer-ink: #FFFFFF;
+  --footer-taupe: #A0A5B0;
+  --footer-sub: rgba(255, 255, 255, 0.6);
+  --footer-rule: rgba(255, 255, 255, 0.15);
 }
 
 .nl-footer-editorial .nl-footer-editorial-content {
