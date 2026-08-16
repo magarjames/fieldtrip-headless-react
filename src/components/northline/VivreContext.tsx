@@ -32,8 +32,26 @@ interface VivreContextType {
 const VivreContext = createContext<VivreContextType | undefined>(undefined);
 
 export function VivreProvider({ children }: { children: ReactNode }) {
-  const [bag, setBag] = useState<Product[]>([]);
+  const [bag, setBag] = useState<Product[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('vivre-bag');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          console.error('Failed to parse bag from localStorage', e);
+        }
+      }
+    }
+    return [];
+  });
   const [bagOpen, setBagOpen] = useState(false);
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('vivre-bag', JSON.stringify(bag));
+    }
+  }, [bag]);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 

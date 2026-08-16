@@ -15,6 +15,7 @@ import {
   NorthlineScrollEdge,
   type NorthlineEdgeMotion,
 } from "@/components/northline/NorthlineScrollEdge";
+import { useVivre } from "@/components/northline/VivreContext";
 import { shopifyClient } from "@/lib/shopify";
 import type { Product as ShopifyProduct } from "shopify-buy";
 import { NorthlineScrollFilm } from "@/components/northline/NorthlineScrollFilm";
@@ -99,14 +100,12 @@ export function NorthlinePageV8({
   const [activeProduct, setActiveProduct] = useState<Product | null>(null);
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
-  const [bag, setBag] = useState<Product[]>([]);
-  const [bagOpen, setBagOpen] = useState(false);
+  const { bag, bagOpen, setBagOpen, isCheckingOut, addToBag: contextAddToBag, removeFromBag, checkout } = useVivre();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [signupMessage, setSignupMessage] = useState("");
   const [shopifyProducts, setShopifyProducts] = useState<ShopifyProduct[]>([]);
   const [collectionDetails, setCollectionDetails] = useState<{title: string, description: string} | null>(null);
-  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const productGridRef = useRef<HTMLDivElement>(null);
   const continuationNavRef = useRef<HTMLElement>(null);
@@ -552,14 +551,9 @@ export function NorthlinePageV8({
     }
 
     startTransition(() => {
-      setBag((current) => [...current, { ...product, shopifyVariantId: finalVariantId, variantTitle }]);
-      setBagOpen(true);
+      contextAddToBag({ ...product, shopifyVariantId: finalVariantId, variantTitle });
       setActiveProduct(null);
     });
-  }
-
-  function removeFromBag(index: number) {
-    setBag((current) => current.filter((_, itemIndex) => itemIndex !== index));
   }
 
   function submitSignup(event: React.FormEvent<HTMLFormElement>) {
@@ -573,37 +567,6 @@ export function NorthlinePageV8({
     setSignupMessage("Thanks. Vivre notes will go to " + email + ".");
     setEmail("");
   }
-
-  const checkout = async () => {
-    if (bag.length === 0) return;
-    setIsCheckingOut(true);
-    try {
-      const checkoutSession = await shopifyClient.checkout.create();
-      // Count duplicate items to send correct quantities
-      const quantities: Record<string, number> = {};
-      bag.forEach(item => {
-        if (item.shopifyVariantId) {
-          quantities[item.shopifyVariantId] = (quantities[item.shopifyVariantId] || 0) + 1;
-        }
-      });
-      
-      const lineItemsToAdd = Object.keys(quantities).map(variantId => ({
-        variantId,
-        quantity: quantities[variantId]
-      }));
-
-      if (lineItemsToAdd.length > 0) {
-        await shopifyClient.checkout.addLineItems(checkoutSession.id, lineItemsToAdd);
-        window.location.href = checkoutSession.webUrl;
-      } else {
-        alert("No valid products in bag to checkout.");
-        setIsCheckingOut(false);
-      }
-    } catch (error) {
-      console.error("Checkout error:", error);
-      setIsCheckingOut(false);
-    }
-  };
 
   return (
     <div
