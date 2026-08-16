@@ -3303,8 +3303,16 @@
   grid-template-columns: repeat(12, 1fr);
   border: 2px solid var(--ticket-border);
   background: 
-    linear-gradient(125deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.4) 100%),
-    linear-gradient(45deg, #f3a183, #eeb678, #a8e063, #56ab2f, #00d2ff, #3a7bd5, #d53369, #cbad6d);
+    linear-gradient(125deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.8) 100%),
+    linear-gradient(45deg, 
+      #d4d4d8, 
+      #f8fafc, 
+      #e2e8f0, 
+      #ffffff, 
+      #e4e4e7, 
+      #f1f5f9, 
+      #cbd5e1
+    );
   background-size: 400% 400%;
   animation: holo-gradient 15s ease infinite;
   box-shadow: 0 20px 40px rgba(0,0,0,0.1);
