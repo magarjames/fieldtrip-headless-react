@@ -3279,7 +3279,7 @@
   width: 100%;
   color: var(--ticket-ink);
   font-family: var(--ticket-mono);
-  background: #ffffff; /* White background behind the floating ticket */
+  background: transparent;
 }
 
 @keyframes holo-gradient {

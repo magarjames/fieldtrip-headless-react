@@ -44,13 +44,13 @@ export function VivreLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="ft" style={{ 
       minHeight: '100vh', 
-      backgroundColor: 'transparent',
+      backgroundColor: '#ffffff',
       color: 'var(--ink)',
       position: 'relative'
     }}>
       <style>{`
         .ft{
-          --paper:#FBF7EF; --ink:#141317; --dim:#565462; --hair:rgba(20,19,23,0.16);
+          --paper:#FFFFFF; --ink:#141317; --dim:#565462; --hair:rgba(20,19,23,0.16);
           --pop:#F5C518; --pop-ink:#141317;
           font-family:Archivo,"Helvetica Neue",sans-serif;
         }
