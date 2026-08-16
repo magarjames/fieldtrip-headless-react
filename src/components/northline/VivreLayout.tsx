@@ -220,7 +220,7 @@ export function VivreLayout({ children }: { children: React.ReactNode }) {
       {searchOpen && typeof document !== "undefined" && createPortal(
         <div className="nl-layer">
           <div
-            className="nl-layer-backdrop"
+            className="nl-layer-backdrop p-4 pb-[85svh] md:pb-0 md:p-[clamp(2rem,5vw,4rem)] md:pr-[max(460px,5vw)]"
             style={{
               background: 'rgba(255, 255, 255, 0.05)',
               backdropFilter: 'blur(24px) saturate(150%)',
@@ -229,8 +229,6 @@ export function VivreLayout({ children }: { children: React.ReactNode }) {
               willChange: 'transform, backdrop-filter',
               cursor: 'pointer',
               display: 'block',
-              padding: 'clamp(2rem, 5vw, 4rem)',
-              paddingRight: 'max(460px, 5vw)', // Leave room for the drawer
               overflowY: 'auto'
             }}
             onClick={() => setSearchOpen(false)}

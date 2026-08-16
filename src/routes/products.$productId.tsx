@@ -117,10 +117,26 @@ function ProductDetailsPage() {
       <div className="shell py-12 md:py-24">
         
         {/* Main PDP Grid */}
-        <div className="grid md:grid-cols-2 gap-12 lg:gap-24">
+        <div className="flex flex-col md:grid md:grid-cols-2 gap-12 lg:gap-24">
           
-          {/* Left Column: Details */}
-          <div className="flex flex-col">
+          {/* Right Column: Images (Appears first on mobile) */}
+          <div 
+            className="order-1 md:order-2 flex flex-col gap-6 md:max-h-screen md:overflow-y-auto md:pr-4" 
+            ref={sideableImagesRef} 
+            style={{ scrollbarWidth: 'none' }}
+          >
+             {images.map((img: string, i: number) => (
+               <img 
+                 key={i} 
+                 src={img} 
+                 alt={`${product.title} view ${i + 1}`} 
+                 className="w-full rounded-2xl bg-black/5 aspect-[4/5] md:aspect-auto object-cover border border-black/5"
+               />
+             ))}
+          </div>
+
+          {/* Left Column: Details (Appears second on mobile) */}
+          <div className="order-2 md:order-1 flex flex-col">
              <p className="font-mono text-xs tracking-[0.14em] uppercase text-black/50 mb-4">{product.productType || "New Arrivals"}</p>
              <h1 className="text-5xl md:text-6xl font-display font-black uppercase tracking-tighter mb-6">{product.title}</h1>
              
@@ -197,18 +213,6 @@ function ProductDetailsPage() {
                  dangerouslySetInnerHTML={{ __html: product.descriptionHtml || product.description }}
                />
              </div>
-          </div>
-          
-          {/* Right Column: Images */}
-          <div className="flex flex-col gap-6" ref={sideableImagesRef} style={{ maxHeight: '100vh', overflowY: 'auto', paddingRight: '1rem', scrollbarWidth: 'none' }}>
-             {images.map((img: string, i: number) => (
-               <img 
-                 key={i} 
-                 src={img} 
-                 alt={`${product.title} view ${i + 1}`} 
-                 className="w-full rounded-2xl bg-black/5 aspect-[4/5] object-cover border border-black/5"
-               />
-             ))}
           </div>
 
         </div>
