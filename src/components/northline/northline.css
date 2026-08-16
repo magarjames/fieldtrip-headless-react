@@ -1814,19 +1814,24 @@
   display: grid;
   grid-template-columns: 4.8rem 1fr auto;
   align-items: center;
-  gap: 0.8rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  gap: 1rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  border-radius: 1rem;
 }
 
 .nl-bag-list img {
   width: 4.8rem;
-  aspect-ratio: 1;
+  aspect-ratio: 4 / 5;
   object-fit: cover;
-  border-radius: 12px;
-  background: #ffffff;
-  padding: 0.3rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border-radius: 0.5rem;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 0;
+  box-shadow: none;
 }
 
 .nl-bag-list h3,
@@ -1839,29 +1844,31 @@
   font-weight: 700;
   letter-spacing: -0.025em;
   line-height: 1.1;
-  color: var(--nl-white);
+  color: var(--nl-ink);
 }
 
 .nl-bag-list p {
   margin-top: 0.3rem;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.9rem;
-  line-height: 1;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.85rem;
+  line-height: 1.2;
 }
 
 .nl-bag-list button {
   min-height: 2.3rem;
   padding: 0.4rem 0.68rem;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 1000px;
   background: transparent;
-  color: var(--nl-white);
+  color: var(--nl-ink);
+  font-weight: 600;
+  font-size: 0.8rem;
   transition: all 0.2s ease;
 }
 
 .nl-bag-list button:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: var(--nl-white);
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.3);
 }
 
 .nl-bag-footer {
