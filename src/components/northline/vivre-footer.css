@@ -399,19 +399,19 @@
 .vivre-footer .campaign-wordmark {
   position: absolute;
   z-index: 2;
-  right: 20%;
+  right: 5%;
   bottom: 6.5%;
-  left: 21%;
+  left: 5%;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   align-items: end;
   height: 88%;
   color: var(--blue);
   font-family: "Barlow Condensed", sans-serif;
-  font-size: clamp(21rem, 30vw, 36rem);
+  font-size: clamp(10rem, 15vw, 20rem);
   font-weight: 700;
   line-height: .68;
-  letter-spacing: -.06em;
+  letter-spacing: -.02em;
   text-align: center;
   pointer-events: none;
   user-select: none;
@@ -585,11 +585,6 @@
     padding-right: 1.25rem;
     padding-left: 1.25rem;
   }
-
-  .vivre-footer .campaign-wordmark {
-    right: 16%;
-    left: 17%;
-  }
 }
 
 @media (max-width: 900px) {
@@ -639,7 +634,7 @@
     bottom: 6rem;
     left: 5%;
     height: 72%;
-    font-size: clamp(15rem, 48vw, 25rem);
+    font-size: clamp(8rem, 20vw, 15rem);
   }
 
   .vivre-footer .spray-band {
@@ -710,7 +705,7 @@
     right: 3.5%;
     bottom: 6.8rem;
     left: 3.5%;
-    font-size: 43vw;
+    font-size: 25vw;
     letter-spacing: -.1em;
   }
 
