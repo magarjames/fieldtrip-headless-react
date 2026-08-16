@@ -256,10 +256,10 @@ export function VivreLayout({ children }: { children: React.ReactNode }) {
                         <div className="aspect-[4/5] bg-black/5 rounded-xl overflow-hidden mb-4 relative">
                           {image && <img src={image} alt={product.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100 mix-blend-multiply" />}
                         </div>
-                        <h3 className="font-bold text-lg leading-tight text-black tracking-tight">{product.title}</h3>
+                        <h3 className="font-bold text-lg leading-tight text-white mix-blend-difference tracking-tight">{product.title}</h3>
                         <div className="flex items-center justify-between mt-2">
-                          {product.vendor && <p className="text-black/50 text-sm font-medium uppercase tracking-wider">{product.vendor}</p>}
-                          <p className="text-black/90 font-medium">{price}</p>
+                          {product.vendor && <p className="text-white/70 mix-blend-difference text-sm font-medium uppercase tracking-wider">{product.vendor}</p>}
+                          <p className="text-white mix-blend-difference font-medium">{price}</p>
                         </div>
                       </Link>
                     )
