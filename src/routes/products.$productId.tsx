@@ -296,10 +296,36 @@ function ProductDetailsPage() {
             </div>
             <div className="p-8 overflow-y-auto bg-white/40">
               {sizeGuideContent ? (
-                <div 
-                  className="prose prose-sm max-w-none text-black/70 leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: sizeGuideContent }} 
-                />
+                <>
+                  <style>{`
+                    .size-guide-content table {
+                      width: 100%;
+                      text-align: left;
+                      font-size: 0.875rem;
+                      border-collapse: collapse;
+                    }
+                    .size-guide-content th {
+                      padding: 1rem 0;
+                      font-weight: 700;
+                      text-transform: uppercase;
+                      letter-spacing: 0.1em;
+                      color: rgb(0 0 0 / 0.5);
+                      border-bottom: 1px solid rgb(0 0 0 / 0.1);
+                    }
+                    .size-guide-content td {
+                      padding: 1rem 0;
+                      font-weight: 500;
+                      border-bottom: 1px solid rgb(0 0 0 / 0.05);
+                    }
+                    .size-guide-content p {
+                      margin-bottom: 1rem;
+                    }
+                  `}</style>
+                  <div 
+                    className="prose prose-sm max-w-none text-black/70 leading-relaxed size-guide-content"
+                    dangerouslySetInnerHTML={{ __html: sizeGuideContent }} 
+                  />
+                </>
               ) : (
                 <table className="w-full text-sm text-left">
                   <thead>
