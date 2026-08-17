@@ -18,6 +18,7 @@ function ProductDetailsPage() {
   
   const [selectedColor, setSelectedColor] = useState<string>("Default");
   const [selectedSize, setSelectedSize] = useState<string>("");
+  const [selectedFit, setSelectedFit] = useState<string>("");
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
 
   useEffect(() => {
@@ -28,9 +29,11 @@ function ProductDetailsPage() {
         // Auto-select first options if available
         const colorOption = (fetchedProduct as any).options?.find((o: any) => o.name.toLowerCase() === 'color' || o.name.toLowerCase() === 'colour');
         const sizeOption = (fetchedProduct as any).options?.find((o: any) => o.name.toLowerCase() === 'size');
+        const fitOption = (fetchedProduct as any).options?.find((o: any) => o.name.toLowerCase() === 'fit');
         
         if (colorOption?.values.length > 0) setSelectedColor(colorOption.values[0].value);
         if (sizeOption?.values.length > 0) setSelectedSize(sizeOption.values[0].value);
+        if (fitOption?.values.length > 0) setSelectedFit(fitOption.values[0].value);
         
         setLoading(false);
       }).catch(err => {
@@ -62,10 +65,12 @@ function ProductDetailsPage() {
     // Find the variant that matches selected options
     let selectedVariant = (product as any).variants[0]; // fallback
     if ((product as any).variants?.length > 1) {
+      const hasFit = (product as any).options?.some((o: any) => o.name.toLowerCase() === 'fit');
       const match = (product as any).variants.find((v: any) => {
         const matchesColor = v.selectedOptions.some((o: any) => (o.name.toLowerCase() === 'color' || o.name.toLowerCase() === 'colour') && o.value === selectedColor);
         const matchesSize = v.selectedOptions.some((o: any) => o.name.toLowerCase() === 'size' && o.value === selectedSize);
-        return matchesColor && matchesSize;
+        const matchesFit = !hasFit || v.selectedOptions.some((o: any) => o.name.toLowerCase() === 'fit' && o.value === selectedFit);
+        return matchesColor && matchesSize && matchesFit;
       });
       if (match) selectedVariant = match;
     }
@@ -107,9 +112,9 @@ function ProductDetailsPage() {
       </VivreLayout>
     );
   }
-
   const colors = (product as any).options?.find((o: any) => o.name.toLowerCase() === 'color' || o.name.toLowerCase() === 'colour')?.values.map((v: any) => v.value) || [];
   const sizes = (product as any).options?.find((o: any) => o.name.toLowerCase() === 'size')?.values.map((v: any) => v.value) || [];
+  const fits = (product as any).options?.find((o: any) => o.name.toLowerCase() === 'fit')?.values.map((v: any) => v.value) || [];
   const images = (product as any).images?.map((img: any) => img.src) || [];
 
   return (
@@ -125,14 +130,14 @@ function ProductDetailsPage() {
             ref={sideableImagesRef} 
             style={{ scrollbarWidth: 'none' }}
           >
-             {images.map((img: string, i: number) => (
-               <img 
-                 key={i} 
-                 src={img} 
-                 alt={`${product.title} view ${i + 1}`} 
-                 className="w-full rounded-2xl bg-black/5 aspect-[4/5] md:aspect-auto object-cover border border-black/5"
-               />
-             ))}
+            {images.map((img: string, i: number) => (
+              <img 
+                key={i} 
+                src={img} 
+                alt={`${product.title} view ${i + 1}`}
+                className="w-full rounded-2xl bg-black/5 aspect-[4/5] md:aspect-auto object-cover border border-black/5"
+              />
+            ))}
           </div>
 
           {/* Left Column: Details (Appears second on mobile) */}
@@ -144,7 +149,7 @@ function ProductDetailsPage() {
              
              <div className="flex justify-between items-center mb-8">
                <span className="font-mono text-xs tracking-[0.14em] uppercase font-bold text-black/50">Price</span>
-               <span className="text-2xl font-medium">GBP {product.variants?.[0]?.price?.amount || '0'}</span>
+               <span className="text-2xl font-medium">GBP £{parseFloat(product.variants?.[0]?.price?.amount || '0').toFixed(2)}</span>
              </div>
 
              {colors.length > 0 && colors[0] !== 'Default Title' && (
@@ -164,6 +169,29 @@ function ProductDetailsPage() {
                        }`}
                      >
                        {color}
+                     </button>
+                   ))}
+                 </div>
+               </div>
+             )}
+
+             {fits.length > 0 && fits[0] !== 'Default Title' && (
+               <div className="mb-8">
+                 <div className="flex justify-between items-center mb-4">
+                   <span className="font-mono text-xs tracking-[0.14em] uppercase font-bold text-black/50">Fit</span>
+                 </div>
+                 <div className="flex gap-3 flex-wrap">
+                   {fits.map((fit: string) => (
+                     <button
+                       key={fit}
+                       onClick={() => setSelectedFit(fit)}
+                       className={`px-6 py-3 border rounded-full text-sm uppercase tracking-widest font-bold transition-all ${
+                         selectedFit === fit 
+                         ? 'border-brand-black bg-brand-black text-white' 
+                         : 'border-black/15 hover:border-black/30 bg-transparent'
+                       }`}
+                     >
+                       {fit}
                      </button>
                    ))}
                  </div>
