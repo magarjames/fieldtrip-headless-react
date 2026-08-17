@@ -1584,8 +1584,6 @@
   flex: 1.2;
   padding: 3rem 2.5rem;
   border-left: 1px solid rgba(255, 255, 255, 0.15);
-  display: flex;
-  flex-direction: column;
   overflow-y: auto;
 }
 
