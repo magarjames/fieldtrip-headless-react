@@ -17,6 +17,7 @@ import { Route as NorthlineRouteImport } from './routes/northline'
 import { Route as LogoGeneratorRouteImport } from './routes/logo-generator'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as EditionsRouteImport } from './routes/editions'
+import { Route as AccessoriesRouteImport } from './routes/accessories'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WIndexRouteImport } from './routes/w.index'
@@ -88,6 +89,11 @@ const FaqRoute = FaqRouteImport.update({
 const EditionsRoute = EditionsRouteImport.update({
   id: '/editions',
   path: '/editions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccessoriesRoute = AccessoriesRouteImport.update({
+  id: '/accessories',
+  path: '/accessories',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -254,6 +260,7 @@ const SV8ShopRoute = SV8ShopRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/accessories': typeof AccessoriesRoute
   '/editions': typeof EditionsRoute
   '/faq': typeof FaqRoute
   '/logo-generator': typeof LogoGeneratorRoute
@@ -296,6 +303,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/accessories': typeof AccessoriesRoute
   '/editions': typeof EditionsRoute
   '/faq': typeof FaqRoute
   '/logo-generator': typeof LogoGeneratorRoute
@@ -339,6 +347,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/accessories': typeof AccessoriesRoute
   '/editions': typeof EditionsRoute
   '/faq': typeof FaqRoute
   '/logo-generator': typeof LogoGeneratorRoute
@@ -383,6 +392,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/accessories'
     | '/editions'
     | '/faq'
     | '/logo-generator'
@@ -425,6 +435,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/accessories'
     | '/editions'
     | '/faq'
     | '/logo-generator'
@@ -467,6 +478,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/accessories'
     | '/editions'
     | '/faq'
     | '/logo-generator'
@@ -510,6 +522,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AccessoriesRoute: typeof AccessoriesRoute
   EditionsRoute: typeof EditionsRoute
   FaqRoute: typeof FaqRoute
   LogoGeneratorRoute: typeof LogoGeneratorRoute
@@ -606,6 +619,13 @@ declare module '@tanstack/react-router' {
       path: '/editions'
       fullPath: '/editions'
       preLoaderRoute: typeof EditionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accessories': {
+      id: '/accessories'
+      path: '/accessories'
+      fullPath: '/accessories'
+      preLoaderRoute: typeof AccessoriesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -838,6 +858,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AccessoriesRoute: AccessoriesRoute,
   EditionsRoute: EditionsRoute,
   FaqRoute: FaqRoute,
   LogoGeneratorRoute: LogoGeneratorRoute,
