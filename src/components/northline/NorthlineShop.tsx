@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useSearch } from "@tanstack/react-router";
 import { shopifyClient } from "@/lib/shopify";
 import "./northline.css";
 import { VivreLayout } from "@/components/northline/VivreLayout";
@@ -23,6 +23,7 @@ interface Product {
 }
 
 export function NorthlineShop() {
+  const search = useSearch({ strict: false }) as any;
   const [shopifyProducts, setShopifyProducts] = useState<any[]>([]);
   const [shopifyLoading, setShopifyLoading] = useState(true);
   
@@ -30,9 +31,16 @@ export function NorthlineShop() {
   const [activeFilter, setActiveFilter] = useState("All"); // Category
   const [activeColors, setActiveColors] = useState<string[]>([]);
   const [activeSizes, setActiveSizes] = useState<string[]>([]);
-  const [sortOrder, setSortOrder] = useState<string>("featured"); // featured, newest, price-asc, price-desc
+  const [sortOrder, setSortOrder] = useState<string>(search?.sort || "featured"); // featured, newest, price-asc, price-desc
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState<number>(12);
+
+  // Sync sortOrder with URL search params
+  useEffect(() => {
+    if (search?.sort) {
+      setSortOrder(search.sort);
+    }
+  }, [search?.sort]);
 
   // Fetch real products from Shopify
   useEffect(() => {

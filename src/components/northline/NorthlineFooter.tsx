@@ -67,7 +67,7 @@ export function NorthlineFooter() {
             <div className="nl-ticket-cell-header">NAVIGATION // SYST_MAP</div>
             <div className="nl-ticket-links">
               <Link to="/s/v8/shop">SHOP ALL</Link>
-              <a href="#">NEW ARRIVALS</a>
+              <a href="/s/v8/shop?sort=newest">NEW ARRIVALS</a>
               <a href="#">ACCESSORIES</a>
             </div>
           </div>
