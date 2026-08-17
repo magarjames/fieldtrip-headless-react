@@ -857,3 +857,28 @@
   }
 }
 
+
+.scan-runway__wardrobe-link span {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  transition: border-color 0.2s ease;
+}
+
+.scan-runway__wardrobe-link:hover span {
+  border-color: rgba(255, 255, 255, 1);
+}
+
+.scan-runway__wardrobe-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.scan-runway__wardrobe-label {
+  cursor: pointer;
+  padding-bottom: 1px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  transition: border-color 0.2s ease;
+}
+
+.scan-runway__wardrobe-link:hover .scan-runway__wardrobe-label {
+  border-color: rgba(255, 255, 255, 1);
+}

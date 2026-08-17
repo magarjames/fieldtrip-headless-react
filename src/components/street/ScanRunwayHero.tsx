@@ -8,6 +8,7 @@ import {
 } from "react";
 import { ShoppingCart } from "lucide-react";
 import { shopifyClient } from "@/lib/shopify";
+import { Link } from "@tanstack/react-router";
 import "./scan-runway-hero.css";
 
 const FRAME_NAMES = ["a", "b", "c", "d", "e", "f", "g"] as const;
@@ -566,6 +567,7 @@ export function ScanRunwayHero({
             <div className="scan-runway__wardrobe">
               {look.pieces?.map((piece, i) => {
                 let displayName = piece.name;
+                let productId = "";
                 if (shopifyProducts.length > 0) {
                   // Try to find a Shopify product that matches the keyword
                   const matched = shopifyProducts.find(sp => 
@@ -573,13 +575,22 @@ export function ScanRunwayHero({
                   );
                   if (matched) {
                     displayName = matched.title;
+                    productId = matched.id.split('/').pop() || "";
                   }
                 }
                 
                 return (
                   <div key={i} className="scan-runway__wardrobe-item">
                     <div className="scan-runway__wardrobe-swatch" style={{ backgroundColor: piece.hue }} />
-                    <span>{displayName}</span>
+                    {productId ? (
+                      <Link to={`/products/${productId}`} className="scan-runway__wardrobe-link">
+                        <span className="scan-runway__wardrobe-label">
+                          {displayName}
+                        </span>
+                      </Link>
+                    ) : (
+                      <span>{displayName}</span>
+                    )}
                   </div>
                 );
               })}
