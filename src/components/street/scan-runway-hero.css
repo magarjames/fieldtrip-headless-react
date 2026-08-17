@@ -882,3 +882,7 @@
 .scan-runway__wardrobe-link:hover .scan-runway__wardrobe-label {
   border-color: rgba(255, 255, 255, 1);
 }
+
+.scan-runway__wardrobe-link {
+  pointer-events: auto;
+}
