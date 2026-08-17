@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import { shopifyClient } from '@/lib/shopify';
 import { VivreLayout } from '@/components/northline/VivreLayout';
 import { useVivre } from '@/components/northline/VivreContext';
@@ -20,6 +20,44 @@ function ProductDetailsPage() {
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [selectedFit, setSelectedFit] = useState<string>("");
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
+
+  const { descriptionContent, sizeGuideContent } = useMemo(() => {
+    if (!product) return { descriptionContent: "", sizeGuideContent: null };
+    
+    const html = product.descriptionHtml || product.description || "";
+    
+    if (typeof window === 'undefined') {
+       return { descriptionContent: html, sizeGuideContent: null };
+    }
+
+    try {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
+      let foundSizeGuide = false;
+      let extractedSizeGuide = "";
+      
+      const children = Array.from(doc.body.children);
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+        if (!foundSizeGuide && child.textContent?.toLowerCase().includes("size guide")) {
+          foundSizeGuide = true;
+        }
+        
+        if (foundSizeGuide) {
+          extractedSizeGuide += child.outerHTML;
+          child.remove();
+        }
+      }
+      
+      if (foundSizeGuide) {
+         return { descriptionContent: doc.body.innerHTML, sizeGuideContent: extractedSizeGuide };
+      }
+    } catch (e) {
+      console.error("Error parsing description HTML", e);
+    }
+    
+    return { descriptionContent: html, sizeGuideContent: null };
+  }, [product]);
 
   useEffect(() => {
     if (import.meta.env.VITE_SHOPIFY_DOMAIN && import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN) {
@@ -238,7 +276,7 @@ function ProductDetailsPage() {
                <h3 className="font-mono text-xs tracking-[0.14em] uppercase font-bold text-black/50 mb-6 border-b border-black/10 pb-4">Description</h3>
                <div 
                  className="prose prose-sm max-w-none text-black/70 leading-relaxed"
-                 dangerouslySetInnerHTML={{ __html: product.descriptionHtml || product.description }}
+                 dangerouslySetInnerHTML={{ __html: descriptionContent }}
                />
              </div>
           </div>
@@ -257,9 +295,15 @@ function ProductDetailsPage() {
               </button>
             </div>
             <div className="p-8 overflow-y-auto bg-white/40">
-              <table className="w-full text-sm text-left">
-                <thead>
-                  <tr className="border-b border-black/10">
+              {sizeGuideContent ? (
+                <div 
+                  className="prose prose-sm max-w-none text-black/70 leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: sizeGuideContent }} 
+                />
+              ) : (
+                <table className="w-full text-sm text-left">
+                  <thead>
+                    <tr className="border-b border-black/10">
                     <th className="py-4 font-bold uppercase tracking-widest text-black/50">Size</th>
                     <th className="py-4 font-bold uppercase tracking-widest text-black/50">Chest (in)</th>
                     <th className="py-4 font-bold uppercase tracking-widest text-black/50">Waist (in)</th>
@@ -299,6 +343,7 @@ function ProductDetailsPage() {
                   </tr>
                 </tbody>
               </table>
+              )}
               <div className="mt-8 p-6 bg-brand-blue/10 rounded-2xl border border-brand-blue/20">
                 <h4 className="font-bold uppercase tracking-widest text-brand-blue mb-2 text-xs">Fit Notes</h4>
                 <p className="text-sm text-brand-blue/80 leading-relaxed">
