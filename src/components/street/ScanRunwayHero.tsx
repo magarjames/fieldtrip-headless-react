@@ -50,7 +50,7 @@ const LOOKS = [
     note: "Cream graphic knit paired with relaxed dark denim.",
     pieces: [
       { name: "Graphic Crew Sweatshirt", hue: "#ece3cc", keyword: "Graphic Crew Sweatshirt" },
-      { name: "Relaxed Dark Denim", hue: "#263045", keyword: "Denim" },
+      { name: "Longform Wide Leg Jeans – Deep Blue", hue: "#263045", keyword: "Longform Wide" },
     ]
   },
   {
