@@ -1,4 +1,4 @@
-﻿import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { useEffect, useState, useRef } from 'react';
 import { shopifyClient } from '@/lib/shopify';
 import { VivreLayout } from '@/components/northline/VivreLayout';
@@ -79,7 +79,7 @@ function ProductDetailsPage() {
       id: product.id.toString(),
       name: product.title,
       group: (product.productType || "New Arrivals"),
-      price: `GBP &pound;{parseFloat(selectedVariant?.price?.amount || '0').toFixed(2)}`,
+      price: `GBP \u00A3${parseFloat(selectedVariant?.price?.amount || '0').toFixed(2)}`,
       image: selectedVariant?.image?.src || product.images?.[0]?.src || "",
       alt: product.title,
       description: product.descriptionHtml || product.description,
