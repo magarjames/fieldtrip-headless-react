@@ -40,7 +40,7 @@ const LOOKS = [
     name: "Second skin",
     note: "Fitted white long sleeve with ink-washed wide denim.",
     pieces: [
-      { name: "Fitted Long Sleeve", hue: "#f7f7f7", keyword: "Long Sleeve" },
+      { name: "Shoreline Boat Neck Top – Women’s White", hue: "#f7f7f7", keyword: "Shoreline" },
       { name: "Longform Wide Leg Jeans – Deep Blue", hue: "#21283d", keyword: "Longform Wide" },
     ]
   },
