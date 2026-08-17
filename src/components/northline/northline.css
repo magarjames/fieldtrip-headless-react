@@ -1585,6 +1585,10 @@
   padding: 3rem 2.5rem;
   border-left: 1px solid rgba(255, 255, 255, 0.15);
   overflow-y: auto;
+  scrollbar-width: none;
+}
+.nl-dialog-glass-description::-webkit-scrollbar {
+  display: none;
 }
 
 @media (max-width: 1024px) {
