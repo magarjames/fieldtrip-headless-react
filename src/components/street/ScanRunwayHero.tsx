@@ -575,7 +575,7 @@ export function ScanRunwayHero({
                   );
                   if (matched) {
                     displayName = matched.title;
-                    productId = matched.id.split('/').pop() || "";
+                    productId = matched.handle || matched.id.split('/').pop() || "";
                   }
                 }
                 
