@@ -74,7 +74,7 @@ function ProductDetailsPage() {
       id: product.id.toString(),
       name: product.title,
       group: (product.productType || "New Arrivals"),
-      price: `GBP ${selectedVariant?.price?.amount || '0'}`,
+      price: `GBP £${parseFloat(selectedVariant?.price?.amount || '0').toFixed(2)}`,
       image: selectedVariant?.image?.src || product.images?.[0]?.src || "",
       alt: product.title,
       description: product.descriptionHtml || product.description,

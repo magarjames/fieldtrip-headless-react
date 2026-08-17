@@ -51,7 +51,7 @@ export function NorthlineLookbook() {
     id: sp.id.toString(),
     name: sp.title,
     group: (sp.productType || "New Arrivals").charAt(0).toUpperCase() + (sp.productType || "New Arrivals").slice(1),
-    price: `GBP ${sp.variants?.[0]?.price?.amount || '0'}`,
+    price: `GBP £${parseFloat(sp.variants?.[0]?.price?.amount || '0').toFixed(2)}`,
     image: sp.images?.[0]?.src || "/northline-motion/v8/chibi-still-3.webp",
     alt: sp.title,
     description: sp.vendor || "A purposeful new addition to the line.",
