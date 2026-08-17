@@ -60,9 +60,6 @@ export function NorthlineFooter() {
             <div className="nl-ticket-cell-header">COMPANY INFO // VC_CORP.DATA</div>
             <div className="nl-ticket-links">
               <Link to="/about">ABOUT US</Link>
-              <a href="#">CONTACT [HQ_SYDNEY // 13:00-18:00 AEST]</a>
-              <a href="#">CAREERS (VACANCIES: 04)</a>
-              <a href="#">PRESS/MEDIA</a>
             </div>
           </div>
 
@@ -71,7 +68,6 @@ export function NorthlineFooter() {
             <div className="nl-ticket-links">
               <Link to="/s/v8/shop">SHOP ALL</Link>
               <a href="#">NEW ARRIVALS</a>
-              <a href="#">TECH-WEAR [COLLECTIONS]</a>
               <a href="#">ACCESSORIES</a>
             </div>
           </div>
