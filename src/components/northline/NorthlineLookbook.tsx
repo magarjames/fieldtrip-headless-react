@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { shopifyClient } from "@/lib/shopify";
 import "./northline.css";
@@ -163,6 +163,39 @@ export function NorthlineLookbook() {
   }, [activeProduct, bagOpen]);
 
   const sideableImagesRef = useRef<HTMLDivElement>(null);
+
+  const { descriptionContent, sizeGuideContent } = useMemo(() => {
+      if (!activeProduct) return { descriptionContent: "", sizeGuideContent: null };
+      
+      const html = activeProduct.description || "";
+      if (typeof window === 'undefined') return { descriptionContent: html, sizeGuideContent: null };
+  
+      try {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        let foundSizeGuide = false;
+        let extractedSizeGuide = "";
+        
+        const children = Array.from(doc.body.children);
+        for (let i = 0; i < children.length; i++) {
+          const child = children[i];
+          if (!foundSizeGuide && child.textContent?.toLowerCase().includes("size guide")) {
+            foundSizeGuide = true;
+          }
+          if (foundSizeGuide) {
+            extractedSizeGuide += child.outerHTML;
+            child.remove();
+          }
+        }
+        if (foundSizeGuide) {
+           return { descriptionContent: doc.body.innerHTML, sizeGuideContent: extractedSizeGuide };
+        }
+      } catch (e) {
+        console.error("Error parsing description HTML", e);
+      }
+      return { descriptionContent: html, sizeGuideContent: null };
+    }, [activeProduct]);
+
   useEffect(() => {
     const el = sideableImagesRef.current;
     if (!el) return;
@@ -341,7 +374,13 @@ export function NorthlineLookbook() {
                     <span className="nl-dialog-option-label">PRICE</span>
                     <span className="nl-dialog-option-value">{activeProduct.price}</span>
                   </div>
-                  <p className="nl-dialog-description">{activeProduct.description}</p>
+                  <div className="nl-dialog-description" dangerouslySetInnerHTML={{ __html: descriptionContent }} />
+                  {sizeGuideContent && (
+                    <>
+                      <h4 className="nl-dialog-group" style={{ marginBottom: '0.5rem', marginTop: '1rem', border: 'none', fontSize: '0.75rem' }}>Size Guide</h4>
+                      <div className="nl-dialog-description size-guide-content" dangerouslySetInnerHTML={{ __html: sizeGuideContent }} />
+                    </>
+                  )}
                   <fieldset className="nl-dialog-option-fieldset">
                     <legend className="nl-dialog-option-label">COLOR</legend>
                     <div className="nl-option-row">

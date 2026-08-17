@@ -5,6 +5,7 @@ import {
   useEffect,
   useRef,
   useState,
+  useMemo,
 } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "@tanstack/react-router";
@@ -169,6 +170,39 @@ export function NorthlinePageV8({
   }, [activeProduct, bagOpen, mobileMenuOpen]);
 
   const sideableImagesRef = useRef<HTMLDivElement>(null);
+
+  const { descriptionContent, sizeGuideContent } = useMemo(() => {
+    if (!activeProduct) return { descriptionContent: "", sizeGuideContent: null };
+    
+    const html = activeProduct.description || "";
+    if (typeof window === 'undefined') return { descriptionContent: html, sizeGuideContent: null };
+
+    try {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
+      let foundSizeGuide = false;
+      let extractedSizeGuide = "";
+      
+      const children = Array.from(doc.body.children);
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+        if (!foundSizeGuide && child.textContent?.toLowerCase().includes("size guide")) {
+          foundSizeGuide = true;
+        }
+        if (foundSizeGuide) {
+          extractedSizeGuide += child.outerHTML;
+          child.remove();
+        }
+      }
+      if (foundSizeGuide) {
+         return { descriptionContent: doc.body.innerHTML, sizeGuideContent: extractedSizeGuide };
+      }
+    } catch (e) {
+      console.error("Error parsing description HTML", e);
+    }
+    return { descriptionContent: html, sizeGuideContent: null };
+  }, [activeProduct]);
+
   useEffect(() => {
     const el = sideableImagesRef.current;
     if (!el) return;
@@ -985,8 +1019,14 @@ export function NorthlinePageV8({
                 <h3 className="nl-dialog-group" style={{ marginBottom: '1rem', border: 'none' }}>Description</h3>
                 <div 
                   className="nl-dialog-description-long"
-                  dangerouslySetInnerHTML={{ __html: activeProduct.description }}
+                  dangerouslySetInnerHTML={{ __html: descriptionContent }}
                 />
+                {sizeGuideContent && (
+                  <>
+                     <h3 className="nl-dialog-group" style={{ marginBottom: '1rem', marginTop: '2rem', border: 'none' }}>Size Guide</h3>
+                     <div className="nl-dialog-description-long size-guide-content" dangerouslySetInnerHTML={{ __html: sizeGuideContent }} />
+                  </>
+                )}
               </div>
             </div>
             <div className="nl-dialog-glass-footer">
