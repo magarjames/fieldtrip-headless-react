@@ -11,6 +11,7 @@ interface Product {
   description: string;
   colors: string[];
   sizes: string[];
+  fits?: string[];
   images?: string[];
   rawPrice?: number;
   shopifyVariantId?: string;

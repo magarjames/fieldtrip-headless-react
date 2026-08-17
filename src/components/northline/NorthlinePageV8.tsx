@@ -36,6 +36,7 @@ type Product = {
   description: string;
   colors: string[];
   sizes: string[];
+  fits?: string[];
   shopifyVariantId?: string;
   variants?: any[];
   variantTitle?: string;
@@ -101,6 +102,7 @@ export function NorthlinePageV8({
   const [activeProduct, setActiveProduct] = useState<Product | null>(null);
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
+  const [selectedFit, setSelectedFit] = useState("");
   const { bag, bagOpen, setBagOpen, isCheckingOut, addToBag: contextAddToBag, removeFromBag, checkout } = useVivre();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -313,6 +315,8 @@ export function NorthlinePageV8({
       ?.values as unknown as any[])?.map((v: any) => typeof v === 'object' && v !== null ? v.value : v) || ["Default"],
     sizes: (sp.options?.find((o: any) => o.name.toLowerCase() === 'size')
       ?.values as unknown as any[])?.map((v: any) => typeof v === 'object' && v !== null ? v.value : v) || ["One Size"],
+    fits: (sp.options?.find((o: any) => o.name.toLowerCase() === 'fit')
+      ?.values as unknown as any[])?.map((v: any) => typeof v === 'object' && v !== null ? v.value : v) || [],
     shopifyVariantId: (sp.variants?.[0] as any)?.id,
     variants: sp.variants,
     images: sp.images?.map((img: any) => img.src) || [sp.images?.[0]?.src || flatlay]
@@ -523,18 +527,20 @@ export function NorthlinePageV8({
     setActiveProduct(product);
     setSelectedColor(product.colors[0]);
     setSelectedSize(product.sizes[0]);
+    setSelectedFit(product.fits?.[0] || "");
   }
 
   function addToBag(product: Product) {
     let finalVariantId = product.shopifyVariantId;
     
     // Resolve the selected variant ID if we have variants and selections
-    if (product.variants && (selectedSize || selectedColor)) {
+    if (product.variants && (selectedSize || selectedColor || selectedFit)) {
       const matched = product.variants.find((v: any) => {
         return v.selectedOptions?.every((opt: any) => {
           const name = opt.name.toLowerCase();
           if (name === 'size' && selectedSize) return opt.value === selectedSize;
           if ((name === 'color' || name === 'colour') && selectedColor) return opt.value === selectedColor;
+          if (name === 'fit' && selectedFit) return opt.value === selectedFit;
           return true; // Ignore options we don't track
         });
       });
@@ -934,6 +940,23 @@ export function NorthlinePageV8({
                       ))}
                     </div>
                   </fieldset>
+                  {activeProduct.fits && activeProduct.fits.length > 0 && activeProduct.fits[0] !== 'Default Title' && (
+                    <fieldset className="nl-dialog-option-fieldset">
+                      <legend className="nl-dialog-option-label">FIT</legend>
+                      <div className="nl-option-row">
+                        {activeProduct.fits.map((fit) => (
+                          <button
+                            key={fit}
+                            type="button"
+                            className={selectedFit === fit ? "is-selected" : ""}
+                            onClick={() => setSelectedFit(fit)}
+                          >
+                            {fit}
+                          </button>
+                        ))}
+                      </div>
+                    </fieldset>
+                  )}
                   <fieldset className="nl-dialog-option-fieldset">
                     <legend className="nl-dialog-option-label">SIZE</legend>
                     <div className="nl-option-row">
