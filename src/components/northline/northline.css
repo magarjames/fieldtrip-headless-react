@@ -3475,7 +3475,7 @@
 
 .nl-ticket-input-group button {
   background: var(--ticket-ink);
-  color: var(--nl-white);
+  color: #fff;
   border: none;
   padding: 0 1.5rem;
   font-family: var(--ticket-mono);
