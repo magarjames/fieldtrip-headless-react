@@ -20,6 +20,7 @@ import { shopifyClient } from "@/lib/shopify";
 import type { Product as ShopifyProduct } from "shopify-buy";
 import { NorthlineScrollFilm } from "@/components/northline/NorthlineScrollFilm";
 import { NorthlineFooter } from "@/components/northline/NorthlineFooter";
+import { FoldBackdropV8 } from "@/components/street/FoldBackdropV8";
 import detailBlue from "@/assets/northline/detail-blue.jpg";
 import flatlay from "@/assets/northline/flatlay.jpg";
 import heroDawn from "@/assets/northline/hero-dawn.png";
@@ -874,7 +875,14 @@ export function NorthlinePageV8({
 
       </main>
 
-      <NorthlineFooter />
+      <div style={{ position: 'relative', overflow: 'hidden', backgroundColor: '#ffffff' }}>
+        <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+          <FoldBackdropV8 />
+        </div>
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <NorthlineFooter />
+        </div>
+      </div>
 
       {activeProduct && typeof document !== "undefined" && createPortal(
         <div className="nl-layer is-immersive">
