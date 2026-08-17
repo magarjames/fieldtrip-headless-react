@@ -58,7 +58,7 @@ const LOOKS = [
     name: "After hours",
     note: "Oversized black graphic tee with faded wide-leg jeans.",
     pieces: [
-      { name: "Oversized Graphic Tee", hue: "#1c1c1c", keyword: "Tee" },
+      { name: "Black Boxy Tee", hue: "#1c1c1c", keyword: "Black Boxy Tee" },
       { name: "Razorcut Ripped Wide Leg Jeans – Dark Blue", hue: "#748fba", keyword: "Razorcut" },
     ]
   },
