@@ -3506,6 +3506,9 @@
   font-weight: 600;
 }
 
+.size-guide-content {
+  overflow-x: auto;
+}
 .size-guide-content table {
   width: 100%;
   text-align: left;
@@ -3513,19 +3516,32 @@
   border-collapse: collapse;
 }
 .size-guide-content th {
-  padding: 1rem 0;
+  padding: 1rem 1rem 1rem 0;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: rgb(0 0 0 / 0.5);
   border-bottom: 1px solid rgb(0 0 0 / 0.1);
+  white-space: nowrap;
 }
 .size-guide-content td {
-  padding: 1rem 0;
+  padding: 1rem 1rem 1rem 0;
   font-weight: 500;
   border-bottom: 1px solid rgb(0 0 0 / 0.05);
+  white-space: nowrap;
 }
 .size-guide-content p {
   margin-bottom: 1rem;
 }
+
+/* Dark mode overrides for Quick Look */
+.nl-dialog-glass-content .size-guide-content th {
+  color: rgba(255, 255, 255, 0.7);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+.nl-dialog-glass-content .size-guide-content td {
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 
