@@ -68,7 +68,7 @@ const LOOKS = [
     note: "Grey ribbed henley layered over washed wide denim.",
     pieces: [
       { name: "Grey Ribbed Henley", hue: "#878a8f", keyword: "Henley" },
-      { name: "Wide-Leg Denim Jeans", hue: "#6a82a6", keyword: "Wide-Leg Denim" },
+      { name: "Overset Wide Leg Jeans – Navy", hue: "#6a82a6", keyword: "Overset" },
     ]
   },
   {
