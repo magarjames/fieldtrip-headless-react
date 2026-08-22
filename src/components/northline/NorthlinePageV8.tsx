@@ -195,7 +195,10 @@ export function NorthlinePageV8({
         }
       }
       if (foundSizeGuide) {
-         return { descriptionContent: doc.body.innerHTML, sizeGuideContent: extractedSizeGuide };
+         return { 
+           descriptionContent: doc.body.innerHTML, 
+           sizeGuideContent: extractedSizeGuide.replace(/APPROX\s*/gi, '') 
+         };
       }
     } catch (e) {
       console.error("Error parsing description HTML", e);
