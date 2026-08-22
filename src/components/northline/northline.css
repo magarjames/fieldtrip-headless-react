@@ -1595,10 +1595,13 @@
   .nl-dialog-glass-content {
     flex-direction: column;
   }
+  .nl-dialog-glass-left,
   .nl-dialog-glass-right,
   .nl-dialog-glass-description {
     border-left: none;
     border-top: 1px solid rgba(255, 255, 255, 0.15);
+    flex: none;
+    overflow: visible;
   }
 }
 
