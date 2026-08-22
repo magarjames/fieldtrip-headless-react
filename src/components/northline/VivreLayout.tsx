@@ -279,7 +279,7 @@ export function VivreLayout({ children }: { children: React.ReactNode }) {
           </div>
           
           <aside
-            className="nl-bag-drawer max-md:!h-auto max-md:!pt-6 max-md:!pb-10 max-md:self-start max-md:rounded-t-none max-md:rounded-b-3xl"
+            className="nl-bag-drawer max-md:!h-auto max-md:!pt-6 max-md:!pb-4 max-md:self-start max-md:rounded-t-none max-md:rounded-b-3xl"
             role="dialog"
             aria-modal="true"
             aria-labelledby="search-title"
@@ -348,9 +348,11 @@ export function VivreLayout({ children }: { children: React.ReactNode }) {
               />
             </div>
 
-            <div style={{ flex: 1, padding: '1.5rem 0' }}>
-              <p className="nl-empty-bag" style={{ color: 'rgba(0,0,0,0.5)' }}>Type above to search our catalog.</p>
-            </div>
+            {searchQuery.length === 0 && (
+              <div className="md:flex-1 py-2 md:py-6">
+                <p className="nl-empty-bag !mt-0" style={{ color: 'rgba(0,0,0,0.5)', fontSize: '0.9rem' }}>Type above to search our catalog.</p>
+              </div>
+            )}
           </aside>
         </div>, document.body
       )}
