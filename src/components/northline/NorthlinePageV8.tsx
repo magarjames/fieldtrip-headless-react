@@ -1025,10 +1025,7 @@ export function NorthlinePageV8({
                   dangerouslySetInnerHTML={{ __html: descriptionContent }}
                 />
                 {sizeGuideContent && (
-                  <>
-                     <h3 className="nl-dialog-group" style={{ marginBottom: '1rem', marginTop: '2rem', border: 'none' }}>Size Guide</h3>
-                     <div className="nl-dialog-description-long size-guide-content" dangerouslySetInnerHTML={{ __html: sizeGuideContent }} />
-                  </>
+                  <div className="nl-dialog-description-long size-guide-content" style={{ marginTop: '2rem' }} dangerouslySetInnerHTML={{ __html: sizeGuideContent }} />
                 )}
               </div>
             </div>
