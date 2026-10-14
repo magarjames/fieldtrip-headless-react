@@ -4,10 +4,19 @@ import { Check, Play, Pause } from "lucide-react";
 import { useVivre } from "@/components/northline/VivreContext";
 import "@/components/product/lenticular.css";
 
-// 7 Real Model Scan Looks available in public/fieldtrip
+// 7 Real Model Scan Looks matching Runway Hero in exact order
+export interface HeroLookPiece {
+  name: string;
+  keyword: string;
+  hue: string;
+  handle: string;
+}
+
 export interface ModelScanLook {
   id: string;
+  lookNumber: string;
   name: string;
+  heroName: string;
   gender: "m" | "f";
   outfit: string;
   defaultCategory: string;
@@ -15,34 +24,98 @@ export interface ModelScanLook {
   specHardware: string;
   specSilhouette: string;
   specOrigin: string;
+  printTitle: string;
+  printDesc: string;
+  printImage: string;
+  pieces: HeroLookPiece[];
 }
 
 export const MODEL_SCAN_LOOKS: ModelScanLook[] = [
   {
-    id: "m3",
-    name: "Look M3 · Suede Shift",
-    gender: "m",
-    outfit: "Sand suede jacket over striped poplin and 15oz raw selvedge trousers",
-    defaultCategory: "Outerwear & Jackets",
-    specGSM: "Heavyweight 420 GSM Sanded Calf Suede with Cotton Twill Lining",
-    specHardware: "Custom Matte Gunmetal Riveted Snaps & YKK #8 Metal Zipper",
-    specSilhouette: "Structured Boxy Crop with Articulated Bi-Swing Back",
-    specOrigin: "Tanned in Tuscany, Tailored in Small Batches in London",
-  },
-  {
     id: "f4",
-    name: "Look F4 · Skyline Zip",
+    lookNumber: "01",
+    name: "Look 01 · Skyline Zip",
+    heroName: "Skyline zip",
     gender: "f",
     outfit: "Pale blue double-zip hoodie with washed charcoal wide-leg denim",
     defaultCategory: "Hoodies & Fleece",
     specGSM: "480 GSM 100% Organic Heavy French Loopback Terry",
-    specHardware: "Two-Way Matte Nickel Raccagni Double Zip with Pull Tapes",
-    specSilhouette: "Relaxed Cocoon Dropped Shoulder with Darted Hood",
-    specOrigin: "Knitted in Wakayama, Japan. Assembled in Portugal",
+    specHardware: "Two-Way Matte Nickel Raccagni Double Zip with Extended Pull Tapes",
+    specSilhouette: "Relaxed Cocoon Dropped Shoulder with Darted Dual-Layer Hood",
+    specOrigin: "Knitted in Wakayama, Japan. Tailored in Small Batches in Portugal",
+    printTitle: "Wakayama Loopback Terry Weave & Raccagni Zipper Track",
+    printDesc: "High-density 480 GSM French terry with brushed inner pile, paired with custom nickel-plated teeth.",
+    printImage: "/brand/northline-detail-blue.jpg",
+    pieces: [
+      { name: "Skyline Zip Hoodie", keyword: "Hoodie", hue: "#9fb9c9", handle: "skyline-zip-hoodie" },
+      { name: "Washed Charcoal Denim", keyword: "Denim", hue: "#424246", handle: "washed-charcoal-denim" },
+    ],
+  },
+  {
+    id: "f1",
+    lookNumber: "02",
+    name: "Look 02 · Mouth Tee",
+    heroName: "Mouth tee",
+    gender: "f",
+    outfit: "White silkscreen printed tee with relaxed olive utility cargo trousers",
+    defaultCategory: "Graphic & Bottoms",
+    specGSM: "280 GSM Ring-Spun Compact Cotton with Discharge Water-Based Print",
+    specHardware: "Heavy Cotton Herringbone Pocket Bags & Mil-Spec Anodized Snaps",
+    specSilhouette: "Relaxed Dropped Fit with Articulated Knee Pleats & Cinch Hems",
+    specOrigin: "Constructed in Osaka, Japan",
+    printTitle: "Original Silkscreen Mouth Graphic Discharge Print",
+    printDesc: "Hand-pulled water-based silkscreen that bleaches into the cotton yarn, ensuring zero hand-feel stiffness.",
+    printImage: "/brand/vivre-tag.jpg",
+    pieces: [
+      { name: "Mouth Tee", keyword: "Tee", hue: "#f2f2f2", handle: "mouth-tee" },
+      { name: "Olive Cargo Trousers", keyword: "Cargo", hue: "#575e46", handle: "olive-cargo-trousers" },
+    ],
+  },
+  {
+    id: "f2",
+    lookNumber: "03",
+    name: "Look 03 · Second Skin",
+    heroName: "Second skin",
+    gender: "f",
+    outfit: "Fitted shoreline boat-neck top with deep ink washed wide denim",
+    defaultCategory: "Tops & Tunics",
+    specGSM: "240 GSM Modal-Cotton Blend with 4-Way Tactile Elasticity",
+    specHardware: "Clean Bonded Hem Construction with Laser-Cut Edge Finishes",
+    specSilhouette: "Fitted Ergonomic Boat-Neck with High Lateral Armholes",
+    specOrigin: "Knitted and Crafted in Northern Portugal",
+    printTitle: "Shoreline 240 GSM Modal-Cotton Micro-Rib Texture",
+    printDesc: "Silky tactile modal ribbing that hugs contours without compression, breathable and shape-retaining.",
+    printImage: "/brand/northline-materials.jpg",
+    pieces: [
+      { name: "Shoreline Boat Neck Top – Women’s White", keyword: "Shoreline", hue: "#f7f7f7", handle: "shoreline-boat-neck-top" },
+      { name: "Longform Wide Leg Jeans – Deep Blue", keyword: "Longform Wide", hue: "#21283d", handle: "longform-wide-leg-jeans" },
+    ],
+  },
+  {
+    id: "f3",
+    lookNumber: "04",
+    name: "Look 04 · Archive Layer",
+    heroName: "Archive layer",
+    gender: "f",
+    outfit: "Cream graphic crew sweater paired with relaxed dark indigo denim",
+    defaultCategory: "Sweaters & Knits",
+    specGSM: "520 GSM 7-Gauge Pure Shetland Wool Intarsia Knit",
+    specHardware: "Tubular Ribbed Cuffs, Collar & Hem with Double Linked Seams",
+    specSilhouette: "Classic Boxy Slouch with Soft Dropped Sleeves",
+    specOrigin: "Spun & Loomed on the Scottish Borders",
+    printTitle: "Archive 7-Gauge Shetland Wool Intarsia Graphic Motif",
+    printDesc: "Multi-yarn intarsia structure with contrasting heather tones and tight tension needle loops.",
+    printImage: "/brand/northline-fabric-landscape.jpg",
+    pieces: [
+      { name: "Graphic Crew Sweatshirt", keyword: "Graphic Crew Sweatshirt", hue: "#ece3cc", handle: "graphic-crew-sweatshirt" },
+      { name: "Longform Wide Leg Jeans – Deep Blue", keyword: "Longform Wide", hue: "#263045", handle: "longform-wide-leg-jeans" },
+    ],
   },
   {
     id: "m1",
-    name: "Look M1 · After Hours",
+    lookNumber: "05",
+    name: "Look 05 · After Hours",
+    heroName: "After hours",
     gender: "m",
     outfit: "Oversized washed black boxy tee with razorcut ripped wide-leg denim",
     defaultCategory: "Tees & Tops",
@@ -50,52 +123,114 @@ export const MODEL_SCAN_LOOKS: ModelScanLook[] = [
     specHardware: "Bound 1.25\" Ribbed Collar with Blind-Stitched Cuffs",
     specSilhouette: "Oversized Square Boxy Cut with Forward Shoulder Seams",
     specOrigin: "Milled in South Carolina, Garment Dyed in Los Angeles",
+    printTitle: "After Hours Typographic Silkscreen & 300 GSM Enzyme Wash",
+    printDesc: "Heavy vintage mineral wash giving broken-in softness with sharp high-density typographic chest screen.",
+    printImage: "/brand/vivre-black.jpg",
+    pieces: [
+      { name: "Black Boxy Tee", keyword: "Black Boxy Tee", hue: "#1c1c1c", handle: "black-boxy-tee" },
+      { name: "Razorcut Ripped Wide Leg Jeans – Dark Blue", keyword: "Razorcut", hue: "#748fba", handle: "razorcut-ripped-wide-leg-jeans" },
+    ],
   },
   {
     id: "m2",
-    name: "Look M2 · Layered Henley",
+    lookNumber: "06",
+    name: "Look 06 · Layered Henley",
+    heroName: "Layered henley",
     gender: "m",
-    outfit: "Grey ribbed thermal henley layered over washed wide denim",
+    outfit: "Grey ribbed thermal henley layered over overset navy wide denim",
     defaultCategory: "Thermal & Knits",
     specGSM: "360 GSM 100% Merino-Cotton Double Face Rib Knit",
-    specHardware: "Natural Corozo Nut Matte Buttons & Reinforced Placket",
+    specHardware: "Natural Turned Corozo Nut Matte Buttons & Reinforced Placket",
     specSilhouette: "Relaxed Straight Silhouette with Extended Rib Cuffs",
     specOrigin: "Spun in Biella, Italy. Finished in Leicestershire",
+    printTitle: "Double-Face Merino Waffle-Rib & Turned Corozo Button",
+    printDesc: "Two-ply thermal matrix designed to trap warm air with matte polished natural corozo fastenings.",
+    printImage: "/brand/northline-flatlay.jpg",
+    pieces: [
+      { name: "Grey Ribbed Henley", keyword: "Henley", hue: "#878a8f", handle: "grey-ribbed-henley" },
+      { name: "Overset Wide Leg Jeans – Navy", keyword: "Overset", hue: "#6a82a6", handle: "overset-wide-leg-jeans" },
+    ],
   },
   {
-    id: "f2",
-    name: "Look F2 · Second Skin",
-    gender: "f",
-    outfit: "Fitted shoreline boat-neck top with deep ink washed wide denim",
-    defaultCategory: "Tops & Bases",
-    specGSM: "240 GSM Modal-Cotton Blend with 4-Way Tactile Elasticity",
-    specHardware: "Clean Bonded Hem Construction with Laser-Cut Edges",
-    specSilhouette: "Fitted Ergonomic Boat-Neck with High Lateral Armholes",
-    specOrigin: "Knitted and Crafted in Northern Portugal",
-  },
-  {
-    id: "f3",
-    name: "Look F3 · Archive Knit",
-    gender: "f",
-    outfit: "Cream graphic crew sweater paired with relaxed dark indigo denim",
-    defaultCategory: "Knitwear",
-    specGSM: "520 GSM 7-Gauge Pure Shetland Wool Intarsia Knit",
-    specHardware: "Tubular Ribbed Cuffs, Collar & Hem with Double Linked Seams",
-    specSilhouette: "Classic Boxy Slouch with Soft Dropped Sleeves",
-    specOrigin: "Spun & Loomed on the Scottish Borders",
-  },
-  {
-    id: "f1",
-    name: "Look F1 · Mouth Graphic",
-    gender: "f",
-    outfit: "White silkscreen printed tee with relaxed olive utility cargo trousers",
-    defaultCategory: "Graphic & Bottoms",
-    specGSM: "280 GSM Ring-Spun Compact Cotton with Discharge Water-Based Print",
-    specHardware: "Heavy Cotton Herringbone Pocket Bags & Mil-Spec Snaps",
-    specSilhouette: "Relaxed Dropped Fit with Articulated Knee Pleats",
-    specOrigin: "Constructed in Osaka, Japan",
+    id: "m3",
+    lookNumber: "07",
+    name: "Look 07 · Suede Shift",
+    heroName: "Suede shift",
+    gender: "m",
+    outfit: "Sand suede jacket over striped poplin and 15oz raw selvedge trousers",
+    defaultCategory: "Outerwear & Jackets",
+    specGSM: "Heavyweight 420 GSM Sanded Calf Suede with Cotton Twill Lining",
+    specHardware: "Custom Matte Gunmetal Riveted Snaps & YKK #8 Metal Zipper",
+    specSilhouette: "Structured Boxy Crop with Articulated Bi-Swing Back",
+    specOrigin: "Tanned in Tuscany, Tailored in Small Batches in London",
+    printTitle: "Tuscan Sanded Calf Suede Nappe & Gunmetal Rivet",
+    printDesc: "Velvety hand-buffed calf suede with natural nap variance, reinforced with matte oxidized hardware.",
+    printImage: "/brand/northline-materials.jpg",
+    pieces: [
+      { name: "Sand Suede Jacket", keyword: "Jacket", hue: "#c9b699", handle: "sand-suede-jacket" },
+      { name: "Ironwork 15oz Raw Denim Jeans – Black", keyword: "Ironwork", hue: "#2b2b2b", handle: "ironwork-15oz-raw-denim-jeans" },
+    ],
   },
 ];
+
+export function getLookForProduct(product: any, productId?: string): ModelScanLook {
+  // 1. Direct lookId match
+  if (product?.lookId) {
+    const found = MODEL_SCAN_LOOKS.find((l) => l.id === product.lookId);
+    if (found) return found;
+  }
+
+  const pId = (productId || "").toLowerCase();
+  const title = (product?.title || "").toLowerCase();
+  const handle = (product?.handle || "").toLowerCase();
+  const s = `${pId} ${title} ${handle}`;
+
+  // 2. Look 01 (f4) — Skyline zip & Washed charcoal denim
+  if (s.includes("skyline") || s.includes("f4") || s.includes("charcoal")) {
+    return MODEL_SCAN_LOOKS[0]; // f4
+  }
+
+  // 3. Look 02 (f1) — Mouth tee & Olive cargo
+  if (s.includes("mouth") || s.includes("f1") || s.includes("olive") || s.includes("cargo")) {
+    return MODEL_SCAN_LOOKS[1]; // f1
+  }
+
+  // 4. Look 03 (f2) — Shoreline boat neck top & Longform wide jeans
+  if (s.includes("shoreline") || s.includes("boat") || s.includes("second-skin") || s.includes("f2")) {
+    return MODEL_SCAN_LOOKS[2]; // f2
+  }
+
+  // 5. Look 04 (f3) — Graphic crew sweatshirt & Archive layer
+  if (s.includes("graphic-crew") || s.includes("archive") || s.includes("f3") || s.includes("crew-sweatshirt")) {
+    return MODEL_SCAN_LOOKS[3]; // f3
+  }
+
+  // 6. Look 05 (m1) — Black boxy tee & Razorcut ripped wide jeans
+  if (s.includes("razorcut") || s.includes("after-hours") || s.includes("m1") || (s.includes("boxy") && s.includes("tee")) || s.includes("black-boxy")) {
+    return MODEL_SCAN_LOOKS[4]; // m1
+  }
+
+  // 7. Look 06 (m2) — Grey ribbed henley & Overset wide jeans
+  if (s.includes("henley") || s.includes("m2") || s.includes("overset")) {
+    return MODEL_SCAN_LOOKS[5]; // m2
+  }
+
+  // 8. Look 07 (m3) — Sand suede jacket & Ironwork 15oz denim
+  if (s.includes("suede") || s.includes("m3") || s.includes("ironwork") || s.includes("15oz")) {
+    return MODEL_SCAN_LOOKS[6]; // m3
+  }
+
+  // Category fallback heuristics
+  if (s.includes("hoodie") || s.includes("fleece")) return MODEL_SCAN_LOOKS[0]; // f4
+  if (s.includes("knit") || s.includes("sweater")) return MODEL_SCAN_LOOKS[3]; // f3
+  if (s.includes("tee") || s.includes("shirt")) return MODEL_SCAN_LOOKS[4]; // m1
+  if (s.includes("jacket") || s.includes("coat") || s.includes("outerwear")) return MODEL_SCAN_LOOKS[6]; // m3
+  if (s.includes("denim") || s.includes("jeans") || s.includes("pant") || s.includes("trouser")) return MODEL_SCAN_LOOKS[0]; // f4
+
+  // Deterministic fallback based on id length
+  const idx = Math.abs((productId || "p").split("").reduce((acc, c) => acc + c.charCodeAt(0), 0)) % MODEL_SCAN_LOOKS.length;
+  return MODEL_SCAN_LOOKS[idx];
+}
 
 // 4 Lenticular Angles mapping: Front (a), Three-quarter (b), Profile (c), Back (e)
 export const LENTICULAR_ANGLES = [
@@ -113,39 +248,24 @@ export interface LenticularProductProps {
 export function LenticularProductPage({ product, productId }: LenticularProductProps) {
   const { addToBag, bag, setBagOpen } = useVivre();
 
-  // Determine look model based on product title/category or allow override
-  const initialLook = useMemo(() => {
-    const title = (product?.title || productId || "").toLowerCase();
-    const type = (product?.productType || "").toLowerCase();
-
-    if (title.includes("jacket") || title.includes("suede") || title.includes("coat") || type.includes("outerwear")) {
-      return MODEL_SCAN_LOOKS[0]; // m3
-    }
-    if (title.includes("hoodie") || title.includes("zip") || title.includes("sweatshirt") || type.includes("fleece")) {
-      return MODEL_SCAN_LOOKS[1]; // f4
-    }
-    if (title.includes("tee") || title.includes("shirt") || title.includes("boxy") || type.includes("tee")) {
-      return MODEL_SCAN_LOOKS[2]; // m1
-    }
-    if (title.includes("henley") || title.includes("thermal") || title.includes("ribbed")) {
-      return MODEL_SCAN_LOOKS[3]; // m2
-    }
-    if (title.includes("boat") || title.includes("top") || title.includes("shoreline")) {
-      return MODEL_SCAN_LOOKS[4]; // f2
-    }
-    if (title.includes("knit") || title.includes("crew") || title.includes("sweater")) {
-      return MODEL_SCAN_LOOKS[5]; // f3
-    }
-    if (title.includes("cargo") || title.includes("trouser") || title.includes("denim") || title.includes("jeans")) {
-      return MODEL_SCAN_LOOKS[6]; // f1
-    }
-    // Deterministic fallback based on id length
-    const idx = Math.abs((productId || "p").split("").reduce((acc, c) => acc + c.charCodeAt(0), 0)) % MODEL_SCAN_LOOKS.length;
-    return MODEL_SCAN_LOOKS[idx];
-  }, [product, productId]);
-
+  // Accurately determine Runway Hero look model based on product
+  const initialLook = useMemo(() => getLookForProduct(product, productId), [product, productId]);
   const [activeLook, setActiveLook] = useState<ModelScanLook>(initialLook);
   const [activeAngleIdx, setActiveAngleIdx] = useState(0);
+
+  // Synchronize active look whenever product or route param updates
+  useEffect(() => {
+    setActiveLook(getLookForProduct(product, productId));
+  }, [product, productId]);
+
+  // Find companion piece in this Runway Hero look
+  const companionPiece = useMemo(() => {
+    const currentTitle = (product?.title || "").toLowerCase();
+    const currentHandle = (product?.handle || productId || "").toLowerCase();
+    return activeLook.pieces?.find(
+      (p) => !currentTitle.includes(p.name.toLowerCase()) && !currentHandle.includes(p.handle.toLowerCase())
+    );
+  }, [activeLook, product, productId]);
 
   // E-commerce state
   const colors = (product as any)?.options?.find((o: any) => o.name.toLowerCase() === 'color' || o.name.toLowerCase() === 'colour')?.values.map((v: any) => v.value) || ["Default"];
@@ -464,15 +584,26 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
           <div className="ln-hero-left">
             <div className="ln-product-type-pill">
               <span className="ln-m" style={{ color: "var(--ln-clay)", fontWeight: 700 }}>
-                ● DROP 001 // LENTICULAR SPEC
+                ● DROP 001 // RUNWAY HERO
               </span>
               <span style={{ opacity: 0.3 }}>/</span>
-              <span className="ln-m">{product?.productType || "Outerwear"}</span>
+              <span className="ln-m">LOOK {activeLook.lookNumber}</span>
+              <span style={{ opacity: 0.3 }}>/</span>
+              <span className="ln-m">{product?.productType || activeLook.defaultCategory}</span>
             </div>
 
             <h1 className="ln-hero-title">
-              {product?.title || "Vivre Sand Suede Jacket"}
+              {product?.title || activeLook.pieces[0]?.name || "Vivre Runway Garment"}
             </h1>
+
+            <div className="ln-hero-look-spec-bar">
+              <span className="ln-m" style={{ color: "var(--ln-ink)", fontWeight: 700, fontSize: "11px" }}>
+                RUNWAY SPEC //
+              </span>
+              <span className="ln-m" style={{ color: "var(--ln-ink-muted)", fontSize: "11px" }}>
+                {activeLook.outfit}
+              </span>
+            </div>
 
             <p className="ln-hero-desc">
               {cleanDescription}
@@ -483,9 +614,23 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
               <span className="ln-m" style={{ opacity: 0.7 }}>Inclusive of duty &amp; taxes</span>
             </div>
 
+            {/* Complete The Runway Look Pairing Card */}
+            {companionPiece && (
+              <div className="ln-hero-companion-box">
+                <span className="ln-m" style={{ color: "var(--ln-clay)", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em" }}>
+                  RUNWAY OUTFIT PAIRING //
+                </span>
+                <Link to={`/products/${companionPiece.handle}`} className="ln-hero-companion-link">
+                  <div className="ln-companion-swatch" style={{ backgroundColor: companionPiece.hue }} />
+                  <span className="ln-companion-name">{companionPiece.name}</span>
+                  <span className="ln-companion-arrow">→</span>
+                </Link>
+              </div>
+            )}
+
             <div style={{ display: "flex", gap: "1.5rem", alignItems: "center", marginTop: "2rem" }}>
               <a href="#ln-views" className="ln-m" style={{ textDecoration: "underline", color: "var(--ln-ink)", fontWeight: 700 }}>
-                Four views ↓
+                Four views &amp; print ↓
               </a>
               <a href="#ln-specs" className="ln-m" style={{ textDecoration: "underline", color: "var(--ln-ink-muted)" }}>
                 Specifications ↓
@@ -733,10 +878,10 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
       {/* Section 02: Four Views, One Print Gallery */}
       <section id="ln-views" className="ln-gallery-section">
         <p className="ln-gallery-title ln-up">
-          Four views, one garment.
+          Four views, one print.
         </p>
-        <p style={{ color: "var(--ln-ink-soft)", maxWidth: "44ch", marginTop: "0.8rem", fontSize: "15px" }}>
-          Captured in our 360-degree scan chamber. Move your cursor across the card above to walk round the piece in physical motion, or click any angle below.
+        <p style={{ color: "var(--ln-ink-soft)", maxWidth: "52ch", marginTop: "0.8rem", fontSize: "15px" }}>
+          Captured in our 360-degree scan chamber. Move your cursor across the card above to rotate in physical motion, or inspect the 4 orthogonal views and macro textile print below.
         </p>
 
         <div className="ln-gallery-grid">
@@ -761,6 +906,27 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
               </figcaption>
             </figure>
           ))}
+
+          {/* 5th Card: The One Print / Textile Macro View */}
+          <figure
+            key="print-detail"
+            className="ln-thumb ln-thumb--print ln-up"
+          >
+            <div className="ln-thumb-wrap">
+              <img
+                src={activeLook.printImage}
+                alt={`${product?.title || "Garment"} ${activeLook.printTitle}`}
+                loading="lazy"
+              />
+              <span className="ln-print-chip">MACRO PRINT</span>
+            </div>
+            <figcaption className="ln-thumb-caption">
+              <span className="ln-m" style={{ fontWeight: 700, color: "var(--ln-clay)" }}>
+                05 // PRINT &amp; WEAVE
+              </span>
+              <span className="ln-m" style={{ fontSize: "10px" }}>Macro 1:1</span>
+            </figcaption>
+          </figure>
         </div>
       </section>
 

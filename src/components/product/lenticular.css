@@ -114,6 +114,74 @@
   color: var(--ln-ink);
 }
 
+.ln-hero-look-spec-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 14px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  max-width: 42ch;
+}
+
+.ln-hero-companion-box {
+  margin-top: 24px;
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 10px 24px -6px rgba(0, 0, 0, 0.04);
+  max-width: 38ch;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ln-hero-companion-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--ln-ink);
+  font-family: var(--ln-sans);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: -0.01em;
+  transition: all 0.2s var(--ln-ease);
+}
+.ln-hero-companion-link:hover {
+  color: var(--ln-clay);
+  transform: translateX(2px);
+}
+
+.ln-companion-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.ln-companion-name {
+  flex-grow: 1;
+}
+
+.ln-companion-arrow {
+  color: var(--ln-clay);
+  font-weight: 900;
+  transition: transform 0.2s ease;
+}
+.ln-hero-companion-link:hover .ln-companion-arrow {
+  transform: translateX(3px);
+}
+
 /* ==========================================================================
    Center Column: 3D Lenticular Card Stage
    ========================================================================== */
@@ -649,9 +717,21 @@
 
 .ln-gallery-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
   margin-top: 40px;
+}
+
+@media (max-width: 1200px) {
+  .ln-gallery-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .ln-gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .ln-thumb {
@@ -664,6 +744,7 @@
 }
 
 .ln-thumb-wrap {
+  position: relative;
   aspect-ratio: 3/4;
   overflow: hidden;
   border-radius: 18px;
@@ -673,6 +754,24 @@
   border: 1px solid rgba(255, 255, 255, 0.65);
   box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.85);
   transition: box-shadow 0.3s var(--ln-ease);
+}
+
+.ln-print-chip {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(16, 17, 20, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ffffff;
+  font-family: var(--ln-mono);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 .ln-thumb:hover .ln-thumb-wrap {
   box-shadow: 0 24px 48px -10px rgba(0, 0, 0, 0.14), inset 0 1px 1px rgba(255, 255, 255, 1);

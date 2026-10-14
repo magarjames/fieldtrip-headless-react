@@ -22,8 +22,8 @@ const LOOKS = [
     name: "Skyline zip",
     note: "Pale blue zip hoodie with washed charcoal wide-leg denim.",
     pieces: [
-      { name: "Skyline Zip Hoodie", hue: "#9fb9c9", keyword: "Hoodie" },
-      { name: "Washed Charcoal Denim", hue: "#424246", keyword: "Denim" },
+      { name: "Skyline Zip Hoodie", hue: "#9fb9c9", keyword: "Hoodie", handle: "skyline-zip-hoodie" },
+      { name: "Washed Charcoal Denim", hue: "#424246", keyword: "Denim", handle: "washed-charcoal-denim" },
     ]
   },
   {
@@ -31,8 +31,8 @@ const LOOKS = [
     name: "Mouth tee",
     note: "White mouth-print tee with relaxed olive cargo trousers.",
     pieces: [
-      { name: "Mouth Tee", hue: "#f2f2f2", keyword: "Tee" },
-      { name: "Olive Cargo Trousers", hue: "#575e46", keyword: "Cargo" },
+      { name: "Mouth Tee", hue: "#f2f2f2", keyword: "Tee", handle: "mouth-tee" },
+      { name: "Olive Cargo Trousers", hue: "#575e46", keyword: "Cargo", handle: "olive-cargo-trousers" },
     ]
   },
   {
@@ -40,8 +40,8 @@ const LOOKS = [
     name: "Second skin",
     note: "Fitted white long sleeve with ink-washed wide denim.",
     pieces: [
-      { name: "Shoreline Boat Neck Top – Women’s White", hue: "#f7f7f7", keyword: "Shoreline" },
-      { name: "Longform Wide Leg Jeans – Deep Blue", hue: "#21283d", keyword: "Longform Wide" },
+      { name: "Shoreline Boat Neck Top – Women’s White", hue: "#f7f7f7", keyword: "Shoreline", handle: "shoreline-boat-neck-top" },
+      { name: "Longform Wide Leg Jeans – Deep Blue", hue: "#21283d", keyword: "Longform Wide", handle: "longform-wide-leg-jeans" },
     ]
   },
   {
@@ -49,8 +49,8 @@ const LOOKS = [
     name: "Archive layer",
     note: "Cream graphic knit paired with relaxed dark denim.",
     pieces: [
-      { name: "Graphic Crew Sweatshirt", hue: "#ece3cc", keyword: "Graphic Crew Sweatshirt" },
-      { name: "Longform Wide Leg Jeans – Deep Blue", hue: "#263045", keyword: "Longform Wide" },
+      { name: "Graphic Crew Sweatshirt", hue: "#ece3cc", keyword: "Graphic Crew Sweatshirt", handle: "graphic-crew-sweatshirt" },
+      { name: "Longform Wide Leg Jeans – Deep Blue", hue: "#263045", keyword: "Longform Wide", handle: "longform-wide-leg-jeans" },
     ]
   },
   {
@@ -58,8 +58,8 @@ const LOOKS = [
     name: "After hours",
     note: "Oversized black graphic tee with faded wide-leg jeans.",
     pieces: [
-      { name: "Black Boxy Tee", hue: "#1c1c1c", keyword: "Black Boxy Tee" },
-      { name: "Razorcut Ripped Wide Leg Jeans – Dark Blue", hue: "#748fba", keyword: "Razorcut" },
+      { name: "Black Boxy Tee", hue: "#1c1c1c", keyword: "Black Boxy Tee", handle: "black-boxy-tee" },
+      { name: "Razorcut Ripped Wide Leg Jeans – Dark Blue", hue: "#748fba", keyword: "Razorcut", handle: "razorcut-ripped-wide-leg-jeans" },
     ]
   },
   {
@@ -67,8 +67,8 @@ const LOOKS = [
     name: "Layered henley",
     note: "Grey ribbed henley layered over washed wide denim.",
     pieces: [
-      { name: "Grey Ribbed Henley", hue: "#878a8f", keyword: "Henley" },
-      { name: "Overset Wide Leg Jeans – Navy", hue: "#6a82a6", keyword: "Overset" },
+      { name: "Grey Ribbed Henley", hue: "#878a8f", keyword: "Henley", handle: "grey-ribbed-henley" },
+      { name: "Overset Wide Leg Jeans – Navy", hue: "#6a82a6", keyword: "Overset", handle: "overset-wide-leg-jeans" },
     ]
   },
   {
@@ -76,8 +76,8 @@ const LOOKS = [
     name: "Suede shift",
     note: "Sand suede jacket over a striped shirt and dark trousers.",
     pieces: [
-      { name: "Sand Suede Jacket", hue: "#c9b699", keyword: "Jacket" },
-      { name: "Ironwork 15oz Raw Denim Jeans – Black", hue: "#2b2b2b", keyword: "Ironwork" },
+      { name: "Sand Suede Jacket", hue: "#c9b699", keyword: "Jacket", handle: "sand-suede-jacket" },
+      { name: "Ironwork 15oz Raw Denim Jeans – Black", hue: "#2b2b2b", keyword: "Ironwork", handle: "ironwork-15oz-raw-denim-jeans" },
     ]
   },
 ] as const;
@@ -567,7 +567,7 @@ export function ScanRunwayHero({
             <div className="scan-runway__wardrobe">
               {look.pieces?.map((piece, i) => {
                 let displayName = piece.name;
-                let productId = "";
+                let productId = (piece as any).handle || "";
                 if (shopifyProducts.length > 0) {
                   // Try to find a Shopify product that matches the keyword
                   const matched = shopifyProducts.find(sp => 
@@ -575,7 +575,7 @@ export function ScanRunwayHero({
                   );
                   if (matched) {
                     displayName = matched.title;
-                    productId = matched.handle || matched.id.split('/').pop() || "";
+                    productId = matched.handle || matched.id.split('/').pop() || productId;
                   }
                 }
                 

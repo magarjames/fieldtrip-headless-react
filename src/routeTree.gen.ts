@@ -9,103 +9,53 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as StudioRouteImport } from './routes/studio'
-import { Route as ShippingRouteImport } from './routes/shipping'
-import { Route as ReturnsRouteImport } from './routes/returns'
-import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as NorthlineWorldRouteImport } from './routes/northline-world'
-import { Route as NorthlineRouteImport } from './routes/northline'
-import { Route as LogoGeneratorRouteImport } from './routes/logo-generator'
-import { Route as FaqRouteImport } from './routes/faq'
-import { Route as EditionsRouteImport } from './routes/editions'
-import { Route as BrandRouteImport } from './routes/brand'
-import { Route as AccessoriesRouteImport } from './routes/accessories'
-import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as WIndexRouteImport } from './routes/w.index'
-import { Route as SIndexRouteImport } from './routes/s.index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as AccessoriesRouteImport } from './routes/accessories'
+import { Route as BrandRouteImport } from './routes/brand'
+import { Route as EditionsRouteImport } from './routes/editions'
+import { Route as FaqRouteImport } from './routes/faq'
+import { Route as LogoGeneratorRouteImport } from './routes/logo-generator'
+import { Route as NorthlineRouteImport } from './routes/northline'
+import { Route as NorthlineWorldRouteImport } from './routes/northline-world'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ReturnsRouteImport } from './routes/returns'
+import { Route as ShippingRouteImport } from './routes/shipping'
+import { Route as StudioRouteImport } from './routes/studio'
 import { Route as NlIndexRouteImport } from './routes/nl.index'
-import { Route as WWeaveRouteImport } from './routes/w.weave'
-import { Route as WVitrineRouteImport } from './routes/w.vitrine'
-import { Route as WTideRouteImport } from './routes/w.tide'
-import { Route as WKilnRouteImport } from './routes/w.kiln'
-import { Route as WFoldRouteImport } from './routes/w.fold'
-import { Route as WDriftRouteImport } from './routes/w.drift'
-import { Route as WCorridorRouteImport } from './routes/w.corridor'
-import { Route as WClothRouteImport } from './routes/w.cloth'
-import { Route as WBloomRouteImport } from './routes/w.bloom'
-import { Route as WAtlasRouteImport } from './routes/w.atlas'
-import { Route as SWorldRouteImport } from './routes/s.world'
-import { Route as SV8RouteImport } from './routes/s.v8'
-import { Route as SV7RouteImport } from './routes/s.v7'
-import { Route as SV6RouteImport } from './routes/s.v6'
-import { Route as SV5RouteImport } from './routes/s.v5'
-import { Route as SV4RouteImport } from './routes/s.v4'
-import { Route as SV3RouteImport } from './routes/s.v3'
-import { Route as SV2RouteImport } from './routes/s.v2'
-import { Route as ProductsProductIdRouteImport } from './routes/products.$productId'
-import { Route as NlTasteRouteImport } from './routes/nl.taste'
-import { Route as NlMinimalRouteImport } from './routes/nl.minimal'
-import { Route as NlImpeccableRouteImport } from './routes/nl.impeccable'
-import { Route as NlHyerRouteImport } from './routes/nl.hyer'
-import { Route as NlGalleryRouteImport } from './routes/nl.gallery'
-import { Route as NlFlightRouteImport } from './routes/nl.flight'
 import { Route as NlBrutalistRouteImport } from './routes/nl.brutalist'
+import { Route as NlFlightRouteImport } from './routes/nl.flight'
+import { Route as NlGalleryRouteImport } from './routes/nl.gallery'
+import { Route as NlHyerRouteImport } from './routes/nl.hyer'
+import { Route as NlImpeccableRouteImport } from './routes/nl.impeccable'
+import { Route as NlMinimalRouteImport } from './routes/nl.minimal'
+import { Route as NlTasteRouteImport } from './routes/nl.taste'
+import { Route as ProductsProductIdRouteImport } from './routes/products.$productId'
+import { Route as SIndexRouteImport } from './routes/s.index'
+import { Route as SV2RouteImport } from './routes/s.v2'
+import { Route as SV3RouteImport } from './routes/s.v3'
+import { Route as SV4RouteImport } from './routes/s.v4'
+import { Route as SV5RouteImport } from './routes/s.v5'
+import { Route as SV6RouteImport } from './routes/s.v6'
+import { Route as SV7RouteImport } from './routes/s.v7'
+import { Route as SV8RouteImport } from './routes/s.v8'
+import { Route as SWorldRouteImport } from './routes/s.world'
+import { Route as WIndexRouteImport } from './routes/w.index'
+import { Route as WAtlasRouteImport } from './routes/w.atlas'
+import { Route as WBloomRouteImport } from './routes/w.bloom'
+import { Route as WClothRouteImport } from './routes/w.cloth'
+import { Route as WCorridorRouteImport } from './routes/w.corridor'
+import { Route as WDriftRouteImport } from './routes/w.drift'
+import { Route as WFoldRouteImport } from './routes/w.fold'
+import { Route as WKilnRouteImport } from './routes/w.kiln'
+import { Route as WTideRouteImport } from './routes/w.tide'
+import { Route as WVitrineRouteImport } from './routes/w.vitrine'
+import { Route as WWeaveRouteImport } from './routes/w.weave'
 import { Route as SV8ShopRouteImport } from './routes/s_.v8_.shop'
 
-const StudioRoute = StudioRouteImport.update({
-  id: '/studio',
-  path: '/studio',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ShippingRoute = ShippingRouteImport.update({
-  id: '/shipping',
-  path: '/shipping',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReturnsRoute = ReturnsRouteImport.update({
-  id: '/returns',
-  path: '/returns',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacyRoute = PrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NorthlineWorldRoute = NorthlineWorldRouteImport.update({
-  id: '/northline-world',
-  path: '/northline-world',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NorthlineRoute = NorthlineRouteImport.update({
-  id: '/northline',
-  path: '/northline',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LogoGeneratorRoute = LogoGeneratorRouteImport.update({
-  id: '/logo-generator',
-  path: '/logo-generator',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FaqRoute = FaqRouteImport.update({
-  id: '/faq',
-  path: '/faq',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EditionsRoute = EditionsRouteImport.update({
-  id: '/editions',
-  path: '/editions',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BrandRoute = BrandRouteImport.update({
-  id: '/brand',
-  path: '/brand',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AccessoriesRoute = AccessoriesRouteImport.update({
-  id: '/accessories',
-  path: '/accessories',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -113,19 +63,59 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AccessoriesRoute = AccessoriesRouteImport.update({
+  id: '/accessories',
+  path: '/accessories',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WIndexRoute = WIndexRouteImport.update({
-  id: '/w/',
-  path: '/w/',
+const BrandRoute = BrandRouteImport.update({
+  id: '/brand',
+  path: '/brand',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SIndexRoute = SIndexRouteImport.update({
-  id: '/s/',
-  path: '/s/',
+const EditionsRoute = EditionsRouteImport.update({
+  id: '/editions',
+  path: '/editions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LogoGeneratorRoute = LogoGeneratorRouteImport.update({
+  id: '/logo-generator',
+  path: '/logo-generator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NorthlineRoute = NorthlineRouteImport.update({
+  id: '/northline',
+  path: '/northline',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NorthlineWorldRoute = NorthlineWorldRouteImport.update({
+  id: '/northline-world',
+  path: '/northline-world',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReturnsRoute = ReturnsRouteImport.update({
+  id: '/returns',
+  path: '/returns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShippingRoute = ShippingRouteImport.update({
+  id: '/shipping',
+  path: '/shipping',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudioRoute = StudioRouteImport.update({
+  id: '/studio',
+  path: '/studio',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NlIndexRoute = NlIndexRouteImport.update({
@@ -133,124 +123,9 @@ const NlIndexRoute = NlIndexRouteImport.update({
   path: '/nl/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WWeaveRoute = WWeaveRouteImport.update({
-  id: '/w/weave',
-  path: '/w/weave',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WVitrineRoute = WVitrineRouteImport.update({
-  id: '/w/vitrine',
-  path: '/w/vitrine',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WTideRoute = WTideRouteImport.update({
-  id: '/w/tide',
-  path: '/w/tide',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WKilnRoute = WKilnRouteImport.update({
-  id: '/w/kiln',
-  path: '/w/kiln',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WFoldRoute = WFoldRouteImport.update({
-  id: '/w/fold',
-  path: '/w/fold',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WDriftRoute = WDriftRouteImport.update({
-  id: '/w/drift',
-  path: '/w/drift',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WCorridorRoute = WCorridorRouteImport.update({
-  id: '/w/corridor',
-  path: '/w/corridor',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WClothRoute = WClothRouteImport.update({
-  id: '/w/cloth',
-  path: '/w/cloth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WBloomRoute = WBloomRouteImport.update({
-  id: '/w/bloom',
-  path: '/w/bloom',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WAtlasRoute = WAtlasRouteImport.update({
-  id: '/w/atlas',
-  path: '/w/atlas',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SWorldRoute = SWorldRouteImport.update({
-  id: '/s/world',
-  path: '/s/world',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SV8Route = SV8RouteImport.update({
-  id: '/s/v8',
-  path: '/s/v8',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SV7Route = SV7RouteImport.update({
-  id: '/s/v7',
-  path: '/s/v7',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SV6Route = SV6RouteImport.update({
-  id: '/s/v6',
-  path: '/s/v6',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SV5Route = SV5RouteImport.update({
-  id: '/s/v5',
-  path: '/s/v5',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SV4Route = SV4RouteImport.update({
-  id: '/s/v4',
-  path: '/s/v4',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SV3Route = SV3RouteImport.update({
-  id: '/s/v3',
-  path: '/s/v3',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SV2Route = SV2RouteImport.update({
-  id: '/s/v2',
-  path: '/s/v2',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProductsProductIdRoute = ProductsProductIdRouteImport.update({
-  id: '/products/$productId',
-  path: '/products/$productId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NlTasteRoute = NlTasteRouteImport.update({
-  id: '/nl/taste',
-  path: '/nl/taste',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NlMinimalRoute = NlMinimalRouteImport.update({
-  id: '/nl/minimal',
-  path: '/nl/minimal',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NlImpeccableRoute = NlImpeccableRouteImport.update({
-  id: '/nl/impeccable',
-  path: '/nl/impeccable',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NlHyerRoute = NlHyerRouteImport.update({
-  id: '/nl/hyer',
-  path: '/nl/hyer',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NlGalleryRoute = NlGalleryRouteImport.update({
-  id: '/nl/gallery',
-  path: '/nl/gallery',
+const NlBrutalistRoute = NlBrutalistRouteImport.update({
+  id: '/nl/brutalist',
+  path: '/nl/brutalist',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NlFlightRoute = NlFlightRouteImport.update({
@@ -258,9 +133,134 @@ const NlFlightRoute = NlFlightRouteImport.update({
   path: '/nl/flight',
   getParentRoute: () => rootRouteImport,
 } as any)
-const NlBrutalistRoute = NlBrutalistRouteImport.update({
-  id: '/nl/brutalist',
-  path: '/nl/brutalist',
+const NlGalleryRoute = NlGalleryRouteImport.update({
+  id: '/nl/gallery',
+  path: '/nl/gallery',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NlHyerRoute = NlHyerRouteImport.update({
+  id: '/nl/hyer',
+  path: '/nl/hyer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NlImpeccableRoute = NlImpeccableRouteImport.update({
+  id: '/nl/impeccable',
+  path: '/nl/impeccable',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NlMinimalRoute = NlMinimalRouteImport.update({
+  id: '/nl/minimal',
+  path: '/nl/minimal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NlTasteRoute = NlTasteRouteImport.update({
+  id: '/nl/taste',
+  path: '/nl/taste',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductsProductIdRoute = ProductsProductIdRouteImport.update({
+  id: '/products/$productId',
+  path: '/products/$productId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SIndexRoute = SIndexRouteImport.update({
+  id: '/s/',
+  path: '/s/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SV2Route = SV2RouteImport.update({
+  id: '/s/v2',
+  path: '/s/v2',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SV3Route = SV3RouteImport.update({
+  id: '/s/v3',
+  path: '/s/v3',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SV4Route = SV4RouteImport.update({
+  id: '/s/v4',
+  path: '/s/v4',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SV5Route = SV5RouteImport.update({
+  id: '/s/v5',
+  path: '/s/v5',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SV6Route = SV6RouteImport.update({
+  id: '/s/v6',
+  path: '/s/v6',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SV7Route = SV7RouteImport.update({
+  id: '/s/v7',
+  path: '/s/v7',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SV8Route = SV8RouteImport.update({
+  id: '/s/v8',
+  path: '/s/v8',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SWorldRoute = SWorldRouteImport.update({
+  id: '/s/world',
+  path: '/s/world',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WIndexRoute = WIndexRouteImport.update({
+  id: '/w/',
+  path: '/w/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WAtlasRoute = WAtlasRouteImport.update({
+  id: '/w/atlas',
+  path: '/w/atlas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WBloomRoute = WBloomRouteImport.update({
+  id: '/w/bloom',
+  path: '/w/bloom',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WClothRoute = WClothRouteImport.update({
+  id: '/w/cloth',
+  path: '/w/cloth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WCorridorRoute = WCorridorRouteImport.update({
+  id: '/w/corridor',
+  path: '/w/corridor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WDriftRoute = WDriftRouteImport.update({
+  id: '/w/drift',
+  path: '/w/drift',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WFoldRoute = WFoldRouteImport.update({
+  id: '/w/fold',
+  path: '/w/fold',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WKilnRoute = WKilnRouteImport.update({
+  id: '/w/kiln',
+  path: '/w/kiln',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WTideRoute = WTideRouteImport.update({
+  id: '/w/tide',
+  path: '/w/tide',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WVitrineRoute = WVitrineRouteImport.update({
+  id: '/w/vitrine',
+  path: '/w/vitrine',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WWeaveRoute = WWeaveRouteImport.update({
+  id: '/w/weave',
+  path: '/w/weave',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SV8ShopRoute = SV8ShopRouteImport.update({
@@ -591,81 +591,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/studio': {
-      id: '/studio'
-      path: '/studio'
-      fullPath: '/studio'
-      preLoaderRoute: typeof StudioRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/shipping': {
-      id: '/shipping'
-      path: '/shipping'
-      fullPath: '/shipping'
-      preLoaderRoute: typeof ShippingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/returns': {
-      id: '/returns'
-      path: '/returns'
-      fullPath: '/returns'
-      preLoaderRoute: typeof ReturnsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/northline-world': {
-      id: '/northline-world'
-      path: '/northline-world'
-      fullPath: '/northline-world'
-      preLoaderRoute: typeof NorthlineWorldRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/northline': {
-      id: '/northline'
-      path: '/northline'
-      fullPath: '/northline'
-      preLoaderRoute: typeof NorthlineRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/logo-generator': {
-      id: '/logo-generator'
-      path: '/logo-generator'
-      fullPath: '/logo-generator'
-      preLoaderRoute: typeof LogoGeneratorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/faq': {
-      id: '/faq'
-      path: '/faq'
-      fullPath: '/faq'
-      preLoaderRoute: typeof FaqRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/editions': {
-      id: '/editions'
-      path: '/editions'
-      fullPath: '/editions'
-      preLoaderRoute: typeof EditionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/brand': {
-      id: '/brand'
-      path: '/brand'
-      fullPath: '/brand'
-      preLoaderRoute: typeof BrandRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/accessories': {
-      id: '/accessories'
-      path: '/accessories'
-      fullPath: '/accessories'
-      preLoaderRoute: typeof AccessoriesRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -675,25 +605,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/accessories': {
+      id: '/accessories'
+      path: '/accessories'
+      fullPath: '/accessories'
+      preLoaderRoute: typeof AccessoriesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/w/': {
-      id: '/w/'
-      path: '/w'
-      fullPath: '/w/'
-      preLoaderRoute: typeof WIndexRouteImport
+    '/brand': {
+      id: '/brand'
+      path: '/brand'
+      fullPath: '/brand'
+      preLoaderRoute: typeof BrandRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/s/': {
-      id: '/s/'
-      path: '/s'
-      fullPath: '/s/'
-      preLoaderRoute: typeof SIndexRouteImport
+    '/editions': {
+      id: '/editions'
+      path: '/editions'
+      fullPath: '/editions'
+      preLoaderRoute: typeof EditionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/logo-generator': {
+      id: '/logo-generator'
+      path: '/logo-generator'
+      fullPath: '/logo-generator'
+      preLoaderRoute: typeof LogoGeneratorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/northline': {
+      id: '/northline'
+      path: '/northline'
+      fullPath: '/northline'
+      preLoaderRoute: typeof NorthlineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/northline-world': {
+      id: '/northline-world'
+      path: '/northline-world'
+      fullPath: '/northline-world'
+      preLoaderRoute: typeof NorthlineWorldRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/returns': {
+      id: '/returns'
+      path: '/returns'
+      fullPath: '/returns'
+      preLoaderRoute: typeof ReturnsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shipping': {
+      id: '/shipping'
+      path: '/shipping'
+      fullPath: '/shipping'
+      preLoaderRoute: typeof ShippingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/studio': {
+      id: '/studio'
+      path: '/studio'
+      fullPath: '/studio'
+      preLoaderRoute: typeof StudioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/nl/': {
@@ -703,172 +689,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NlIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/w/weave': {
-      id: '/w/weave'
-      path: '/w/weave'
-      fullPath: '/w/weave'
-      preLoaderRoute: typeof WWeaveRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/w/vitrine': {
-      id: '/w/vitrine'
-      path: '/w/vitrine'
-      fullPath: '/w/vitrine'
-      preLoaderRoute: typeof WVitrineRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/w/tide': {
-      id: '/w/tide'
-      path: '/w/tide'
-      fullPath: '/w/tide'
-      preLoaderRoute: typeof WTideRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/w/kiln': {
-      id: '/w/kiln'
-      path: '/w/kiln'
-      fullPath: '/w/kiln'
-      preLoaderRoute: typeof WKilnRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/w/fold': {
-      id: '/w/fold'
-      path: '/w/fold'
-      fullPath: '/w/fold'
-      preLoaderRoute: typeof WFoldRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/w/drift': {
-      id: '/w/drift'
-      path: '/w/drift'
-      fullPath: '/w/drift'
-      preLoaderRoute: typeof WDriftRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/w/corridor': {
-      id: '/w/corridor'
-      path: '/w/corridor'
-      fullPath: '/w/corridor'
-      preLoaderRoute: typeof WCorridorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/w/cloth': {
-      id: '/w/cloth'
-      path: '/w/cloth'
-      fullPath: '/w/cloth'
-      preLoaderRoute: typeof WClothRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/w/bloom': {
-      id: '/w/bloom'
-      path: '/w/bloom'
-      fullPath: '/w/bloom'
-      preLoaderRoute: typeof WBloomRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/w/atlas': {
-      id: '/w/atlas'
-      path: '/w/atlas'
-      fullPath: '/w/atlas'
-      preLoaderRoute: typeof WAtlasRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/s/world': {
-      id: '/s/world'
-      path: '/s/world'
-      fullPath: '/s/world'
-      preLoaderRoute: typeof SWorldRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/s/v8': {
-      id: '/s/v8'
-      path: '/s/v8'
-      fullPath: '/s/v8'
-      preLoaderRoute: typeof SV8RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/s/v7': {
-      id: '/s/v7'
-      path: '/s/v7'
-      fullPath: '/s/v7'
-      preLoaderRoute: typeof SV7RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/s/v6': {
-      id: '/s/v6'
-      path: '/s/v6'
-      fullPath: '/s/v6'
-      preLoaderRoute: typeof SV6RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/s/v5': {
-      id: '/s/v5'
-      path: '/s/v5'
-      fullPath: '/s/v5'
-      preLoaderRoute: typeof SV5RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/s/v4': {
-      id: '/s/v4'
-      path: '/s/v4'
-      fullPath: '/s/v4'
-      preLoaderRoute: typeof SV4RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/s/v3': {
-      id: '/s/v3'
-      path: '/s/v3'
-      fullPath: '/s/v3'
-      preLoaderRoute: typeof SV3RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/s/v2': {
-      id: '/s/v2'
-      path: '/s/v2'
-      fullPath: '/s/v2'
-      preLoaderRoute: typeof SV2RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/products/$productId': {
-      id: '/products/$productId'
-      path: '/products/$productId'
-      fullPath: '/products/$productId'
-      preLoaderRoute: typeof ProductsProductIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/nl/taste': {
-      id: '/nl/taste'
-      path: '/nl/taste'
-      fullPath: '/nl/taste'
-      preLoaderRoute: typeof NlTasteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/nl/minimal': {
-      id: '/nl/minimal'
-      path: '/nl/minimal'
-      fullPath: '/nl/minimal'
-      preLoaderRoute: typeof NlMinimalRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/nl/impeccable': {
-      id: '/nl/impeccable'
-      path: '/nl/impeccable'
-      fullPath: '/nl/impeccable'
-      preLoaderRoute: typeof NlImpeccableRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/nl/hyer': {
-      id: '/nl/hyer'
-      path: '/nl/hyer'
-      fullPath: '/nl/hyer'
-      preLoaderRoute: typeof NlHyerRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/nl/gallery': {
-      id: '/nl/gallery'
-      path: '/nl/gallery'
-      fullPath: '/nl/gallery'
-      preLoaderRoute: typeof NlGalleryRouteImport
+    '/nl/brutalist': {
+      id: '/nl/brutalist'
+      path: '/nl/brutalist'
+      fullPath: '/nl/brutalist'
+      preLoaderRoute: typeof NlBrutalistRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/nl/flight': {
@@ -878,11 +703,186 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NlFlightRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/nl/brutalist': {
-      id: '/nl/brutalist'
-      path: '/nl/brutalist'
-      fullPath: '/nl/brutalist'
-      preLoaderRoute: typeof NlBrutalistRouteImport
+    '/nl/gallery': {
+      id: '/nl/gallery'
+      path: '/nl/gallery'
+      fullPath: '/nl/gallery'
+      preLoaderRoute: typeof NlGalleryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nl/hyer': {
+      id: '/nl/hyer'
+      path: '/nl/hyer'
+      fullPath: '/nl/hyer'
+      preLoaderRoute: typeof NlHyerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nl/impeccable': {
+      id: '/nl/impeccable'
+      path: '/nl/impeccable'
+      fullPath: '/nl/impeccable'
+      preLoaderRoute: typeof NlImpeccableRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nl/minimal': {
+      id: '/nl/minimal'
+      path: '/nl/minimal'
+      fullPath: '/nl/minimal'
+      preLoaderRoute: typeof NlMinimalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nl/taste': {
+      id: '/nl/taste'
+      path: '/nl/taste'
+      fullPath: '/nl/taste'
+      preLoaderRoute: typeof NlTasteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/products/$productId': {
+      id: '/products/$productId'
+      path: '/products/$productId'
+      fullPath: '/products/$productId'
+      preLoaderRoute: typeof ProductsProductIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/s/': {
+      id: '/s/'
+      path: '/s'
+      fullPath: '/s/'
+      preLoaderRoute: typeof SIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/s/v2': {
+      id: '/s/v2'
+      path: '/s/v2'
+      fullPath: '/s/v2'
+      preLoaderRoute: typeof SV2RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/s/v3': {
+      id: '/s/v3'
+      path: '/s/v3'
+      fullPath: '/s/v3'
+      preLoaderRoute: typeof SV3RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/s/v4': {
+      id: '/s/v4'
+      path: '/s/v4'
+      fullPath: '/s/v4'
+      preLoaderRoute: typeof SV4RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/s/v5': {
+      id: '/s/v5'
+      path: '/s/v5'
+      fullPath: '/s/v5'
+      preLoaderRoute: typeof SV5RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/s/v6': {
+      id: '/s/v6'
+      path: '/s/v6'
+      fullPath: '/s/v6'
+      preLoaderRoute: typeof SV6RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/s/v7': {
+      id: '/s/v7'
+      path: '/s/v7'
+      fullPath: '/s/v7'
+      preLoaderRoute: typeof SV7RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/s/v8': {
+      id: '/s/v8'
+      path: '/s/v8'
+      fullPath: '/s/v8'
+      preLoaderRoute: typeof SV8RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/s/world': {
+      id: '/s/world'
+      path: '/s/world'
+      fullPath: '/s/world'
+      preLoaderRoute: typeof SWorldRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/w/': {
+      id: '/w/'
+      path: '/w'
+      fullPath: '/w/'
+      preLoaderRoute: typeof WIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/w/atlas': {
+      id: '/w/atlas'
+      path: '/w/atlas'
+      fullPath: '/w/atlas'
+      preLoaderRoute: typeof WAtlasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/w/bloom': {
+      id: '/w/bloom'
+      path: '/w/bloom'
+      fullPath: '/w/bloom'
+      preLoaderRoute: typeof WBloomRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/w/cloth': {
+      id: '/w/cloth'
+      path: '/w/cloth'
+      fullPath: '/w/cloth'
+      preLoaderRoute: typeof WClothRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/w/corridor': {
+      id: '/w/corridor'
+      path: '/w/corridor'
+      fullPath: '/w/corridor'
+      preLoaderRoute: typeof WCorridorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/w/drift': {
+      id: '/w/drift'
+      path: '/w/drift'
+      fullPath: '/w/drift'
+      preLoaderRoute: typeof WDriftRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/w/fold': {
+      id: '/w/fold'
+      path: '/w/fold'
+      fullPath: '/w/fold'
+      preLoaderRoute: typeof WFoldRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/w/kiln': {
+      id: '/w/kiln'
+      path: '/w/kiln'
+      fullPath: '/w/kiln'
+      preLoaderRoute: typeof WKilnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/w/tide': {
+      id: '/w/tide'
+      path: '/w/tide'
+      fullPath: '/w/tide'
+      preLoaderRoute: typeof WTideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/w/vitrine': {
+      id: '/w/vitrine'
+      path: '/w/vitrine'
+      fullPath: '/w/vitrine'
+      preLoaderRoute: typeof WVitrineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/w/weave': {
+      id: '/w/weave'
+      path: '/w/weave'
+      fullPath: '/w/weave'
+      preLoaderRoute: typeof WWeaveRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/s_/v8_/shop': {
