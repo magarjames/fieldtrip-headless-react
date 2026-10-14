@@ -232,12 +232,23 @@ export function getLookForProduct(product: any, productId?: string): ModelScanLo
   return MODEL_SCAN_LOOKS[idx];
 }
 
-// 4 Lenticular Angles mapping: Front (a), Three-quarter (b), Profile (c), Back (e)
-export const LENTICULAR_ANGLES = [
-  { frame: "a", name: "Front", label: "Front 000°" },
-  { frame: "b", name: "Three-quarter", label: "Three-quarter 045°" },
-  { frame: "c", name: "Profile", label: "Profile 090°" },
-  { frame: "e", name: "Back", label: "Back 180°" },
+// 7 Frame names and angles matching ScanRunwayHero exactly
+export const FRAME_NAMES = ["a", "b", "c", "d", "e", "f", "g"] as const;
+export const ANGLES = ["000", "045", "090", "135", "180", "225", "360"] as const;
+export const SCAN_ASSET_VERSION = "hair-edge-3";
+
+export const frameUrl = (lookId: string, frame: number) =>
+  `/fieldtrip/scan-${lookId}/${FRAME_NAMES[frame]}.webp?v=${SCAN_ASSET_VERSION}`;
+
+export const wrapFrame = (frame: number) =>
+  ((frame % FRAME_NAMES.length) + FRAME_NAMES.length) % FRAME_NAMES.length;
+
+// 4 Orthogonal Views mapping for Section 02: Front (0), 3/4 (1), Profile (2), Back (4)
+export const FOUR_VIEWS = [
+  { frameIdx: 0, frameName: "a", name: "Front", label: "Front 000°", deg: "000°" },
+  { frameIdx: 1, frameName: "b", name: "Three-quarter", label: "Three-quarter 045°", deg: "045°" },
+  { frameIdx: 2, frameName: "c", name: "Profile", label: "Profile 090°", deg: "090°" },
+  { frameIdx: 4, frameName: "e", name: "Back", label: "Back 180°", deg: "180°" },
 ];
 
 export interface LenticularProductProps {
@@ -251,12 +262,29 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
   // Accurately determine Runway Hero look model based on product
   const initialLook = useMemo(() => getLookForProduct(product, productId), [product, productId]);
   const [activeLook, setActiveLook] = useState<ModelScanLook>(initialLook);
-  const [activeAngleIdx, setActiveAngleIdx] = useState(0);
+  const [frameIndex, setFrameIndex] = useState(0);
+  const frameIndexRef = useRef(0);
+  const dragRef = useRef({ active: false, startX: 0, startFrame: 0 });
+  const [autoOrbit, setAutoOrbit] = useState(false);
+
+  const stageRef = useRef<HTMLDivElement | null>(null);
+  const scrubTrackRef = useRef<HTMLDivElement | null>(null);
 
   // Synchronize active look whenever product or route param updates
   useEffect(() => {
     setActiveLook(getLookForProduct(product, productId));
+    frameIndexRef.current = 0;
+    setFrameIndex(0);
   }, [product, productId]);
+
+  // Preload all 7 frames for the active look so rotation is instant
+  useEffect(() => {
+    FRAME_NAMES.forEach((_, idx) => {
+      const img = new Image();
+      img.decoding = "async";
+      img.src = frameUrl(activeLook.id, idx);
+    });
+  }, [activeLook.id]);
 
   // Find companion piece in this Runway Hero look
   const companionPiece = useMemo(() => {
@@ -294,216 +322,85 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
     return raw.replace(/<[^>]*size guide[^>]*>[\s\S]*$/i, "").trim() || raw;
   }, [product]);
 
-  // Canvas & Scrubber refs
-  const lensCanvasRef = useRef<HTMLCanvasElement | null>(null);
-  const cardRef = useRef<HTMLDivElement | null>(null);
-  const heroRef = useRef<HTMLElement | null>(null);
-  const scrubTrackRef = useRef<HTMLDivElement | null>(null);
-  const scrubThumbRef = useRef<HTMLDivElement | null>(null);
+  // Change frame helper
+  const changeFrame = (next: number) => {
+    const wrapped = wrapFrame(next);
+    frameIndexRef.current = wrapped;
+    setFrameIndex(wrapped);
+  };
 
-  const [autoOrbit, setAutoOrbit] = useState(true);
-
-  // Interactive motion physics state
-  const motionRef = useRef({
-    view: 0.1,
-    target: 0.1,
-    my: 0.5,
-    auto: true,
-    dead: false,
-    reduce: false,
-    raf2: 0,
-  });
-
-  // Calculate 4 image URLs for current look
-  const imageUrls = useMemo(() => {
-    return LENTICULAR_ANGLES.map((angle) => `/fieldtrip/scan-${activeLook.id}/${angle.frame}.jpg`);
-  }, [activeLook.id]);
-
-  // Lenticular Card WebGL Shader & 3D Tilt Physics
-  useEffect(() => {
-    const c = lensCanvasRef.current;
-    const card = cardRef.current;
-    const hero = heroRef.current;
-    if (!c || !card || !hero) return;
-
-    const gl = c.getContext("webgl", { antialias: false, alpha: false });
-    if (!gl) return;
-
-    function sh(type: number, src: string) {
-      const o = gl!.createShader(type)!;
-      gl!.shaderSource(o, src);
-      gl!.compileShader(o);
-      return o;
-    }
-
-    const pr = gl.createProgram()!;
-    gl.attachShader(pr, sh(gl.VERTEX_SHADER, "attribute vec2 p;varying vec2 vu;void main(){vu=p*.5+.5;gl_Position=vec4(p,0.,1.);}"));
-    gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, [
-      "precision highp float;",
-      "varying vec2 vu;",
-      "uniform sampler2D T0;",
-      "uniform sampler2D T1;",
-      "uniform sampler2D T2;",
-      "uniform sampler2D T3;",
-      "uniform vec4 A;",
-      "uniform vec2 r;",
-      "uniform float v;",
-      "vec2 cover(vec2 uv, float ia) {",
-      "  float pa = r.x / r.y;",
-      "  vec2 s = ia > pa ? vec2(pa / ia, 1.0) : vec2(1.0, ia / pa);",
-      "  return (uv - 0.5) * s + 0.5;",
-      "}",
-      "vec3 img(float k, vec2 uv) {",
-      "  if (k < 0.5) return texture2D(T0, cover(uv, A.x)).rgb;",
-      "  if (k < 1.5) return texture2D(T1, cover(uv, A.y)).rgb;",
-      "  if (k < 2.5) return texture2D(T2, cover(uv, A.z)).rgb;",
-      "  return texture2D(T3, cover(uv, A.w)).rgb;",
-      "}",
-      "void main() {",
-      "  float vv = clamp(v, 0.0, 0.999) * 3.0;",
-      "  float k = floor(vv);",
-      "  float fr = fract(vv);",
-      "  vec3 a = img(k, vu);",
-      "  vec3 b = img(min(k + 1.0, 3.0), vu);",
-      "  vec3 col = mix(a, b, smoothstep(0.15, 0.85, fr));",
-      "  gl_FragColor = vec4(col, 1.0);",
-      "}"
-    ].join("\n")));
-
-    gl.linkProgram(pr);
-    if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) return;
-    gl.useProgram(pr);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
-
-    const l = gl.getAttribLocation(pr, "p");
-    gl.enableVertexAttribArray(l);
-    gl.vertexAttribPointer(l, 2, gl.FLOAT, false, 0, 0);
-
-    const U: Record<string, WebGLUniformLocation | null> = {};
-    ["T0", "T1", "T2", "T3", "A", "r", "v"].forEach((k) => {
-      U[k] = gl.getUniformLocation(pr, k);
-    });
-
-    // Texture bindings for the 4 angles
-    const T = imageUrls.map((srcUrl) => {
-      const o = { t: gl.createTexture(), a: 0.75 };
-      gl.bindTexture(gl.TEXTURE_2D, o.t);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([200, 202, 206, 255]));
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
-      const im = new Image();
-      im.onload = () => {
-        try {
-          gl.bindTexture(gl.TEXTURE_2D, o.t);
-          gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, im);
-          o.a = im.naturalWidth / im.naturalHeight;
-        } catch (e) {
-          console.warn("Lenticular texture error", e);
-        }
-      };
-      im.src = srcUrl;
-      return o;
-    });
-
-    const t0 = performance.now();
-    let lastIdx = -1;
-
-    function renderLens() {
-      if (motionRef.current.dead || !c || !gl || !hero) return;
-      const d = Math.min(2, window.devicePixelRatio || 1);
-      const w = Math.round(c.clientWidth * d);
-      const h = Math.round(c.clientHeight * d);
-      const bb = hero.getBoundingClientRect();
-      const vh = window.innerHeight || 900;
-
-      if (w && h && bb.bottom > 0 && bb.top < vh + 1000) {
-        if (c.width !== w || c.height !== h) {
-          c.width = w;
-          c.height = h;
-          gl.viewport(0, 0, w, h);
-        }
-        const tt = (performance.now() - t0) / 1000;
-        const prog = Math.max(0, Math.min(1, -bb.top / Math.max(1, bb.height)));
-
-        if (motionRef.current.auto && !motionRef.current.reduce) {
-          motionRef.current.target = 0.5 + 0.45 * Math.sin(tt * 0.5);
-        }
-
-        const tgt = Math.min(0.999, Math.max(0, motionRef.current.target + prog * 0.6));
-        motionRef.current.view += (tgt - motionRef.current.view) * 0.08;
-
-        if (card && !motionRef.current.reduce) {
-          card.style.transform = `rotateY(${((motionRef.current.view - 0.5) * 34).toFixed(2)}deg) rotateX(${((motionRef.current.my - 0.5) * -10).toFixed(2)}deg)`;
-        }
-
-        if (scrubThumbRef.current) {
-          const pct = Math.max(0, Math.min(1, motionRef.current.view));
-          scrubThumbRef.current.style.left = `${(pct * 100).toFixed(2)}%`;
-        }
-
-        for (let i = 0; i < 4; i++) {
-          gl.activeTexture(gl.TEXTURE0 + i);
-          gl.bindTexture(gl.TEXTURE_2D, T[i].t);
-          gl.uniform1i(U[`T${i}`]!, i);
-        }
-        gl.uniform4f(U.A!, T[0].a, T[1].a, T[2].a, T[3].a);
-        gl.uniform2f(U.r!, w, h);
-        gl.uniform1f(U.v!, motionRef.current.view);
-        gl.drawArrays(gl.TRIANGLES, 0, 3);
-
-        const currentIdx = Math.min(3, Math.round(motionRef.current.view * 3));
-        if (currentIdx !== lastIdx) {
-          lastIdx = currentIdx;
-          setActiveAngleIdx(currentIdx);
-        }
-      }
-      motionRef.current.raf2 = requestAnimationFrame(renderLens);
-    }
-    renderLens();
-
-    return () => {
-      cancelAnimationFrame(motionRef.current.raf2);
+  // Direct Drag rotation matching ScanRunwayHero
+  const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    dragRef.current = {
+      active: true,
+      startX: event.clientX,
+      startFrame: frameIndexRef.current,
     };
-  }, [imageUrls]);
-
-  // Pointer movement handlers over hero
-  const handlePointerMove = (e: React.PointerEvent<HTMLElement>) => {
-    const b = e.currentTarget.getBoundingClientRect();
-    motionRef.current.auto = false;
-    motionRef.current.target = Math.max(0, Math.min(1, (e.clientX - b.left) / b.width));
-    motionRef.current.my = (e.clientY - b.top) / b.height;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    if (autoOrbit) setAutoOrbit(false);
   };
 
-  const handlePointerLeave = () => {
-    motionRef.current.auto = autoOrbit;
-    motionRef.current.my = 0.5;
+  const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragRef.current.active) return;
+    const travelled = event.clientX - dragRef.current.startX;
+    const stepped = Math.round(travelled / 48);
+    const next = wrapFrame(dragRef.current.startFrame + stepped);
+    if (next !== frameIndexRef.current) {
+      changeFrame(next);
+    }
   };
 
-  const snapToAngle = (index: number) => {
-    motionRef.current.auto = false;
-    setAutoOrbit(false);
-    motionRef.current.target = index / 3;
-    setActiveAngleIdx(index);
+  const onPointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+    dragRef.current.active = false;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
   };
 
-  const toggleAutoOrbit = () => {
-    setAutoOrbit((prev) => {
-      const next = !prev;
-      motionRef.current.auto = next;
-      return next;
-    });
+  const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      changeFrame(frameIndexRef.current - 1);
+    } else if (event.key === "ArrowRight") {
+      event.preventDefault();
+      changeFrame(frameIndexRef.current + 1);
+    }
   };
+
+  // Keyboard navigation for perspective switching
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement ||
+        e.target instanceof HTMLSelectElement
+      ) {
+        return;
+      }
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        changeFrame(frameIndexRef.current + 1);
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        changeFrame(frameIndexRef.current - 1);
+      }
+    };
+    window.addEventListener("keydown", handleGlobalKeyDown);
+    return () => window.removeEventListener("keydown", handleGlobalKeyDown);
+  }, []);
+
+  // Smooth Auto-orbit option
+  useEffect(() => {
+    if (!autoOrbit) return;
+    const timer = setInterval(() => {
+      changeFrame(frameIndexRef.current + 1);
+    }, 800);
+    return () => clearInterval(timer);
+  }, [autoOrbit]);
 
   const handleScrubPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     e.currentTarget.setPointerCapture(e.pointerId);
-    motionRef.current.auto = false;
-    setAutoOrbit(false);
+    if (autoOrbit) setAutoOrbit(false);
     handleScrubMove(e);
   };
 
@@ -511,41 +408,9 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
     if (!scrubTrackRef.current) return;
     const rect = scrubTrackRef.current.getBoundingClientRect();
     const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    motionRef.current.target = pct;
-    motionRef.current.view = pct;
-    const newIdx = Math.min(3, Math.round(pct * 3));
-    setActiveAngleIdx(newIdx);
+    const targetIdx = Math.min(FRAME_NAMES.length - 1, Math.round(pct * (FRAME_NAMES.length - 1)));
+    changeFrame(targetIdx);
   };
-
-  // Keyboard navigation for perspective switching
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement) {
-        return;
-      }
-      if (e.key === "ArrowRight") {
-        e.preventDefault();
-        motionRef.current.auto = false;
-        setAutoOrbit(false);
-        setActiveAngleIdx((prev) => {
-          const next = Math.min(3, prev + 1);
-          motionRef.current.target = next / 3;
-          return next;
-        });
-      } else if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        motionRef.current.auto = false;
-        setAutoOrbit(false);
-        setActiveAngleIdx((prev) => {
-          const next = Math.max(0, prev - 1);
-          motionRef.current.target = next / 3;
-          return next;
-        });
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
 
   const handleAddBagClick = () => {
     const itemToAdd = {
@@ -553,7 +418,7 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
       name: product?.title || activeLook.name,
       group: product?.productType || activeLook.defaultCategory,
       price: priceFormatted,
-      image: `/fieldtrip/scan-${activeLook.gender}${activeLook.id.slice(1)}/a.jpg`,
+      image: frameUrl(activeLook.id, 0),
       alt: product?.title || activeLook.outfit,
       description: product?.description || activeLook.outfit,
       colors: selectedColor ? [selectedColor] : [],
@@ -568,17 +433,16 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
     setBagOpen(true);
   };
 
-  const currentAngleName = LENTICULAR_ANGLES[activeAngleIdx]?.name || "Front";
+  // Scan chamber optical echo indices matching ScanRunwayHero
+  const leftFrame = wrapFrame(frameIndex - 2);
+  const rearFrame = wrapFrame(frameIndex + 3);
+  const rightFrame = wrapFrame(frameIndex + 2);
+  const currentAngleName = frameIndex === 0 ? "Front" : frameIndex === 1 ? "Three-quarter" : frameIndex === 2 ? "Profile" : frameIndex === 3 ? "Rear Three-quarter" : frameIndex === 4 ? "Back" : frameIndex === 5 ? "Opposite Three-quarter" : "Complete Turn";
 
   return (
     <div className="ln-root">
       {/* Hero Section: 3-Column Asymmetric Lenticular Stage */}
-      <section
-        ref={heroRef}
-        className="ln-hero-section"
-        onPointerMove={handlePointerMove}
-        onPointerLeave={handlePointerLeave}
-      >
+      <section className="ln-hero-section">
         <div className="ln-hero-grid">
           {/* Left Column: Product Title & Specs */}
           <div className="ln-hero-left">
@@ -638,36 +502,115 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
             </div>
           </div>
 
-          {/* Center Column: 3D Lenticular Card with Interactive Controller Dock at Bottom */}
+          {/* Center Column: 360 Scan Chamber Stage matching Hero Section */}
           <div className="ln-card-container">
             <div className="ln-card-column">
-              <div ref={cardRef} className="ln-card">
-                <canvas
-                  ref={lensCanvasRef}
-                  className="ln-lens-canvas"
-                  role="img"
-                  aria-label={`Lenticular view of ${product?.title || "garment"}, showing ${currentAngleName} view`}
+              <div
+                ref={stageRef}
+                className="ln-scan-chamber-stage"
+                role="group"
+                aria-label={`Rotate ${product?.title || activeLook.name}. Current angle ${ANGLES[frameIndex]} degrees. Drag horizontally or use arrow keys.`}
+                tabIndex={0}
+                onPointerDown={onPointerDown}
+                onPointerMove={onPointerMove}
+                onPointerUp={onPointerUp}
+                onPointerCancel={onPointerUp}
+                onKeyDown={onKeyDown}
+              >
+                {/* Floor Podium & Ring Atmosphere matching Hero Section */}
+                <div className="ln-stage-floor-podium" aria-hidden="true">
+                  <div className="ln-podium-spotlight" />
+                  <div className="ln-podium-ring" />
+                  <div className="ln-floor-ticks">
+                    {ANGLES.map((ang, idx) => (
+                      <span
+                        key={ang}
+                        className={`ln-floor-tick-label ${frameIndex === idx ? "active" : ""}`}
+                      >
+                        {ang}°
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Left Echo Silhouette */}
+                <img
+                  className="ln-scan-echo ln-scan-echo--left"
+                  src={frameUrl(activeLook.id, leftFrame)}
+                  alt=""
+                  width={960}
+                  height={1720}
+                  decoding="async"
+                  draggable={false}
                 />
+
+                {/* Rear Echo Silhouette */}
+                <img
+                  className="ln-scan-echo ln-scan-echo--rear"
+                  src={frameUrl(activeLook.id, rearFrame)}
+                  alt=""
+                  width={960}
+                  height={1720}
+                  decoding="async"
+                  draggable={false}
+                />
+
+                {/* Right Echo Silhouette */}
+                <img
+                  className="ln-scan-echo ln-scan-echo--right"
+                  src={frameUrl(activeLook.id, rightFrame)}
+                  alt=""
+                  width={960}
+                  height={1720}
+                  decoding="async"
+                  draggable={false}
+                />
+
+                {/* Primary Model Scan Frame */}
+                <img
+                  className="ln-scan-model-frame"
+                  key={`${activeLook.id}-${frameIndex}`}
+                  src={frameUrl(activeLook.id, frameIndex)}
+                  alt={`${product?.title || activeLook.name}, ${ANGLES[frameIndex]} degree view`}
+                  width={960}
+                  height={1720}
+                  draggable={false}
+                  decoding="async"
+                  fetchPriority="high"
+                />
+
+                {/* Interactive Drag Hint */}
+                <div className="ln-scan-drag-hint">
+                  <span>↔ DRAG TO ROTATE 360°</span>
+                </div>
               </div>
 
-              {/* Interactive Angle Controller Dock (Directly at bottom of picture) */}
+              {/* Interactive Angle Controller Dock (Directly at bottom of scan picture) */}
               <div className="ln-angle-controller-bar">
                 {/* Header: Title + Orbit Mode Button */}
                 <div className="ln-angle-header">
                   <div>
                     <span className="ln-m" style={{ color: "var(--ln-clay)", display: "block", marginBottom: "2px" }}>
-                      PERSPECTIVE 360°
+                      CHAMBER SCAN 360°
                     </span>
                     <b className="ln-angle-heading-live">
-                      {currentAngleName} · {LENTICULAR_ANGLES[activeAngleIdx]?.label.split(" ")[1] || "000°"}
+                      {ANGLES[frameIndex]}° · {
+                        frameIndex === 0 ? "FRONT VIEW" :
+                        frameIndex === 1 ? "THREE-QUARTER" :
+                        frameIndex === 2 ? "PROFILE VIEW" :
+                        frameIndex === 3 ? "REAR THREE-QUARTER" :
+                        frameIndex === 4 ? "BACK VIEW" :
+                        frameIndex === 5 ? "OPPOSITE THREE-QUARTER" :
+                        "TURNAROUND VIEW"
+                      }
                     </b>
                   </div>
 
                   <button
                     type="button"
                     className={`ln-orbit-toggle-btn ${autoOrbit ? "active" : ""}`}
-                    onClick={toggleAutoOrbit}
-                    title="Toggle auto-orbiting camera"
+                    onClick={() => setAutoOrbit(!autoOrbit)}
+                    title="Toggle auto-orbiting rotation"
                   >
                     {autoOrbit ? (
                       <>
@@ -683,21 +626,23 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
                   </button>
                 </div>
 
-                {/* 4 Interactive Angle Choice Pills */}
+                {/* 7 Interactive Angle Choice Pills */}
                 <div className="ln-angle-pills-grid">
-                  {LENTICULAR_ANGLES.map((angle, idx) => {
-                    const isSel = activeAngleIdx === idx;
+                  {FRAME_NAMES.map((fName, idx) => {
+                    const isSel = frameIndex === idx;
+                    const angleDeg = ANGLES[idx];
+                    const label = idx === 0 ? "000° Front" : idx === 1 ? "045° 3/4" : idx === 2 ? "090° Prof" : idx === 3 ? "135° R-3/4" : idx === 4 ? "180° Back" : idx === 5 ? "225° Opp" : "360° Full";
                     return (
                       <button
-                        key={angle.frame}
+                        key={fName}
                         type="button"
                         className={`ln-angle-pill-btn ${isSel ? "active" : ""}`}
-                        onClick={() => snapToAngle(idx)}
+                        onClick={() => changeFrame(idx)}
                         aria-pressed={isSel}
-                        title={`Select ${angle.name} view`}
+                        title={`Select ${label} view`}
                       >
-                        <span className="ln-angle-pill-name">{angle.name}</span>
-                        <span className="ln-angle-pill-deg">{angle.label.split(" ")[1] || "000°"}</span>
+                        <span className="ln-angle-pill-name">{label.split(" ")[1]}</span>
+                        <span className="ln-angle-pill-deg">{angleDeg}°</span>
                       </button>
                     );
                   })}
@@ -716,18 +661,20 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
                   >
                     <div className="ln-scrub-rail" />
                     <div className="ln-scrub-ticks">
-                      <span className="ln-scrub-tick" />
-                      <span className="ln-scrub-tick" />
-                      <span className="ln-scrub-tick" />
-                      <span className="ln-scrub-tick" />
+                      {FRAME_NAMES.map((_, idx) => (
+                        <span key={idx} className="ln-scrub-tick" />
+                      ))}
                     </div>
-                    <div ref={scrubThumbRef} className="ln-scrub-thumb" />
+                    <div
+                      className="ln-scrub-thumb"
+                      style={{ left: `${(frameIndex / (FRAME_NAMES.length - 1)) * 100}%` }}
+                    />
                   </div>
                   <div className="ln-scrub-labels">
                     <span>000° FRONT</span>
-                    <span>045° 3/4</span>
                     <span>090° PROFILE</span>
                     <span>180° BACK</span>
+                    <span>360° TURN</span>
                   </div>
                 </div>
               </div>
@@ -881,28 +828,28 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
           Four views, one print.
         </p>
         <p style={{ color: "var(--ln-ink-soft)", maxWidth: "52ch", marginTop: "0.8rem", fontSize: "15px" }}>
-          Captured in our 360-degree scan chamber. Move your cursor across the card above to rotate in physical motion, or inspect the 4 orthogonal views and macro textile print below.
+          Captured in our 360-degree scan chamber. Drag across the stage above to rotate in physical motion, or inspect the 4 orthogonal views and macro textile print below.
         </p>
 
         <div className="ln-gallery-grid">
-          {LENTICULAR_ANGLES.map((angle, idx) => (
+          {FOUR_VIEWS.map((view, idx) => (
             <figure
-              key={angle.frame}
-              className="ln-thumb ln-up"
-              onClick={() => snapToAngle(idx)}
+              key={view.frameName}
+              className={`ln-thumb ln-up ${frameIndex === view.frameIdx ? "active" : ""}`}
+              onClick={() => changeFrame(view.frameIdx)}
             >
               <div className="ln-thumb-wrap">
                 <img
-                  src={`/fieldtrip/scan-${activeLook.id}/${angle.frame}.jpg`}
-                  alt={`${product?.title || "Garment"} ${angle.name} view`}
+                  src={frameUrl(activeLook.id, view.frameIdx)}
+                  alt={`${product?.title || "Garment"} ${view.name} view`}
                   loading="lazy"
                 />
               </div>
               <figcaption className="ln-thumb-caption">
                 <span className="ln-m" style={{ fontWeight: 700, color: "var(--ln-ink)" }}>
-                  0{idx + 1} // {angle.name}
+                  0{idx + 1} // {view.name}
                 </span>
-                <span className="ln-m">{angle.label}</span>
+                <span className="ln-m">{view.label}</span>
               </figcaption>
             </figure>
           ))}

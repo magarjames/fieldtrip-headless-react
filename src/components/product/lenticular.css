@@ -183,10 +183,9 @@
 }
 
 /* ==========================================================================
-   Center Column: 3D Lenticular Card Stage
+   Center Column: 360 Scan Chamber Stage (Matching Hero Section)
    ========================================================================== */
 .ln-card-container {
-  perspective: 1400px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -196,35 +195,189 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: min(470px, 86vw);
+  width: min(490px, 88vw);
 }
 
-.ln-card {
+.ln-scan-chamber-stage {
   position: relative;
   width: 100%;
   aspect-ratio: 3/4;
-  transform-style: preserve-3d;
-  transition: transform 0.5s var(--ln-ease);
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.7);
-  cursor: grab;
+  min-height: 540px;
+  max-height: 680px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(32px) saturate(190%);
+  -webkit-backdrop-filter: blur(32px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow:
+    0 24px 60px -15px rgba(0, 0, 0, 0.08),
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    inset 0 1px 1px rgba(255, 255, 255, 0.95);
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: ew-resize;
+  touch-action: pan-y;
+  user-select: none;
+  isolation: isolate;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
-.ln-card:active {
+
+.ln-scan-chamber-stage:hover {
+  border-color: rgba(255, 255, 255, 0.95);
+  box-shadow:
+    0 30px 70px -15px rgba(0, 0, 0, 0.12),
+    0 2px 4px rgba(0, 0, 0, 0.04),
+    inset 0 1px 1px rgba(255, 255, 255, 1);
+}
+
+.ln-scan-chamber-stage:active {
   cursor: grabbing;
 }
 
-.ln-lens-canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border-radius: 20px;
-  filter: none !important;
-  -webkit-filter: none !important;
-  mix-blend-mode: normal !important;
+.ln-scan-chamber-stage:focus-visible {
+  outline: 2px solid var(--ln-ink);
+  outline-offset: 4px;
+}
+
+/* Floor Podium & Angle Ring */
+.ln-stage-floor-podium {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ln-podium-spotlight {
+  position: absolute;
+  top: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 85%;
+  background: radial-gradient(
+    ellipse at 50% 35%,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(255, 255, 255, 0.35) 45%,
+    transparent 72%
+  );
+  filter: blur(24px);
+  opacity: 0.7;
+}
+
+.ln-podium-ring {
+  position: absolute;
+  bottom: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 76%;
+  height: 18%;
+  border-radius: 50%;
+  border: 1px dashed rgba(20, 19, 23, 0.2);
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(20, 19, 23, 0.05) 0%,
+    rgba(20, 19, 23, 0.02) 60%,
+    transparent 85%
+  );
+}
+
+.ln-floor-ticks {
+  position: absolute;
+  bottom: 3.5%;
+  left: 5%;
+  right: 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.ln-floor-tick-label {
+  font-family: var(--ln-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ln-ink-muted);
+  opacity: 0.55;
+  transition: all 0.2s ease;
+}
+
+.ln-floor-tick-label.active {
+  color: var(--ln-clay);
+  opacity: 1;
+  font-weight: 800;
+  transform: translateY(-2px);
+}
+
+/* Echo Silhouettes giving 3D scan chamber depth */
+.ln-scan-echo {
+  position: absolute;
+  top: 6%;
+  left: 50%;
+  width: 78%;
+  height: 85%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  will-change: transform, opacity;
+  transition: transform 0.35s var(--ln-ease), opacity 0.35s ease;
+}
+
+.ln-scan-echo--left {
+  opacity: 0.22;
+  transform: translate3d(calc(-50% - 65px), 0, 0) scale(0.92);
+  filter: blur(1px);
+}
+
+.ln-scan-echo--rear {
+  opacity: 0.14;
+  transform: translate3d(-50%, -15px, 0) scale(0.86);
+  filter: blur(2.5px);
+}
+
+.ln-scan-echo--right {
+  opacity: 0.22;
+  transform: translate3d(calc(-50% + 65px), 0, 0) scale(0.92);
+  filter: blur(1px);
+}
+
+/* Primary Model Frame */
+.ln-scan-model-frame {
+  position: relative;
+  z-index: 5;
+  width: 86%;
+  height: 88%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  filter: drop-shadow(0 16px 24px rgba(0, 0, 0, 0.08));
+  will-change: transform;
+}
+
+/* Drag Hint */
+.ln-scan-drag-hint {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  font-family: var(--ln-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: var(--ln-ink-muted);
+  pointer-events: none;
 }
 
 /* ==========================================================================
@@ -295,11 +448,17 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* 4 Angle Choice Pills */
+/* 7 Angle Choice Pills */
 .ln-angle-pills-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+@media (max-width: 600px) {
+  .ln-angle-pills-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 .ln-angle-pill-btn {
@@ -777,15 +936,26 @@
   box-shadow: 0 24px 48px -10px rgba(0, 0, 0, 0.14), inset 0 1px 1px rgba(255, 255, 255, 1);
 }
 
+.ln-thumb.active .ln-thumb-wrap {
+  border-color: var(--ln-clay);
+  box-shadow: 0 0 0 2px var(--ln-clay), 0 20px 44px -10px rgba(0, 0, 0, 0.16);
+}
+
 .ln-thumb-wrap img {
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: contain;
+  padding: 10px;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.08)) !important;
+  -webkit-filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.08)) !important;
+  transition: transform 0.4s var(--ln-ease);
+}
+.ln-thumb--print .ln-thumb-wrap img {
   object-fit: cover;
+  padding: 0;
   filter: none !important;
   -webkit-filter: none !important;
-  mix-blend-mode: normal !important;
-  transition: transform 0.6s var(--ln-ease);
 }
 .ln-thumb:hover .ln-thumb-wrap img {
   transform: scale(1.04);
