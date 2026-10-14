@@ -1,37 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { FieldtripPage } from "@/components/street/FieldtripPage";
-import { FoldBackdrop } from "@/components/street/FoldBackdrop";
-import { NorthlinePage } from "@/components/northline/NorthlinePage";
+import { StudioWebsite } from "@/components/studio/StudioWebsite";
 import { pageMeta } from "@/components/northline/parts";
 
 export const Route = createFileRoute("/s/v7")({
-  component: FieldtripNorthlineV7Page,
+  component: StudioWebsite,
   head: () =>
     pageMeta(
-      "Vivre x Northline V7 | Dress for the long way home",
-      "An independent V7 workspace copied from the Vivre and Northline merged storefront.",
+      "James Thapa · Studio | Creative Director & Systems Architect",
+      "Studio website featuring tactile digital commerce, quantitative trading bots, production hospitality software, and autonomous AI systems over a live crease shader gradient.",
     ),
 });
-
-function FieldtripNorthlineV7Page() {
-  return (
-    <>
-      <div id="fieldtrip-v7-top">
-        <FieldtripPage
-          backdrop={<FoldBackdrop />}
-          figurePlacement="edge"
-          content="landing"
-          primaryHref="#collection"
-          secondaryHref="#materials"
-          shopHref="#collection"
-        />
-      </div>
-      <NorthlinePage
-        showHeader={false}
-        showHero={false}
-        homeHref="#fieldtrip-v7-top"
-        continuation
-      />
-    </>
-  );
-}

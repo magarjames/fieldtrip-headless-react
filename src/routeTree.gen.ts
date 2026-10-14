@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as StudioRouteImport } from './routes/studio'
 import { Route as ShippingRouteImport } from './routes/shipping'
 import { Route as ReturnsRouteImport } from './routes/returns'
 import { Route as PrivacyRouteImport } from './routes/privacy'
@@ -17,6 +18,7 @@ import { Route as NorthlineRouteImport } from './routes/northline'
 import { Route as LogoGeneratorRouteImport } from './routes/logo-generator'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as EditionsRouteImport } from './routes/editions'
+import { Route as BrandRouteImport } from './routes/brand'
 import { Route as AccessoriesRouteImport } from './routes/accessories'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
@@ -51,6 +53,11 @@ import { Route as NlFlightRouteImport } from './routes/nl.flight'
 import { Route as NlBrutalistRouteImport } from './routes/nl.brutalist'
 import { Route as SV8ShopRouteImport } from './routes/s_.v8_.shop'
 
+const StudioRoute = StudioRouteImport.update({
+  id: '/studio',
+  path: '/studio',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShippingRoute = ShippingRouteImport.update({
   id: '/shipping',
   path: '/shipping',
@@ -89,6 +96,11 @@ const FaqRoute = FaqRouteImport.update({
 const EditionsRoute = EditionsRouteImport.update({
   id: '/editions',
   path: '/editions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrandRoute = BrandRouteImport.update({
+  id: '/brand',
+  path: '/brand',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccessoriesRoute = AccessoriesRouteImport.update({
@@ -261,6 +273,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/accessories': typeof AccessoriesRoute
+  '/brand': typeof BrandRoute
   '/editions': typeof EditionsRoute
   '/faq': typeof FaqRoute
   '/logo-generator': typeof LogoGeneratorRoute
@@ -269,6 +282,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/returns': typeof ReturnsRoute
   '/shipping': typeof ShippingRoute
+  '/studio': typeof StudioRoute
   '/nl/brutalist': typeof NlBrutalistRoute
   '/nl/flight': typeof NlFlightRoute
   '/nl/gallery': typeof NlGalleryRoute
@@ -304,6 +318,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/accessories': typeof AccessoriesRoute
+  '/brand': typeof BrandRoute
   '/editions': typeof EditionsRoute
   '/faq': typeof FaqRoute
   '/logo-generator': typeof LogoGeneratorRoute
@@ -312,6 +327,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/returns': typeof ReturnsRoute
   '/shipping': typeof ShippingRoute
+  '/studio': typeof StudioRoute
   '/nl/brutalist': typeof NlBrutalistRoute
   '/nl/flight': typeof NlFlightRoute
   '/nl/gallery': typeof NlGalleryRoute
@@ -348,6 +364,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/accessories': typeof AccessoriesRoute
+  '/brand': typeof BrandRoute
   '/editions': typeof EditionsRoute
   '/faq': typeof FaqRoute
   '/logo-generator': typeof LogoGeneratorRoute
@@ -356,6 +373,7 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/returns': typeof ReturnsRoute
   '/shipping': typeof ShippingRoute
+  '/studio': typeof StudioRoute
   '/nl/brutalist': typeof NlBrutalistRoute
   '/nl/flight': typeof NlFlightRoute
   '/nl/gallery': typeof NlGalleryRoute
@@ -393,6 +411,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/accessories'
+    | '/brand'
     | '/editions'
     | '/faq'
     | '/logo-generator'
@@ -401,6 +420,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/returns'
     | '/shipping'
+    | '/studio'
     | '/nl/brutalist'
     | '/nl/flight'
     | '/nl/gallery'
@@ -436,6 +456,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/accessories'
+    | '/brand'
     | '/editions'
     | '/faq'
     | '/logo-generator'
@@ -444,6 +465,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/returns'
     | '/shipping'
+    | '/studio'
     | '/nl/brutalist'
     | '/nl/flight'
     | '/nl/gallery'
@@ -479,6 +501,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/accessories'
+    | '/brand'
     | '/editions'
     | '/faq'
     | '/logo-generator'
@@ -487,6 +510,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/returns'
     | '/shipping'
+    | '/studio'
     | '/nl/brutalist'
     | '/nl/flight'
     | '/nl/gallery'
@@ -523,6 +547,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AccessoriesRoute: typeof AccessoriesRoute
+  BrandRoute: typeof BrandRoute
   EditionsRoute: typeof EditionsRoute
   FaqRoute: typeof FaqRoute
   LogoGeneratorRoute: typeof LogoGeneratorRoute
@@ -531,6 +556,7 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   ReturnsRoute: typeof ReturnsRoute
   ShippingRoute: typeof ShippingRoute
+  StudioRoute: typeof StudioRoute
   NlBrutalistRoute: typeof NlBrutalistRoute
   NlFlightRoute: typeof NlFlightRoute
   NlGalleryRoute: typeof NlGalleryRoute
@@ -565,6 +591,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/studio': {
+      id: '/studio'
+      path: '/studio'
+      fullPath: '/studio'
+      preLoaderRoute: typeof StudioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shipping': {
       id: '/shipping'
       path: '/shipping'
@@ -619,6 +652,13 @@ declare module '@tanstack/react-router' {
       path: '/editions'
       fullPath: '/editions'
       preLoaderRoute: typeof EditionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/brand': {
+      id: '/brand'
+      path: '/brand'
+      fullPath: '/brand'
+      preLoaderRoute: typeof BrandRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/accessories': {
@@ -859,6 +899,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AccessoriesRoute: AccessoriesRoute,
+  BrandRoute: BrandRoute,
   EditionsRoute: EditionsRoute,
   FaqRoute: FaqRoute,
   LogoGeneratorRoute: LogoGeneratorRoute,
@@ -867,6 +908,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   ReturnsRoute: ReturnsRoute,
   ShippingRoute: ShippingRoute,
+  StudioRoute: StudioRoute,
   NlBrutalistRoute: NlBrutalistRoute,
   NlFlightRoute: NlFlightRoute,
   NlGalleryRoute: NlGalleryRoute,

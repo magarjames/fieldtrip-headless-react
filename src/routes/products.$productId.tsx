@@ -1,386 +1,204 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { useEffect, useState, useRef, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { shopifyClient } from '@/lib/shopify';
+import { LenticularProductPage } from '@/components/product/LenticularProductPage';
 import { VivreLayout } from '@/components/northline/VivreLayout';
-import { useVivre } from '@/components/northline/VivreContext';
-import { createPortal } from 'react-dom';
 
 export const Route = createFileRoute('/products/$productId')({
-  component: ProductDetailsPage,
+  component: ProductDetailsRoute,
 });
 
-function ProductDetailsPage() {
+// Rich catalog fallbacks when Shopify credentials are not set or handle is not in store
+const CATALOG_FALLBACKS: Record<string, any> = {
+  "suede-jacket": {
+    id: "prod-suede-jacket",
+    title: "Vivre Sand Suede Shift Jacket",
+    productType: "Outerwear & Jackets",
+    description: "Architectural boxy cropped jacket cut from 420 GSM Tuscan sanded calf suede. Features an articulated bi-swing back, custom gunmetal riveted snaps, and heavy cotton twill lining.",
+    variants: [{ id: "var-1", price: { amount: "285.00", currencyCode: "GBP" }, title: "M / Sand Suede" }],
+    options: [
+      { name: "Color", values: [{ value: "Sand Suede" }, { value: "Washed Charcoal" }, { value: "Concrete" }] },
+      { name: "Size", values: [{ value: "S" }, { value: "M" }, { value: "L" }, { value: "XL" }] },
+      { name: "Fit", values: [{ value: "Boxy Crop" }, { value: "Standard" }] },
+    ],
+  },
+  "skyline-zip-hoodie": {
+    id: "prod-skyline-hoodie",
+    title: "Fieldtrip Skyline Double-Zip Hoodie",
+    productType: "Hoodies & Fleece",
+    description: "480 GSM heavy French loopback terry knitted in Wakayama, Japan. Two-way matte nickel Raccagni double zip with extended webbing pulls and darted cocoon hood.",
+    variants: [{ id: "var-2", price: { amount: "195.00", currencyCode: "GBP" }, title: "M / Sky Blue" }],
+    options: [
+      { name: "Color", values: [{ value: "Sky Blue" }, { value: "Faded Black" }, { value: "Bone White" }] },
+      { name: "Size", values: [{ value: "XS" }, { value: "S" }, { value: "M" }, { value: "L" }, { value: "XL" }] },
+      { name: "Fit", values: [{ value: "Cocoon Fit" }, { value: "Relaxed" }] },
+    ],
+  },
+  "after-hours-tee": {
+    id: "prod-boxy-tee",
+    title: "Vivre Heavy After Hours Boxy Tee",
+    productType: "Tees & Tops",
+    description: "300 GSM combed carded jersey finished with an enzyme stone wash. Bound 1.25\" ribbed collar, dropped forward shoulders, and blind-stitched hems.",
+    variants: [{ id: "var-3", price: { amount: "85.00", currencyCode: "GBP" }, title: "M / Washed Black" }],
+    options: [
+      { name: "Color", values: [{ value: "Washed Black" }, { value: "Optic White" }, { value: "Dust Taupe" }] },
+      { name: "Size", values: [{ value: "S" }, { value: "M" }, { value: "L" }, { value: "XL" }] },
+      { name: "Fit", values: [{ value: "Square Boxy" }] },
+    ],
+  },
+  "layered-henley": {
+    id: "prod-layered-henley",
+    title: "Fieldtrip Layered Ribbed Henley",
+    productType: "Thermal & Knits",
+    description: "360 GSM double-face merino-cotton rib knit. Raw edge contrast cuffs and brushed horn buttons for temperature-adaptive layering.",
+    variants: [{ id: "var-4", price: { amount: "145.00", currencyCode: "GBP" }, title: "M / Heather Grey" }],
+    options: [
+      { name: "Color", values: [{ value: "Heather Grey" }, { value: "Deep Ink" }, { value: "Oatmeal" }] },
+      { name: "Size", values: [{ value: "S" }, { value: "M" }, { value: "L" }, { value: "XL" }] },
+      { name: "Fit", values: [{ value: "Tailored Slim" }, { value: "Relaxed" }] },
+    ],
+  },
+  "boatneck-top": {
+    id: "prod-boatneck-top",
+    title: "Vivre Shoreline Boatneck Top",
+    productType: "Tops & Tunics",
+    description: "260 GSM organic long-staple pima cotton interlock with structured neckline and minimal blind side slits.",
+    variants: [{ id: "var-5", price: { amount: "110.00", currencyCode: "GBP" }, title: "M / Slate Grey" }],
+    options: [
+      { name: "Color", values: [{ value: "Slate Grey" }, { value: "Ecru" }, { value: "Navy" }] },
+      { name: "Size", values: [{ value: "XS" }, { value: "S" }, { value: "M" }, { value: "L" }] },
+      { name: "Fit", values: [{ value: "Straight Line" }] },
+    ],
+  },
+  "tactical-crewneck": {
+    id: "prod-tactical-crewneck",
+    title: "Fieldtrip Tactical Slub Crewneck",
+    productType: "Sweaters & Knits",
+    description: "400 GSM dry slub cotton knit with reinforced elbow paneling and split drop hem.",
+    variants: [{ id: "var-6", price: { amount: "165.00", currencyCode: "GBP" }, title: "M / Washed Olive" }],
+    options: [
+      { name: "Color", values: [{ value: "Washed Olive" }, { value: "Black" }, { value: "Sand" }] },
+      { name: "Size", values: [{ value: "S" }, { value: "M" }, { value: "L" }, { value: "XL" }] },
+      { name: "Fit", values: [{ value: "Drop Shoulder" }] },
+    ],
+  },
+  "wide-leg-cargo": {
+    id: "prod-wide-leg-cargo",
+    title: "Vivre Pleated Wide-Leg Denim Trouser",
+    productType: "Trousers & Denim",
+    description: "14.5oz Japanese Kuroki selvedge denim in a relaxed double-pleated cut with brass button fly.",
+    variants: [{ id: "var-7", price: { amount: "210.00", currencyCode: "GBP" }, title: "32 / Raw Indigo" }],
+    options: [
+      { name: "Color", values: [{ value: "Raw Indigo" }, { value: "Washed Charcoal" }, { value: "Bleach Fade" }] },
+      { name: "Size", values: [{ value: "28" }, { value: "30" }, { value: "32" }, { value: "34" }, { value: "36" }] },
+      { name: "Fit", values: [{ value: "Wide Leg" }, { value: "Tapered" }] },
+    ],
+  },
+};
+
+function generateFallbackProduct(handle: string) {
+  // Check exact key match or partial match
+  const lower = handle.toLowerCase();
+  for (const [key, prod] of Object.entries(CATALOG_FALLBACKS)) {
+    if (lower.includes(key) || key.includes(lower)) {
+      return prod;
+    }
+  }
+
+  // Format title from handle
+  const title = handle
+    .split(/[-_]+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+
+  let type = "Outerwear & Jackets";
+  let amount = "240.00";
+  if (lower.includes("hoodie") || lower.includes("zip")) {
+    type = "Hoodies & Fleece";
+    amount = "195.00";
+  } else if (lower.includes("tee") || lower.includes("shirt")) {
+    type = "Tees & Tops";
+    amount = "85.00";
+  } else if (lower.includes("pant") || lower.includes("denim") || lower.includes("trouser")) {
+    type = "Trousers & Denim";
+    amount = "210.00";
+  }
+
+  return {
+    id: `prod-${handle}`,
+    title: title ? `Vivre ${title}` : "Vivre Sand Suede Shift Jacket",
+    productType: type,
+    description: `Architectural silhouette tailored in London from premium heavyweight textiles with articulated seam construction and custom matte hardware.`,
+    variants: [{ id: `var-${handle}`, price: { amount, currencyCode: "GBP" }, title: "M / Standard" }],
+    options: [
+      { name: "Color", values: [{ value: "Standard Edition" }, { value: "Ink Black" }, { value: "Concrete" }] },
+      { name: "Size", values: [{ value: "S" }, { value: "M" }, { value: "L" }, { value: "XL" }] },
+      { name: "Fit", values: [{ value: "Boxy Cut" }, { value: "Relaxed" }] },
+    ],
+  };
+}
+
+function ProductDetailsRoute() {
   const { productId } = Route.useParams();
-  const { addToBag } = useVivre();
-  
-  const [product, setProduct] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  
-  const [selectedColor, setSelectedColor] = useState<string>("Default");
-  const [selectedSize, setSelectedSize] = useState<string>("");
-  const [selectedFit, setSelectedFit] = useState<string>("");
-  const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
-
-  const { descriptionContent, sizeGuideContent } = useMemo(() => {
-    if (!product) return { descriptionContent: "", sizeGuideContent: null };
-    
-    const html = product.descriptionHtml || product.description || "";
-    
-    if (typeof window === 'undefined') {
-       return { descriptionContent: html, sizeGuideContent: null };
-    }
-
-    try {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, "text/html");
-      let foundSizeGuide = false;
-      let extractedSizeGuide = "";
-      
-      const children = Array.from(doc.body.children);
-      for (let i = 0; i < children.length; i++) {
-        const child = children[i];
-        if (!foundSizeGuide && child.textContent?.toLowerCase().includes("size guide")) {
-          foundSizeGuide = true;
-        }
-        
-        if (foundSizeGuide) {
-          extractedSizeGuide += child.outerHTML;
-          child.remove();
-        }
-      }
-      
-      if (foundSizeGuide) {
-         return { descriptionContent: doc.body.innerHTML, sizeGuideContent: extractedSizeGuide };
-      }
-    } catch (e) {
-      console.error("Error parsing description HTML", e);
-    }
-    
-    return { descriptionContent: html, sizeGuideContent: null };
-  }, [product]);
+  const [product, setProduct] = useState<any>(() => generateFallbackProduct(productId));
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    let isMounted = true;
+
     if (import.meta.env.VITE_SHOPIFY_DOMAIN && import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN) {
-      shopifyClient.product.fetchByHandle(productId).then((fetchedProduct) => {
-        setProduct(fetchedProduct);
-        
-        // Auto-select first options if available
-        const colorOption = (fetchedProduct as any).options?.find((o: any) => o.name.toLowerCase() === 'color' || o.name.toLowerCase() === 'colour');
-        const sizeOption = (fetchedProduct as any).options?.find((o: any) => o.name.toLowerCase() === 'size');
-        const fitOption = (fetchedProduct as any).options?.find((o: any) => o.name.toLowerCase() === 'fit');
-        
-        if (colorOption?.values.length > 0) setSelectedColor(colorOption.values[0].value);
-        if (sizeOption?.values.length > 0) setSelectedSize(sizeOption.values[0].value);
-        if (fitOption?.values.length > 0) setSelectedFit(fitOption.values[0].value);
-        
-        setLoading(false);
-      }).catch(err => {
-        console.error("Shopify fetch error:", err);
-        setLoading(false);
-      });
+      shopifyClient.product
+        .fetchByHandle(productId)
+        .then((fetchedProduct) => {
+          if (!isMounted) return;
+          if (fetchedProduct) {
+            setProduct(fetchedProduct);
+          } else {
+            setProduct(generateFallbackProduct(productId));
+          }
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.warn("Shopify fetch failed, falling back to local catalog:", err);
+          if (isMounted) {
+            setProduct(generateFallbackProduct(productId));
+            setLoading(false);
+          }
+        });
     } else {
+      setProduct(generateFallbackProduct(productId));
       setLoading(false);
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [productId]);
-
-  const sideableImagesRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = sideableImagesRef.current;
-    if (!el) return;
-    const handleWheel = (e: WheelEvent) => {
-      if (e.deltaY !== 0) {
-        e.preventDefault();
-        el.scrollLeft += e.deltaY;
-      }
-    };
-    el.addEventListener("wheel", handleWheel, { passive: false });
-    return () => el.removeEventListener("wheel", handleWheel);
-  }, [product]);
-
-  const handleAddToBag = () => {
-    if (!product) return;
-    
-    // Find the variant that matches selected options
-    let selectedVariant = (product as any).variants[0]; // fallback
-    if ((product as any).variants?.length > 1) {
-      const hasFit = (product as any).options?.some((o: any) => o.name.toLowerCase() === 'fit');
-      const match = (product as any).variants.find((v: any) => {
-        const matchesColor = v.selectedOptions.some((o: any) => (o.name.toLowerCase() === 'color' || o.name.toLowerCase() === 'colour') && o.value === selectedColor);
-        const matchesSize = v.selectedOptions.some((o: any) => o.name.toLowerCase() === 'size' && o.value === selectedSize);
-        const matchesFit = !hasFit || v.selectedOptions.some((o: any) => o.name.toLowerCase() === 'fit' && o.value === selectedFit);
-        return matchesColor && matchesSize && matchesFit;
-      });
-      if (match) selectedVariant = match;
-    }
-
-    const mappedProduct = {
-      id: product.id.toString(),
-      name: product.title,
-      group: (product.productType || "New Arrivals"),
-      price: `GBP \u00A3${parseFloat(selectedVariant?.price?.amount || '0').toFixed(2)}`,
-      image: selectedVariant?.image?.src || product.images?.[0]?.src || "",
-      alt: product.title,
-      description: product.descriptionHtml || product.description,
-      colors: [],
-      sizes: [],
-      shopifyVariantId: selectedVariant?.id?.toString(),
-      variantTitle: selectedVariant?.title !== 'Default Title' ? selectedVariant?.title : undefined
-    };
-
-    addToBag(mappedProduct);
-  };
 
   if (loading) {
     return (
-      <VivreLayout>
-        <div className="flex justify-center items-center h-[50vh]">
-          <p className="text-xl text-black/50 tracking-widest uppercase">Loading Product...</p>
-        </div>
-      </VivreLayout>
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "#e6e7e9",
+          color: "#101114",
+          fontFamily: "'Geist Mono', monospace",
+          letterSpacing: "0.14em",
+          fontSize: "0.8rem",
+          textTransform: "uppercase",
+        }}
+      >
+        <span>Loading Atelier Piece...</span>
+      </div>
     );
   }
-
-  if (!product) {
-    return (
-      <VivreLayout>
-        <div className="flex flex-col justify-center items-center h-[50vh]">
-          <h1 className="text-4xl font-black mb-4 uppercase">Product Not Found</h1>
-          <p className="text-black/50">The requested product could not be loaded.</p>
-        </div>
-      </VivreLayout>
-    );
-  }
-  const colors = (product as any).options?.find((o: any) => o.name.toLowerCase() === 'color' || o.name.toLowerCase() === 'colour')?.values.map((v: any) => v.value) || [];
-  const sizes = (product as any).options?.find((o: any) => o.name.toLowerCase() === 'size')?.values.map((v: any) => v.value) || [];
-  const fits = (product as any).options?.find((o: any) => o.name.toLowerCase() === 'fit')?.values.map((v: any) => v.value) || [];
-  const images = (product as any).images?.map((img: any) => img.src) || [];
 
   return (
     <VivreLayout>
-      <div className="shell py-12 md:py-24">
-        
-        {/* Main PDP Grid */}
-        <div className="flex flex-col md:grid md:grid-cols-2 gap-12 lg:gap-24">
-          
-          {/* Right Column: Images (Appears first on mobile) */}
-          <div 
-            className="order-1 md:order-2 flex flex-col gap-6 md:max-h-screen md:overflow-y-auto md:pr-4" 
-            ref={sideableImagesRef} 
-            style={{ scrollbarWidth: 'none' }}
-          >
-            {images.map((img: string, i: number) => (
-              <img 
-                key={i} 
-                src={img} 
-                alt={`${product.title} view ${i + 1}`}
-                className="w-full rounded-2xl bg-black/5 aspect-[4/5] md:aspect-auto object-cover border border-black/5"
-              />
-            ))}
-          </div>
-
-          {/* Left Column: Details (Appears second on mobile) */}
-          <div className="order-2 md:order-1 flex flex-col">
-             <p className="font-mono text-xs tracking-[0.14em] uppercase text-black/50 mb-4">{product.productType || "New Arrivals"}</p>
-             <h1 className="text-5xl md:text-6xl font-display font-black uppercase tracking-tighter mb-6">{product.title}</h1>
-             
-             <div className="w-full h-px bg-black/10 my-8"></div>
-             
-             <div className="flex justify-between items-center mb-8">
-               <span className="font-mono text-xs tracking-[0.14em] uppercase font-bold text-black/50">Price</span>
-               <span className="text-2xl font-medium">GBP &pound;{parseFloat(product.variants?.[0]?.price?.amount || '0').toFixed(2)}</span>
-             </div>
-
-             {colors.length > 0 && colors[0] !== 'Default Title' && (
-               <div className="mb-8">
-                 <div className="flex justify-between items-center mb-4">
-                   <span className="font-mono text-xs tracking-[0.14em] uppercase font-bold text-black/50">Color</span>
-                 </div>
-                 <div className="flex gap-3">
-                   {colors.map((color: string) => (
-                     <button
-                       key={color}
-                       onClick={() => setSelectedColor(color)}
-                       className={`px-6 py-3 border rounded-full text-sm uppercase tracking-widest font-bold transition-all ${
-                         selectedColor === color 
-                         ? 'border-brand-black bg-brand-black text-white' 
-                         : 'border-black/15 hover:border-black/30 bg-transparent'
-                       }`}
-                     >
-                       {color}
-                     </button>
-                   ))}
-                 </div>
-               </div>
-             )}
-
-             {fits.length > 0 && fits[0] !== 'Default Title' && (
-               <div className="mb-8">
-                 <div className="flex justify-between items-center mb-4">
-                   <span className="font-mono text-xs tracking-[0.14em] uppercase font-bold text-black/50">Fit</span>
-                 </div>
-                 <div className="flex gap-3 flex-wrap">
-                   {fits.map((fit: string) => (
-                     <button
-                       key={fit}
-                       onClick={() => setSelectedFit(fit)}
-                       className={`px-6 py-3 border rounded-full text-sm uppercase tracking-widest font-bold transition-all ${
-                         selectedFit === fit 
-                         ? 'border-brand-black bg-brand-black text-white' 
-                         : 'border-black/15 hover:border-black/30 bg-transparent'
-                       }`}
-                     >
-                       {fit}
-                     </button>
-                   ))}
-                 </div>
-               </div>
-             )}
-
-             {sizes.length > 0 && sizes[0] !== 'Default Title' && (
-               <div className="mb-12">
-                 <div className="flex justify-between items-center mb-4">
-                   <span className="font-mono text-xs tracking-[0.14em] uppercase font-bold text-black/50">Size</span>
-                   <button 
-                     onClick={() => setSizeGuideOpen(true)}
-                     className="text-xs font-bold uppercase tracking-widest underline underline-offset-4 opacity-50 hover:opacity-100 transition-opacity"
-                   >
-                     Size Guide
-                   </button>
-                 </div>
-                 <div className="flex flex-wrap gap-3">
-                   {sizes.map((size: string) => (
-                     <button
-                       key={size}
-                       onClick={() => setSelectedSize(size)}
-                       className={`w-14 h-14 border rounded-full flex items-center justify-center text-sm font-bold transition-all ${
-                         selectedSize === size 
-                         ? 'border-brand-black bg-brand-black text-white' 
-                         : 'border-black/15 hover:border-black/30 bg-transparent'
-                       }`}
-                     >
-                       {size}
-                     </button>
-                   ))}
-                 </div>
-               </div>
-             )}
-
-             <button 
-               onClick={handleAddToBag}
-               className="w-full py-5 bg-brand-black text-white text-sm font-bold uppercase tracking-widest rounded-full hover:bg-black/80 transition-transform active:scale-[0.98]"
-             >
-               Add to Bag
-             </button>
-             
-             <div className="mt-16">
-               <h3 className="font-mono text-xs tracking-[0.14em] uppercase font-bold text-black/50 mb-6 border-b border-black/10 pb-4">Description</h3>
-               <div 
-                 className="prose prose-sm max-w-none text-black/70 leading-relaxed"
-                 dangerouslySetInnerHTML={{ __html: descriptionContent }}
-               />
-             </div>
-          </div>
-
-        </div>
-      </div>
-
-      {/* Size Guide Modal */}
-      {sizeGuideOpen && typeof document !== "undefined" && createPortal(
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/20 backdrop-blur-sm p-4">
-          <div className="bg-brand-paper w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col relative border border-black/10">
-            <div className="p-8 border-b border-black/10 flex justify-between items-center bg-white/50 backdrop-blur-xl">
-              <h2 className="text-2xl font-display font-black uppercase tracking-tighter">Size Guide</h2>
-              <button onClick={() => setSizeGuideOpen(false)} className="w-10 h-10 flex items-center justify-center rounded-full bg-black/5 hover:bg-black/10 transition-colors">
-                ✕
-              </button>
-            </div>
-            <div className="p-8 overflow-y-auto bg-white/40">
-              {sizeGuideContent ? (
-                <>
-                  <style>{`
-                    .size-guide-content table {
-                      width: 100%;
-                      text-align: left;
-                      font-size: 0.875rem;
-                      border-collapse: collapse;
-                    }
-                    .size-guide-content th {
-                      padding: 1rem 0;
-                      font-weight: 700;
-                      text-transform: uppercase;
-                      letter-spacing: 0.1em;
-                      color: rgb(0 0 0 / 0.5);
-                      border-bottom: 1px solid rgb(0 0 0 / 0.1);
-                    }
-                    .size-guide-content td {
-                      padding: 1rem 0;
-                      font-weight: 500;
-                      border-bottom: 1px solid rgb(0 0 0 / 0.05);
-                    }
-                    .size-guide-content p {
-                      margin-bottom: 1rem;
-                    }
-                  `}</style>
-                  <div 
-                    className="prose prose-sm max-w-none text-black/70 leading-relaxed size-guide-content"
-                    dangerouslySetInnerHTML={{ __html: sizeGuideContent }} 
-                  />
-                </>
-              ) : (
-                <table className="w-full text-sm text-left">
-                  <thead>
-                    <tr className="border-b border-black/10">
-                    <th className="py-4 font-bold uppercase tracking-widest text-black/50">Size</th>
-                    <th className="py-4 font-bold uppercase tracking-widest text-black/50">Chest (in)</th>
-                    <th className="py-4 font-bold uppercase tracking-widest text-black/50">Waist (in)</th>
-                    <th className="py-4 font-bold uppercase tracking-widest text-black/50">Length (in)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-b border-black/5">
-                    <td className="py-4 font-medium">XS</td>
-                    <td className="py-4">34-36</td>
-                    <td className="py-4">28-30</td>
-                    <td className="py-4">27</td>
-                  </tr>
-                  <tr className="border-b border-black/5">
-                    <td className="py-4 font-medium">S</td>
-                    <td className="py-4">36-38</td>
-                    <td className="py-4">30-32</td>
-                    <td className="py-4">28</td>
-                  </tr>
-                  <tr className="border-b border-black/5">
-                    <td className="py-4 font-medium">M</td>
-                    <td className="py-4">38-40</td>
-                    <td className="py-4">32-34</td>
-                    <td className="py-4">29</td>
-                  </tr>
-                  <tr className="border-b border-black/5">
-                    <td className="py-4 font-medium">L</td>
-                    <td className="py-4">40-42</td>
-                    <td className="py-4">34-36</td>
-                    <td className="py-4">30</td>
-                  </tr>
-                  <tr>
-                    <td className="py-4 font-medium">XL</td>
-                    <td className="py-4">42-44</td>
-                    <td className="py-4">36-38</td>
-                    <td className="py-4">31</td>
-                  </tr>
-                </tbody>
-              </table>
-              )}
-              <div className="mt-8 p-6 bg-brand-blue/10 rounded-2xl border border-brand-blue/20">
-                <h4 className="font-bold uppercase tracking-widest text-brand-blue mb-2 text-xs">Fit Notes</h4>
-                <p className="text-sm text-brand-blue/80 leading-relaxed">
-                  Our garments are designed for a slightly relaxed, contemporary fit. We recommend taking your normal size for the intended aesthetic. If you prefer a closer fit, consider sizing down.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>,
-        document.body
-      )}
+      <LenticularProductPage product={product} productId={productId} />
     </VivreLayout>
   );
 }

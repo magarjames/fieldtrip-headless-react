@@ -96,10 +96,32 @@ const DARK_PALETTES: Palette[] = [
   { base: rgb("#151310"), mid: rgb("#42301D"), crest: rgb("#6B4A2E"), lip: rgb("#C49A6C") },
 ];
 
-type Tone = "light" | "dark";
+const CLAY_PALETTES: Palette[] = [
+  // Clay Studio — warm dark concrete, terracotta clay, soft peach/clay lip
+  { base: rgb("#0c0e12"), mid: rgb("#261e1b"), crest: rgb("#bc7155"), lip: rgb("#d68267") },
+  // Studio Pebble — concrete slate, warm umber, terracotta accent
+  { base: rgb("#0e1117"), mid: rgb("#2a2826"), crest: rgb("#8e8e95"), lip: rgb("#bc7155") },
+  // Deep Terracotta — rich midnight, dark clay, lime crease highlight
+  { base: rgb("#080a0f"), mid: rgb("#33211c"), crest: rgb("#bc7155"), lip: rgb("#c7f453") },
+];
 
-const palettesFor = (tone: Tone): Palette[] =>
-  tone === "dark" ? DARK_PALETTES : PALETTES;
+const STUDIO_LIGHT_PALETTES: Palette[] = [
+  // Studio Clay Light — concrete cream base, soft pebble mid, clay terracotta crest, warm clay lip
+  { base: rgb("#FAF7F2"), mid: rgb("#E8E2D8"), crest: rgb("#BC7155"), lip: rgb("#D8886E") },
+  // Studio Paper — pure paper cream, soft sky blue mid, slate crest, warm lip
+  { base: rgb("#F7F6F2"), mid: rgb("#DCE4EB"), crest: rgb("#424B57"), lip: rgb("#BC7155") },
+  // Studio Concrete — light grey concrete, warm sand, terracotta umber crest
+  { base: rgb("#F2F1ED"), mid: rgb("#DDD8CF"), crest: rgb("#8C5B45"), lip: rgb("#C97D62") },
+];
+
+export type Tone = "light" | "dark" | "clay" | "studio-light";
+
+const palettesFor = (tone: Tone): Palette[] => {
+  if (tone === "studio-light") return STUDIO_LIGHT_PALETTES;
+  if (tone === "clay") return CLAY_PALETTES;
+  if (tone === "dark") return DARK_PALETTES;
+  return PALETTES;
+};
 
 function CreasedGradient({ tone = "light" }: { tone?: Tone }) {
   const mat = useRef<THREE.ShaderMaterial>(null);
@@ -145,19 +167,22 @@ function CreasedGradient({ tone = "light" }: { tone?: Tone }) {
     (u.uLip.value as THREE.Vector3).lerp(t.lip, k);
   });
 
-  return (
-    <mesh frustumCulled={false}>
-      <planeGeometry args={[2, 2]} />
-      <shaderMaterial
-        ref={mat}
-        vertexShader={VERT}
-        fragmentShader={FRAG}
-        uniforms={uniforms}
-        depthWrite={false}
-        depthTest={false}
-      />
-    </mesh>
-  );
+  const mesh = useMemo(() => {
+    const geo = new THREE.PlaneGeometry(2, 2);
+    const material = new THREE.ShaderMaterial({
+      vertexShader: VERT,
+      fragmentShader: FRAG,
+      uniforms,
+      depthWrite: false,
+      depthTest: false,
+    });
+    mat.current = material;
+    const m = new THREE.Mesh(geo, material);
+    m.frustumCulled = false;
+    return m;
+  }, [uniforms]);
+
+  return <primitive object={mesh} />;
 }
 
 /** fixed full-viewport creased gradient; renders behind the page. "light" is

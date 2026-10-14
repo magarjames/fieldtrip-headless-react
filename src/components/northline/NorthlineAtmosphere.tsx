@@ -1,7 +1,17 @@
 import { ShaderGradient, ShaderGradientCanvas } from "@shadergradient/react";
 import { useEffect, useState } from "react";
 
-export function NorthlineAtmosphere({ className = "" }: { className?: string }) {
+export function NorthlineAtmosphere({
+  className = "",
+  color1 = "#0b0f0f",
+  color2 = "#263768",
+  color3 = "#c7f453",
+}: {
+  className?: string;
+  color1?: string;
+  color2?: string;
+  color3?: string;
+}) {
   const [mounted, setMounted] = useState(false);
   const [still, setStill] = useState(false);
 
@@ -41,9 +51,9 @@ export function NorthlineAtmosphere({ className = "" }: { className?: string }) 
             cPolarAngle={72}
             cDistance={3.3}
             cameraZoom={8.7}
-            color1="#0b0f0f"
-            color2="#263768"
-            color3="#c7f453"
+            color1={color1}
+            color2={color2}
+            color3={color3}
             brightness={0.82}
             reflection={0.08}
             grain="on"
