@@ -34,141 +34,141 @@ export const MODEL_SCAN_LOOKS: ModelScanLook[] = [
   {
     id: "f4",
     lookNumber: "01",
-    name: "Look 01 · Skyline Zip",
-    heroName: "Skyline zip",
+    name: "Look 01 · Key To My Heart Zip",
+    heroName: "Key To My Heart Zip",
     gender: "f",
-    outfit: "Pale blue double-zip hoodie with washed charcoal wide-leg denim",
+    outfit: "Sky blue rhinestone 'Key To My Heart' zip hoodie with washed charcoal double-knee carpenter denim",
     defaultCategory: "Hoodies & Fleece",
-    specGSM: "480 GSM 100% Organic Heavy French Loopback Terry",
-    specHardware: "Two-Way Matte Nickel Raccagni Double Zip with Extended Pull Tapes",
-    specSilhouette: "Relaxed Cocoon Dropped Shoulder with Darted Dual-Layer Hood",
-    specOrigin: "Knitted in Wakayama, Japan. Tailored in Small Batches in Portugal",
-    printTitle: "Wakayama Loopback Terry Weave & Raccagni Zipper Track",
-    printDesc: "High-density 480 GSM French terry with brushed inner pile, paired with custom nickel-plated teeth.",
+    specGSM: "480 GSM Loopback Fleece & 14.5oz Double-Knee Rigid Denim",
+    specHardware: "Two-Way Silver Metal Zipper with Rhinestone Typography & Utility Hammer Loop",
+    specSilhouette: "Dropped Cocoon Shoulder Hoodie with Stacking Double-Knee Carpenter Leg",
+    specOrigin: "Loomed in Wakayama, Japan. Tailored in Small Batches in Portugal",
+    printTitle: "'YOU ARE THE KEY TO MY HEART' Crystal Rhinestone Typography",
+    printDesc: "Hand-applied crystal rhinestone lettering heat-sealed across split kangaroo pockets with embroidered heraldic chest crest.",
     printImage: "/brand/northline-detail-blue.jpg",
     pieces: [
-      { name: "Skyline Zip Hoodie", keyword: "Hoodie", hue: "#9fb9c9", handle: "skyline-zip-hoodie" },
-      { name: "Washed Charcoal Denim", keyword: "Denim", hue: "#424246", handle: "washed-charcoal-denim" },
+      { name: "Rhinestone 'Key To My Heart' Zip Hoodie", keyword: "Hoodie", hue: "#9fb9c9", handle: "key-to-my-heart-zip-hoodie" },
+      { name: "Washed Charcoal Double-Knee Carpenter Jeans", keyword: "Carpenter", hue: "#3a3a3d", handle: "washed-charcoal-carpenter-jeans" },
     ],
   },
   {
     id: "f1",
     lookNumber: "02",
-    name: "Look 02 · Mouth Tee",
-    heroName: "Mouth tee",
+    name: "Look 02 · Double Mouth Tee",
+    heroName: "Double Mouth Tee",
     gender: "f",
-    outfit: "White silkscreen printed tee with relaxed olive utility cargo trousers",
-    defaultCategory: "Graphic & Bottoms",
-    specGSM: "280 GSM Ring-Spun Compact Cotton with Discharge Water-Based Print",
-    specHardware: "Heavy Cotton Herringbone Pocket Bags & Mil-Spec Anodized Snaps",
-    specSilhouette: "Relaxed Dropped Fit with Articulated Knee Pleats & Cinch Hems",
-    specOrigin: "Constructed in Osaka, Japan",
-    printTitle: "Original Silkscreen Mouth Graphic Discharge Print",
-    printDesc: "Hand-pulled water-based silkscreen that bleaches into the cotton yarn, ensuring zero hand-feel stiffness.",
+    outfit: "White tee with stacked blue glitter mouth prints paired with olive utility cargo trousers",
+    defaultCategory: "Tees & Cargo",
+    specGSM: "280 GSM Heavyweight Cotton Jersey & Heavy Duty Cotton Ripstop",
+    specHardware: "Concealed Military Pocket Snaps & Drawcord Ankle Cinchers",
+    specSilhouette: "Boxy Dropped-Shoulder Tee with Wide Straight Bellows Cargo Silhouette",
+    specOrigin: "Graphic Screened in Osaka, Japan. Trousers Constructed in Portugal",
+    printTitle: "Dual Stacked Blue Glitter Mouth & Grillz Screenprint",
+    printDesc: "Two-stage discharge water-base print overlaid with micro-glitter pigment and reflective teeth detail.",
     printImage: "/brand/vivre-tag.jpg",
     pieces: [
-      { name: "Mouth Tee", keyword: "Tee", hue: "#f2f2f2", handle: "mouth-tee" },
-      { name: "Olive Cargo Trousers", keyword: "Cargo", hue: "#575e46", handle: "olive-cargo-trousers" },
+      { name: "Double Blue Mouth Graphic Tee", keyword: "Mouth", hue: "#f5f5f5", handle: "double-blue-mouth-tee" },
+      { name: "Olive Drab Wide Utility Cargo Trousers", keyword: "Cargo", hue: "#585f47", handle: "olive-drab-cargo-trousers" },
     ],
   },
   {
     id: "f2",
     lookNumber: "03",
-    name: "Look 03 · Second Skin",
-    heroName: "Second skin",
+    name: "Look 03 · Second Skin Boatneck",
+    heroName: "Second Skin Boatneck",
     gender: "f",
-    outfit: "Fitted shoreline boat-neck top with deep ink washed wide denim",
-    defaultCategory: "Tops & Tunics",
-    specGSM: "240 GSM Modal-Cotton Blend with 4-Way Tactile Elasticity",
-    specHardware: "Clean Bonded Hem Construction with Laser-Cut Edge Finishes",
-    specSilhouette: "Fitted Ergonomic Boat-Neck with High Lateral Armholes",
-    specOrigin: "Knitted and Crafted in Northern Portugal",
-    printTitle: "Shoreline 240 GSM Modal-Cotton Micro-Rib Texture",
-    printDesc: "Silky tactile modal ribbing that hugs contours without compression, breathable and shape-retaining.",
+    outfit: "Optic white 3/4 sleeve boatneck top with belted deep indigo raw wide-leg denim",
+    defaultCategory: "Tops & Denim",
+    specGSM: "260 GSM Pima Modal Interlock & 14oz Japanese Raw Selvedge Denim",
+    specHardware: "Brushed Silver Plaque Buckle & Custom Brass Button Fly Rivets",
+    specSilhouette: "Sculpted 3/4 Sleeve Boatneck Line with High-Waisted Pooling Wide Denim",
+    specOrigin: "Interlock Knit in Northern Portugal. Denim Woven in Okayama, Japan",
+    printTitle: "Fine Double-Knit Modal Interlock & Raw Indigo Warp",
+    printDesc: "Smooth, zero-grain tactile knit with clean bonded edges paired with unwashed deep indigo warp yarns.",
     printImage: "/brand/northline-materials.jpg",
     pieces: [
-      { name: "Shoreline Boat Neck Top – Women’s White", keyword: "Shoreline", hue: "#f7f7f7", handle: "shoreline-boat-neck-top" },
-      { name: "Longform Wide Leg Jeans – Deep Blue", keyword: "Longform Wide", hue: "#21283d", handle: "longform-wide-leg-jeans" },
+      { name: "Optic White 3/4 Boatneck Top", keyword: "Boatneck", hue: "#ffffff", handle: "optic-white-boatneck-top" },
+      { name: "Deep Indigo Raw Wide-Leg Jeans", keyword: "Indigo", hue: "#1c2438", handle: "deep-indigo-raw-wide-jeans" },
     ],
   },
   {
     id: "f3",
     lookNumber: "04",
-    name: "Look 04 · Archive Layer",
-    heroName: "Archive layer",
+    name: "Look 04 · Infatuated Graphic Crew",
+    heroName: "Infatuated Graphic Crew",
     gender: "f",
-    outfit: "Cream graphic crew sweater paired with relaxed dark indigo denim",
+    outfit: "Cream 'Infatuated' graphic crew with printed sleeves and dark indigo wide-leg jeans",
     defaultCategory: "Sweaters & Knits",
-    specGSM: "520 GSM 7-Gauge Pure Shetland Wool Intarsia Knit",
-    specHardware: "Tubular Ribbed Cuffs, Collar & Hem with Double Linked Seams",
-    specSilhouette: "Classic Boxy Slouch with Soft Dropped Sleeves",
-    specOrigin: "Spun & Loomed on the Scottish Borders",
-    printTitle: "Archive 7-Gauge Shetland Wool Intarsia Graphic Motif",
-    printDesc: "Multi-yarn intarsia structure with contrasting heather tones and tight tension needle loops.",
+    specGSM: "500 GSM Combed Cotton Loopback Fleece & 14oz Rigid Denim",
+    specHardware: "Double-Needle Coverstitched Seams with 2x2 Heavy Spun Rib Trims",
+    specSilhouette: "Boxy Slouch Drop-Shoulder with Full Extended Graphic Sleeves",
+    specOrigin: "Loomed and Screened in Porto, Portugal",
+    printTitle: "'Infatuated' Multi-Pass Discharge & Dual Sleeve Typography",
+    printDesc: "Soft water-based discharge printing on natural cream base with graphic portrait and typographic arm runs.",
     printImage: "/brand/northline-fabric-landscape.jpg",
     pieces: [
-      { name: "Graphic Crew Sweatshirt", keyword: "Graphic Crew Sweatshirt", hue: "#ece3cc", handle: "graphic-crew-sweatshirt" },
-      { name: "Longform Wide Leg Jeans – Deep Blue", keyword: "Longform Wide", hue: "#263045", handle: "longform-wide-leg-jeans" },
+      { name: "Infatuated Sleeve-Print Graphic Crew", keyword: "Infatuated", hue: "#ece3cb", handle: "infatuated-graphic-crew" },
+      { name: "Dark Indigo Raw Wide-Leg Jeans", keyword: "Indigo", hue: "#232d43", handle: "deep-indigo-raw-wide-jeans" },
     ],
   },
   {
     id: "m1",
     lookNumber: "05",
-    name: "Look 05 · After Hours",
-    heroName: "After hours",
+    name: "Look 05 · Solid Black Boxy Tee",
+    heroName: "Solid Black Boxy Tee",
     gender: "m",
-    outfit: "Oversized washed black boxy tee with razorcut ripped wide-leg denim",
-    defaultCategory: "Tees & Tops",
-    specGSM: "300 GSM Combed Carded Jersey with Pre-Shrunk Enzyme Wash",
-    specHardware: "Bound 1.25\" Ribbed Collar with Blind-Stitched Cuffs",
-    specSilhouette: "Oversized Square Boxy Cut with Forward Shoulder Seams",
-    specOrigin: "Milled in South Carolina, Garment Dyed in Los Angeles",
-    printTitle: "After Hours Typographic Silkscreen & 300 GSM Enzyme Wash",
-    printDesc: "Heavy vintage mineral wash giving broken-in softness with sharp high-density typographic chest screen.",
+    outfit: "Heavyweight solid black boxy tee with vintage razorcut distressed wide-leg jeans",
+    defaultCategory: "Tees & Denim",
+    specGSM: "300 GSM Combed Carded Pure Black Cotton & 14.5oz Japanese Denim",
+    specHardware: "1.25\" Heavy Spun Rib Collar & Hand-Cut Razor Distressed Knee Panels",
+    specSilhouette: "Oversized Boxy Tee with Curved-Seam Distressed Wide Leg",
+    specOrigin: "Cotton Knitted in Los Angeles, Denim Hand-Finished in Kojima, Japan",
+    printTitle: "Deep Mineral Pigment Dye & Hand-Frayed Slit Abrasions",
+    printDesc: "Solid jet black pigment penetration paired with manual stone grinding and razor distressing.",
     printImage: "/brand/vivre-black.jpg",
     pieces: [
-      { name: "Black Boxy Tee", keyword: "Black Boxy Tee", hue: "#1c1c1c", handle: "black-boxy-tee" },
-      { name: "Razorcut Ripped Wide Leg Jeans – Dark Blue", keyword: "Razorcut", hue: "#748fba", handle: "razorcut-ripped-wide-leg-jeans" },
+      { name: "Solid Black Boxy Oversized Tee", keyword: "Boxy", hue: "#181818", handle: "solid-black-boxy-tee" },
+      { name: "Razorcut Distressed Knee-Panel Wide Jeans", keyword: "Razorcut", hue: "#7892bd", handle: "razorcut-distressed-wide-jeans" },
     ],
   },
   {
     id: "m2",
     lookNumber: "06",
-    name: "Look 06 · Layered Henley",
-    heroName: "Layered henley",
+    name: "Look 06 · Heather Grey Henley",
+    heroName: "Layered Grey Henley",
     gender: "m",
-    outfit: "Grey ribbed thermal henley layered over overset navy wide denim",
+    outfit: "Heather grey 3-button knit henley layered over white tee with classic blue wide-leg jeans",
     defaultCategory: "Thermal & Knits",
-    specGSM: "360 GSM 100% Merino-Cotton Double Face Rib Knit",
-    specHardware: "Natural Turned Corozo Nut Matte Buttons & Reinforced Placket",
-    specSilhouette: "Relaxed Straight Silhouette with Extended Rib Cuffs",
-    specOrigin: "Spun in Biella, Italy. Finished in Leicestershire",
-    printTitle: "Double-Face Merino Waffle-Rib & Turned Corozo Button",
-    printDesc: "Two-ply thermal matrix designed to trap warm air with matte polished natural corozo fastenings.",
+    specGSM: "360 GSM Merino-Cotton Double Rib Knit & 14oz Classic Blue Denim",
+    specHardware: "Turned Natural Corozo Nut Buttons with Clean Reinforced Placket",
+    specSilhouette: "Relaxed Layered Henley Knit with Roomy 90s Baggy Wide-Leg Jean",
+    specOrigin: "Knitted in Biella, Italy. Denim Woven in Okayama, Japan",
+    printTitle: "Fine Two-Ply Heather Rib & Authentic 90s Ring-Spun Denim",
+    printDesc: "Subtle two-tone heather melange rib structure paired with vintage rope-dyed indigo twill.",
     printImage: "/brand/northline-flatlay.jpg",
     pieces: [
-      { name: "Grey Ribbed Henley", keyword: "Henley", hue: "#878a8f", handle: "grey-ribbed-henley" },
-      { name: "Overset Wide Leg Jeans – Navy", keyword: "Overset", hue: "#6a82a6", handle: "overset-wide-leg-jeans" },
+      { name: "Heather Grey Knitted 3-Button Henley", keyword: "Henley", hue: "#95989e", handle: "heather-grey-knit-henley" },
+      { name: "Classic Blue Baggy Wide-Leg Jeans", keyword: "Baggy", hue: "#4f6e99", handle: "classic-blue-baggy-jeans" },
     ],
   },
   {
     id: "m3",
     lookNumber: "07",
-    name: "Look 07 · Suede Shift",
-    heroName: "Suede shift",
+    name: "Look 07 · Sand Suede Blouson",
+    heroName: "Sand Suede Blouson",
     gender: "m",
-    outfit: "Sand suede jacket over striped poplin and 15oz raw selvedge trousers",
+    outfit: "Sand suede zip blouson layered over pinstripe shirt and plaid tie with 15oz raw selvedge denim",
     defaultCategory: "Outerwear & Jackets",
-    specGSM: "Heavyweight 420 GSM Sanded Calf Suede with Cotton Twill Lining",
-    specHardware: "Custom Matte Gunmetal Riveted Snaps & YKK #8 Metal Zipper",
-    specSilhouette: "Structured Boxy Crop with Articulated Bi-Swing Back",
-    specOrigin: "Tanned in Tuscany, Tailored in Small Batches in London",
-    printTitle: "Tuscan Sanded Calf Suede Nappe & Gunmetal Rivet",
-    printDesc: "Velvety hand-buffed calf suede with natural nap variance, reinforced with matte oxidized hardware.",
+    specGSM: "420 GSM Tuscan Sanded Calf Suede & 15oz Heavyweight Okayama Selvedge",
+    specHardware: "Antiqued Gunmetal Zipper Track & Hand-Set Selvedge Copper Rivets",
+    specSilhouette: "Pointed Collar Blouson with Elasticated Waist & Rigid Wide Raw Leg",
+    specOrigin: "Tanned in Tuscany, Italy. Denim Woven on Vintage Toyoda Shuttles in Japan",
+    printTitle: "Hand-Sanded Tuscan Calf Suede & 15oz Raw Redline Selvedge",
+    printDesc: "Soft velvety suede nap with natural tone depth, contrasted by unwashed 15oz raw shuttle loom twill.",
     printImage: "/brand/northline-materials.jpg",
     pieces: [
-      { name: "Sand Suede Jacket", keyword: "Jacket", hue: "#c9b699", handle: "sand-suede-jacket" },
-      { name: "Ironwork 15oz Raw Denim Jeans – Black", keyword: "Ironwork", hue: "#2b2b2b", handle: "ironwork-15oz-raw-denim-jeans" },
+      { name: "Sand Suede Zip Blouson Jacket", keyword: "Suede", hue: "#c7b192", handle: "sand-suede-blouson-jacket" },
+      { name: "Ironwork 15oz Raw Selvedge Denim Jeans – Black", keyword: "Ironwork", hue: "#252528", handle: "ironwork-15oz-raw-denim-jeans" },
     ],
   },
 ];
@@ -185,38 +185,38 @@ export function getLookForProduct(product: any, productId?: string): ModelScanLo
   const handle = (product?.handle || "").toLowerCase();
   const s = `${pId} ${title} ${handle}`;
 
-  // 2. Look 01 (f4) — Skyline zip & Washed charcoal denim
-  if (s.includes("skyline") || s.includes("f4") || s.includes("charcoal")) {
+  // 2. Look 01 (f4) — Key To My Heart zip & Washed charcoal carpenter denim
+  if (s.includes("heart") || s.includes("skyline") || s.includes("f4") || s.includes("charcoal") || s.includes("carpenter")) {
     return MODEL_SCAN_LOOKS[0]; // f4
   }
 
-  // 3. Look 02 (f1) — Mouth tee & Olive cargo
-  if (s.includes("mouth") || s.includes("f1") || s.includes("olive") || s.includes("cargo")) {
+  // 3. Look 02 (f1) — Double Mouth tee & Olive cargo
+  if (s.includes("mouth") || s.includes("f1") || s.includes("olive") || s.includes("cargo") || s.includes("drab")) {
     return MODEL_SCAN_LOOKS[1]; // f1
   }
 
-  // 4. Look 03 (f2) — Shoreline boat neck top & Longform wide jeans
-  if (s.includes("shoreline") || s.includes("boat") || s.includes("second-skin") || s.includes("f2")) {
+  // 4. Look 03 (f2) — Shoreline / Optic white boat neck top & Deep indigo raw jeans
+  if (s.includes("shoreline") || s.includes("boat") || s.includes("second-skin") || s.includes("f2") || s.includes("optic-white")) {
     return MODEL_SCAN_LOOKS[2]; // f2
   }
 
-  // 5. Look 04 (f3) — Graphic crew sweatshirt & Archive layer
-  if (s.includes("graphic-crew") || s.includes("archive") || s.includes("f3") || s.includes("crew-sweatshirt")) {
+  // 5. Look 04 (f3) — Infatuated graphic crew sweatshirt & Archive layer
+  if (s.includes("infatuated") || s.includes("graphic-crew") || s.includes("archive") || s.includes("f3") || s.includes("crew-sweatshirt")) {
     return MODEL_SCAN_LOOKS[3]; // f3
   }
 
-  // 6. Look 05 (m1) — Black boxy tee & Razorcut ripped wide jeans
-  if (s.includes("razorcut") || s.includes("after-hours") || s.includes("m1") || (s.includes("boxy") && s.includes("tee")) || s.includes("black-boxy")) {
+  // 6. Look 05 (m1) — Solid black boxy tee & Razorcut ripped wide jeans
+  if (s.includes("razorcut") || s.includes("after-hours") || s.includes("m1") || (s.includes("boxy") && s.includes("tee")) || s.includes("solid-black")) {
     return MODEL_SCAN_LOOKS[4]; // m1
   }
 
-  // 7. Look 06 (m2) — Grey ribbed henley & Overset wide jeans
-  if (s.includes("henley") || s.includes("m2") || s.includes("overset")) {
+  // 7. Look 06 (m2) — Grey knitted henley & Classic blue baggy jeans
+  if (s.includes("henley") || s.includes("m2") || s.includes("overset") || s.includes("baggy") || s.includes("classic-blue")) {
     return MODEL_SCAN_LOOKS[5]; // m2
   }
 
-  // 8. Look 07 (m3) — Sand suede jacket & Ironwork 15oz denim
-  if (s.includes("suede") || s.includes("m3") || s.includes("ironwork") || s.includes("15oz")) {
+  // 8. Look 07 (m3) — Sand suede blouson jacket & Ironwork 15oz denim
+  if (s.includes("suede") || s.includes("blouson") || s.includes("m3") || s.includes("ironwork") || s.includes("15oz")) {
     return MODEL_SCAN_LOOKS[6]; // m3
   }
 
