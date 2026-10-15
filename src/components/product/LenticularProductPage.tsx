@@ -220,15 +220,24 @@ export function getLookForProduct(product: any, productId?: string): ModelScanLo
   const pId = (productId || "").toLowerCase();
   const title = (product?.title || "").toLowerCase();
   const handle = (product?.handle || "").toLowerCase();
-  const s = `${pId} ${title} ${handle}`;
+  const desc = (product?.description || "").toLowerCase();
+  const s = `${pId} ${title} ${handle} ${desc}`;
 
   // 2. Look 01 (f4) — Key To My Heart zip & Washed charcoal carpenter denim
   if (s.includes("heart") || s.includes("skyline") || s.includes("f4") || s.includes("charcoal") || s.includes("carpenter")) {
     return MODEL_SCAN_LOOKS[0]; // f4
   }
 
-  // 3. Look 02 (f1) — Double Mouth tee & Olive cargo
-  if (s.includes("mouth") || s.includes("f1") || s.includes("olive") || s.includes("cargo") || s.includes("drab")) {
+  // 3. Look 02 (f1) — Double Mouth / Graphic Lip tee & Olive cargo
+  if (
+    s.includes("mouth") ||
+    s.includes("lip") ||
+    s.includes("lips") ||
+    s.includes("f1") ||
+    s.includes("olive") ||
+    s.includes("cargo") ||
+    s.includes("drab")
+  ) {
     return MODEL_SCAN_LOOKS[1]; // f1
   }
 
@@ -243,7 +252,15 @@ export function getLookForProduct(product: any, productId?: string): ModelScanLo
   }
 
   // 6. Look 05 (m1) — Solid black boxy tee & Razorcut ripped wide jeans
-  if (s.includes("razorcut") || s.includes("after-hours") || s.includes("m1") || (s.includes("boxy") && s.includes("tee")) || s.includes("solid-black")) {
+  if (
+    s.includes("razorcut") ||
+    s.includes("after-hours") ||
+    s.includes("m1") ||
+    s.includes("solid-black") ||
+    (s.includes("black") && s.includes("boxy")) ||
+    (s.includes("black") && s.includes("tee")) ||
+    (s.includes("boxy") && s.includes("tee") && !s.includes("lip") && !s.includes("mouth") && !s.includes("white"))
+  ) {
     return MODEL_SCAN_LOOKS[4]; // m1
   }
 
@@ -260,8 +277,11 @@ export function getLookForProduct(product: any, productId?: string): ModelScanLo
   // Category fallback heuristics
   if (s.includes("hoodie") || s.includes("fleece")) return MODEL_SCAN_LOOKS[0]; // f4
   if (s.includes("knit") || s.includes("sweater")) return MODEL_SCAN_LOOKS[3]; // f3
-  if (s.includes("tee") || s.includes("shirt")) return MODEL_SCAN_LOOKS[4]; // m1
-  if (s.includes("jacket") || s.includes("coat") || s.includes("outerwear")) return MODEL_SCAN_LOOKS[6]; // m3
+  if (s.includes("cargo")) return MODEL_SCAN_LOOKS[1]; // f1
+  if (s.includes("tee") || s.includes("shirt")) {
+    return s.includes("black") ? MODEL_SCAN_LOOKS[4] : MODEL_SCAN_LOOKS[1];
+  }
+  if (s.includes("jacket") || s.includes("coat") || s.includes("outerwear") || s.includes("blouson")) return MODEL_SCAN_LOOKS[6]; // m3
   if (s.includes("denim") || s.includes("jeans") || s.includes("pant") || s.includes("trouser")) return MODEL_SCAN_LOOKS[0]; // f4
 
   // Deterministic fallback based on id length
@@ -323,32 +343,6 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
     });
   }, [activeLook.id]);
 
-  // Find companion piece in this Runway Hero look
-  const companionPiece = useMemo(() => {
-    const currentTitle = (product?.title || "").toLowerCase();
-    const currentHandle = (product?.handle || productId || "").toLowerCase();
-    return activeLook.pieces?.find(
-      (p) => !currentTitle.includes(p.name.toLowerCase()) && !currentHandle.includes(p.handle.toLowerCase())
-    );
-  }, [activeLook, product, productId]);
-
-  // E-commerce state
-  const colors = (product as any)?.options?.find((o: any) => o.name.toLowerCase() === 'color' || o.name.toLowerCase() === 'colour')?.values.map((v: any) => v.value) || ["Default"];
-  const sizes = (product as any)?.options?.find((o: any) => o.name.toLowerCase() === 'size')?.values.map((v: any) => v.value) || ["S", "M", "L", "XL"];
-  const fits = (product as any)?.options?.find((o: any) => o.name.toLowerCase() === 'fit')?.values.map((v: any) => v.value) || [];
-
-  const [selectedColor, setSelectedColor] = useState<string>(colors[0] || "Default");
-  const [selectedSize, setSelectedSize] = useState<string>(sizes[0] || "M");
-  const [selectedFit, setSelectedFit] = useState<string>(fits[0] || "Boxy");
-  const [addedNotice, setAddedNotice] = useState(false);
-
-  // Price formatting
-  const priceFormatted = useMemo(() => {
-    const raw = product?.variants?.[0]?.price?.amount;
-    if (raw) return `GBP £${parseFloat(raw).toFixed(2)}`;
-    return "GBP £185.00";
-  }, [product]);
-
   // Determine whether this piece is a bottom (pants/denim/cargo) or top/outerwear
   const isBottomPiece = useMemo(() => {
     const t = (product?.productType || "").toLowerCase();
@@ -363,6 +357,37 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
       str.includes("pant")
     );
   }, [product, productId]);
+
+  // Find companion piece in this Runway Hero look
+  const companionPiece = useMemo(() => {
+    if (isBottomPiece) {
+      return (
+        activeLook.pieces?.find((p) => {
+          const n = p.name.toLowerCase();
+          return (
+            n.includes("hoodie") ||
+            n.includes("tee") ||
+            n.includes("top") ||
+            n.includes("blouson") ||
+            n.includes("henley") ||
+            n.includes("crew")
+          );
+        }) || activeLook.pieces?.[0]
+      );
+    } else {
+      return (
+        activeLook.pieces?.find((p) => {
+          const n = p.name.toLowerCase();
+          return (
+            n.includes("jean") ||
+            n.includes("cargo") ||
+            n.includes("trouser") ||
+            n.includes("denim")
+          );
+        }) || activeLook.pieces?.[1]
+      );
+    }
+  }, [activeLook, isBottomPiece]);
 
   // Dynamic extraction of clean description and embedded size guide
   const { descriptionHtml, sizeGuideHtml } = useMemo(() => {

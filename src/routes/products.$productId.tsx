@@ -208,6 +208,11 @@ const CATALOG_FALLBACKS: Record<string, any> = {
   },
 
   // Legacy route aliases & synonyms so no existing links break
+  "graphic-lip-boxy-tee-white": { $ref: "double-blue-mouth-tee" },
+  "graphic-lip-boxy-tee": { $ref: "double-blue-mouth-tee" },
+  "graphic-lip": { $ref: "double-blue-mouth-tee" },
+  "lip-boxy-tee": { $ref: "double-blue-mouth-tee" },
+  "lip-tee": { $ref: "double-blue-mouth-tee" },
   "skyline-zip-hoodie": { $ref: "key-to-my-heart-zip-hoodie" },
   "washed-charcoal-denim": { $ref: "washed-charcoal-carpenter-jeans" },
   "mouth-tee": { $ref: "double-blue-mouth-tee" },
@@ -249,7 +254,11 @@ function generateFallbackProduct(handle: string) {
   let type = "Outerwear & Jackets";
   let amount = "240.00";
 
-  if (lower.includes("suede") || lower.includes("m3") || lower.includes("ironwork") || lower.includes("blouson")) {
+  if (lower.includes("lip") || lower.includes("mouth") || lower.includes("cargo") || lower.includes("f1") || lower.includes("olive")) {
+    lookId = "f1";
+    type = lower.includes("cargo") || lower.includes("trouser") ? "Trousers & Bottoms" : "Tees & Tops";
+    amount = "75.00";
+  } else if (lower.includes("suede") || lower.includes("m3") || lower.includes("ironwork") || lower.includes("blouson")) {
     lookId = "m3";
     type = lower.includes("denim") || lower.includes("jeans") ? "Trousers & Denim" : "Outerwear & Jackets";
     amount = "285.00";
@@ -269,10 +278,6 @@ function generateFallbackProduct(handle: string) {
     lookId = "f2";
     type = lower.includes("denim") || lower.includes("jeans") ? "Trousers & Denim" : "Tops & Tunics";
     amount = "110.00";
-  } else if (lower.includes("mouth") || lower.includes("cargo") || lower.includes("f1") || lower.includes("olive")) {
-    lookId = "f1";
-    type = lower.includes("cargo") || lower.includes("trouser") ? "Trousers & Bottoms" : "Tees & Tops";
-    amount = "75.00";
   } else if (lower.includes("hoodie") || lower.includes("zip") || lower.includes("f4") || lower.includes("carpenter") || lower.includes("heart")) {
     lookId = "f4";
     type = lower.includes("carpenter") || lower.includes("denim") || lower.includes("jeans") ? "Trousers & Denim" : "Hoodies & Fleece";
