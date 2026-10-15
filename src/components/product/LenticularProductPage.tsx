@@ -1113,9 +1113,6 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
                 <div className="ln-side-option-header">
                   <div className="ln-side-size-label-wrap">
                     <span className="ln-m" style={{ color: "var(--ln-ink)", fontWeight: 700 }}>SELECT SIZE</span>
-                    <span className="ln-m" style={{ color: "var(--ln-clay)", fontSize: "10px" }}>
-                      {isBottomPiece ? "MODEL IS 6'1\" WEARING WAIST 32 / L" : "MODEL IS 6'1\" WEARING SIZE L"}
-                    </span>
                   </div>
                   <button
                     type="button"
@@ -1363,9 +1360,6 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
                   ● DROP 001 // SIZING SPECIFICATIONS
                 </span>
                 <h3 className="ln-size-modal-heading">SIZE &amp; FIT GUIDE</h3>
-                <span className="ln-size-modal-model-note">
-                  Chamber Model Reference: 6'1" (185 cm) wearing Size L / 32" Waist
-                </span>
               </div>
 
               <button
