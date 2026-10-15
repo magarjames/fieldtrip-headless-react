@@ -18,7 +18,7 @@ const CATALOG_FALLBACKS: Record<string, any> = {
     title: "Graphic Crew Sweatshirt",
     productType: "Sweatshirts",
     lookId: "f3",
-    description: "Heavy combed organic cotton fleece in apricot cream. Features vintage graphic portrait chest print, typographic typography down both sleeves, and heavy 2x2 ribbed trims.",
+    description: "A crew neck sweatshirt with a bold graphic print. Apricot - a colour that works against black and washed denim. The explosion-style print is large and unsubtle. That is the point. Worn loose, slightly oversized. American street aesthetic with a Y2K edge.\n\nDetails\nLoose crew neck fit • Cotton-blend fleece, apricot • Bold graphic front print • Men’s sizing, M - XL\n\nHow it fits\nCut loose. Take your usual size or size down for a standard fit.",
     variants: [{ id: "var-crew-1", price: { amount: "44.99", currencyCode: "GBP" }, title: "M / Apricot" }],
     options: [
       { name: "Color", values: [{ value: "apricot" }] },
@@ -31,7 +31,7 @@ const CATALOG_FALLBACKS: Record<string, any> = {
     title: "Longform Wide Leg Jeans – Deep Blue",
     productType: "Jeans",
     lookId: "f3",
-    description: "Loose wide leg jeans in deep blue, cut straight and left to fall. The weight of the denim does the work it drapes from the hip rather than holding a shape, which is what makes the leg read long instead of merely wide. Deep blue and black tea, in standard and lighter-weight versions. Floor length as intended. Do not hem it short.",
+    description: "Loose wide leg jeans in deep blue, cut straight and left to fall. The weight of the denim does the work it drapes from the hip rather than holding a shape, which is what makes the leg read long instead of merely wide. Deep blue and black tea, in standard and lighter-weight versions. Floor length as intended. Do not hem it short.\n\nDetails\nLoose wide leg, straight cut, floor length • Drapey cotton denim, deep blue or black tea • Petite, regular and extended lengths • Women's sizing, XS–XL\n\nHow it fits\nRelaxed throughout. Choose your length by height under 158cm, 158–165cm, or 165cm and over.",
     variants: [{ id: "var-longform-1", price: { amount: "49.99", currencyCode: "GBP" }, title: "Dark Blue (Regular) / M" }],
     options: [
       { name: "Fit", values: [{ value: "Dark Blue (Petite)" }, { value: "Dark Blue (Regular)" }, { value: "Dark Blue (Extended)" }] },
@@ -46,7 +46,7 @@ const CATALOG_FALLBACKS: Record<string, any> = {
     title: "Graphic Lip Boxy Tee – White",
     productType: "T-Shirts",
     lookId: "f1",
-    description: "280 GSM heavyweight ring-spun compact cotton jersey. Dual stacked blue glitter and discharge mouth graphic with metallic grillz detail. Cut boxy with relaxed dropped shoulder and blind-stitched hem.",
+    description: "A boxy cotton t-shirt in white with a bold graphic print. Wide through the chest, straight at the hem. Dual stacked blue glitter and discharge mouth graphic with metallic grillz detail.\n\nDetails\nBoxy cut, straight hem, ribbed neck • Cotton jersey, white • Bold graphic front print • Unisex sizing, S–XXXL\n\nHow it fits\nCut loose and wide as drafted. True to size with dropped shoulder.",
     variants: [{ id: "var-lip-1", price: { amount: "22.99", currencyCode: "GBP" }, title: "M / White" }],
     options: [
       { name: "Color", values: [{ value: "White" }] },
@@ -59,7 +59,7 @@ const CATALOG_FALLBACKS: Record<string, any> = {
     title: "Sidestep Cargo Wide Leg – Grey Green",
     productType: "Trousers",
     lookId: "f1",
-    description: "Heavyweight military-grade cotton ripstop in washed grey green. Built with dual bellowed cargo thigh pockets with hidden storm flaps, articulated knee darts, and adjustable wide-leg hem cinches.",
+    description: "High waisted cargo jeans in grey green, cut wide and left to drape. A retro straight leg with cargo pocketing, sitting high on the waist so the length reads long. The grey green is muted enough to work as a neutral against black, denim and bone.\n\nDetails\nHigh waisted wide leg, loose drape • Cargo side pockets • Petite (145–155cm) and standard (156–165cm) lengths • Women's sizing, XS–XL\n\nHow it fits\nHigh waisted and relaxed. Choose petite or standard by your height.",
     variants: [{ id: "var-sidestep-1", price: { amount: "37.99", currencyCode: "GBP" }, title: "M / Gray-green" }],
     options: [
       { name: "Fit", values: [{ value: "Gray-green (petite 145-155CM)" }] },
@@ -74,7 +74,7 @@ const CATALOG_FALLBACKS: Record<string, any> = {
     title: "Shoreline Boat Neck Top – Women’s White",
     productType: "T-Shirts",
     lookId: "f2",
-    description: "260 GSM double-knit modal pima cotton interlock with four-way stretch. Elegant wide boatneck neckline, refined 3/4 elbow-length sleeve, and bonded seamless cuffs for a sculpted second-skin contour.",
+    description: "A slim-fit boat neck top in White. Mid-sleeve. The boat neck sits wide on the shoulder — a cleaner line than a crew or V. Tencel-blend knit keeps it light and breathable against the skin. Works as a base layer under an open jacket or worn alone.\n\nDetails\nSlim fit, wide boat neckline • Tencel-blend knit, breathable mid-sleeve • Women’s sizing, 0–3\n\nHow it fits\nSlim fit across shoulders and bust. Follow height/weight chart in Size Guide.",
     variants: [{ id: "var-shoreline-1", price: { amount: "44.99", currencyCode: "GBP" }, title: "1 / White" }],
     options: [
       { name: "colour", values: [{ value: "White" }] },
@@ -89,7 +89,7 @@ const CATALOG_FALLBACKS: Record<string, any> = {
     title: "Black Boxy Tee",
     productType: "T-Shirts",
     lookId: "m1",
-    description: "300 GSM ultra-heavy combed carded cotton jersey in pure solid pitch black. Engineered with a square boxy drape, dropped forward shoulder seams, 1.25\" thick bound ribbed collar, and wide elbow sleeves.",
+    description: "A boxy tee in black. Short body, wide cut, heavy cotton. Cut square rather than tapered the shoulder sits wide and the body hangs clean. No print, no branding. The black version of the blank everything else gets built on top of.\n\nDetails\nBoxy short-crop fit, small neckline • Heavy cotton, vintage washed black • Short-sleeve • Men’s sizing, XS - 2XL\n\nHow it fits\nShort and wide as cut. True to size the crop is intentional.",
     variants: [{ id: "var-black-tee-1", price: { amount: "24.99", currencyCode: "GBP" }, title: "L / Black" }],
     options: [
       { name: "Color", values: [{ value: "Black" }] },
@@ -102,7 +102,7 @@ const CATALOG_FALLBACKS: Record<string, any> = {
     title: "Razorcut Ripped Wide Leg Jeans – Dark Blue",
     productType: "Jeans",
     lookId: "m1",
-    description: "14.5oz Japanese selvedge denim in a vintage stone bleach wash. Hand-applied horizontal razorcut abrasions, curved arc knee panel seams, and an exaggerated loose skate silhouette stacking over footwear.",
+    description: "Ripped wide leg jeans in washed dark blue. The distressing is set in not added after. A loose straight leg with a curved hem and ripped detailing at the thigh and knee. Washed so the fabric moves from day one.\n\nDetails\nWide straight leg, curved hem, loose fit • Washed cotton denim, ripped detailing • Dark blue • Men’s sizing, S - 3XL\n\nHow it fits\nLoose as cut. Take your usual waist size.",
     variants: [{ id: "var-razorcut-1", price: { amount: "44.99", currencyCode: "GBP" }, title: "32 / Dark Blue" }],
     options: [
       { name: "Color", values: [{ value: "Dark blue" }] },
@@ -117,7 +117,7 @@ const CATALOG_FALLBACKS: Record<string, any> = {
     title: "Layered Henley Knit Sweater – Black",
     productType: "Knitwear",
     lookId: "m2",
-    description: "360 GSM ultra-fine merino and pima cotton ribbed knit. Features a three-button placket with natural corozo nut buttons, designed for seamless layering over a clean white tee, with extended ribbed cuffs and relaxed body.",
+    description: "A knit sweater that reads as two layers. It is one piece. Henley collar, patchwork construction, colour-blocked. Warm without being heavy. Black or dark grey.\n\nDetails\nLoose fit, henley collar • Knit cotton blend, black and dark grey • Layered patchwork construction • Men's sizing, M–3XL\n\nHow it fits\nLoose as cut. Take your usual size.",
     variants: [{ id: "var-henley-1", price: { amount: "39.99", currencyCode: "GBP" }, title: "M / Light Grey" }],
     options: [
       { name: "Color", values: [{ value: "light grey" }] },
@@ -130,7 +130,7 @@ const CATALOG_FALLBACKS: Record<string, any> = {
     title: "Overset Wide Leg Jeans – Navy",
     productType: "Jeans",
     lookId: "m2",
-    description: "14oz ring-spun denim in a classic navy wash. Cut roomy through seat and thigh with an authentic skate-inspired wide straight leg that settles with natural drape over low-profile sneakers.",
+    description: "Wide leg jeans in navy, cut for a larger build. Straight and clean from hip to hem. The navy tone pairs easily with knitwear and tees.\n\nDetails\nWide straight leg, full length • Denim-cotton blend, navy • Machine washable • Sizing by build\n\nHow it fits\nStraight cut through leg with generous break over shoes.",
     variants: [{ id: "var-overset-1", price: { amount: "40.00", currencyCode: "GBP" }, title: "L / Navy" }],
     options: [
       { name: "Color", values: [{ value: "Navy" }] },
@@ -145,7 +145,7 @@ const CATALOG_FALLBACKS: Record<string, any> = {
     title: "Driftwood Retro Leather Jacket – Men’s",
     productType: "Jackets",
     lookId: "m3",
-    description: "Supple retro leather jacket in warm khaki. Styled with a pointed collar, full front zip closure, horizontal chest yoke detail, elasticized hem, and designed for tailoring layers over shirts and ties.",
+    description: "A loose retro PU leather jacket. Wide shoulder, boxy body. Brown with cashmere lining for winter. Khaki lighter. Sits over a hoodie or heavy knit without pulling. Looks better slightly too big.\n\nDetails\nLoose relaxed fit, lapel collar • PU leather, brown (cashmere-lined) and khaki • Zip and button front • Men’s sizing, S–3XL\n\nHow it fits\nCut generously. Size down for a closer fit.",
     variants: [{ id: "var-driftwood-1", price: { amount: "89.99", currencyCode: "GBP" }, title: "L / Khaki" }],
     options: [
       { name: "Color", values: [{ value: "Khaki" }] },
@@ -158,7 +158,7 @@ const CATALOG_FALLBACKS: Record<string, any> = {
     title: "Ironwork 15oz Raw Denim Jeans – Black",
     productType: "Jeans",
     lookId: "m3",
-    description: "15oz sanforized rigid raw black denim. Finished with copper rivets, heavy redline selvedge ID, and a tailored wide straight fall.",
+    description: "15oz raw cow denim. Wide-leg, straight, built to age. No pre-wash. The indigo breaks down where your body moves - behind the knee, pocket corners, along the thigh. The result is jeans that become yours. Heavier than standard denim. The weight holds the leg shape.\n\nDetails\n15oz raw cow denim, original black • Straight wide-leg, baggy fit, mid rise • Unisex sizing, S - 2XL\n\nHow it fits\nStiff at first - correct. Take your usual size. Will not stretch.",
     variants: [{ id: "var-ironwork-1", price: { amount: "69.99", currencyCode: "GBP" }, title: "L / Cow Black" }],
     options: [
       { name: "Color", values: [{ value: "Cow Black" }] },

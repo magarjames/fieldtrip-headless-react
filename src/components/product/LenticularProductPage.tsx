@@ -542,6 +542,168 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
     return { descriptionHtml: clean, sizeGuideHtml: null };
   }, [product]);
 
+  // Real Shopify specifications & authentic garment guidance
+  const shopifySpecs = useMemo(() => {
+    const rawHtml = product?.descriptionHtml || "";
+    const rawText = product?.description || "";
+    const type = (product?.productType || "").toLowerCase();
+    const tags = Array.isArray(product?.tags)
+      ? product.tags.map((t: any) => (typeof t === "string" ? t : t?.value || "")).join(" ").toLowerCase()
+      : typeof product?.tags === "string"
+      ? product.tags.toLowerCase()
+      : "";
+    const title = (product?.title || "").toLowerCase();
+    const handle = (product?.handle || productId || "").toLowerCase();
+
+    // 1. Extract Details
+    let details = "";
+    if (typeof window !== "undefined") {
+      try {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(rawHtml || rawText, "text/html");
+        const headers = Array.from(doc.querySelectorAll("h1, h2, h3, h4, h5, h6, strong, b"));
+        const detailsHeader = headers.find((h) => /details/i.test((h.textContent || "").trim()));
+        if (detailsHeader) {
+          let sib = detailsHeader.nextElementSibling;
+          while (sib && !/^h[1-6]$/i.test(sib.tagName)) {
+            if (sib.tagName === "UL" || sib.tagName === "OL") {
+              const items = Array.from(sib.querySelectorAll("li"))
+                .map((li) => (li.textContent || "").trim())
+                .filter(Boolean);
+              if (items.length > 0) {
+                details = items.join(" • ");
+                break;
+              }
+            }
+            sib = sib.nextElementSibling;
+          }
+        }
+      } catch (e) {
+        console.warn("Error parsing details HTML:", e);
+      }
+    }
+
+    if (!details) {
+      const detailsMatch = (rawHtml || rawText).match(/(?:Details|DETAILS)\s*[:]?\s*([\s\S]*?)(?:How it fits|HOW IT FITS|Size Guide|SIZE GUIDE|$)/i);
+      if (detailsMatch) {
+        details = detailsMatch[1]
+          .replace(/<[^>]*>/g, " ")
+          .replace(/\r?\n+/g, " • ")
+          .replace(/\s+/g, " ")
+          .replace(/^[\s•]+|[\s•]+$/g, "")
+          .trim();
+      }
+    }
+
+    // 2. Extract How it fits
+    let fit = "";
+    if (typeof window !== "undefined") {
+      try {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(rawHtml || rawText, "text/html");
+        const headers = Array.from(doc.querySelectorAll("h1, h2, h3, h4, h5, h6, strong, b"));
+        const fitHeader = headers.find((h) => /how it fits/i.test((h.textContent || "").trim()));
+        if (fitHeader) {
+          let sib = fitHeader.nextElementSibling;
+          while (sib && !/^h[1-6]$/i.test(sib.tagName)) {
+            if (sib.tagName === "P" || sib.tagName === "DIV") {
+              const text = (sib.textContent || "").trim();
+              if (text && !/size guide/i.test(text)) {
+                fit = text;
+                break;
+              }
+            }
+            sib = sib.nextElementSibling;
+          }
+        }
+      } catch (e) {
+        console.warn("Error parsing fit HTML:", e);
+      }
+    }
+
+    if (!fit) {
+      const fitMatch = (rawHtml || rawText).match(/(?:How it fits|HOW IT FITS)\s*[:]?\s*([\s\S]*?)(?:Size Guide|SIZE GUIDE|$)/i);
+      if (fitMatch) {
+        fit = fitMatch[1]
+          .replace(/<[^>]*>/g, " ")
+          .replace(/\r?\n+/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
+      }
+    }
+
+    // 3. Extract Material & Weave from lead description and details
+    let material = "";
+    const introMatch = rawText.match(/^([^\n]+(?:\n[^\n]+)?)/);
+    if (introMatch) {
+      const firstChunk = introMatch[1].replace(/Details[\s\S]*$/i, "").trim();
+      if (firstChunk && !firstChunk.toLowerCase().includes("size guide")) {
+        material = firstChunk;
+      }
+    }
+
+    if (details) {
+      const fabricPart = details.split("•").find((p) =>
+        /denim|cotton|fleece|knit|wool|leather|tencel|ripstop|modal|jersey/i.test(p)
+      );
+      if (fabricPart) {
+        const trimmed = fabricPart.trim();
+        if (!material.toLowerCase().includes(trimmed.toLowerCase())) {
+          material = material ? `${trimmed}. ${material}` : trimmed;
+        }
+      }
+    }
+
+    if (!material) {
+      material = isBottomPiece
+        ? "Heavyweight drapey cotton denim and durable twill loomed for structured fall."
+        : "Combed premium cotton and soft loopback textiles tailored for relaxed architectural comfort.";
+    }
+
+    // 4. Authentic Care Guidelines tailored to the exact garment
+    let care = "";
+    const combined = `${type} ${tags} ${title} ${handle} ${material}`.toLowerCase();
+    if (combined.includes("leather") || combined.includes("pu")) {
+      care = "Wipe clean with a soft damp cloth. Store on a contoured hanger away from direct moisture and heat sources.";
+    } else if (combined.includes("knit") || combined.includes("sweater") || combined.includes("henley")) {
+      care = "Hand wash cold or gentle wool cycle using neutral detergent. Reshape while damp and lay flat to dry on a clean towel.";
+    } else if (combined.includes("sweatshirt") || combined.includes("crew") || combined.includes("hoodie") || combined.includes("fleece")) {
+      care = "Gentle cycle cold wash with like tones. Tumble dry low or air dry flat to preserve fleece softness and graphic print integrity.";
+    } else if (combined.includes("denim") || combined.includes("jean") || combined.includes("cargo") || combined.includes("trouser")) {
+      care = "Wash inside out in cold water on gentle cycle with dark tones. Hang dry in shade to preserve raw dye saturation and structured twill drape.";
+    } else {
+      care = "Gentle cycle cold wash with like tones. Tumble dry low or line dry to preserve fabric density and graphic integrity.";
+    }
+
+    if (!details) {
+      details = isBottomPiece
+        ? "Loose wide leg, straight cut, floor length • Structured twill fall • Articulated seam construction"
+        : "Relaxed drop-shoulder silhouette • Clean reinforced collar and hems • Articulated geometric drape";
+    }
+
+    if (!fit) {
+      fit = isBottomPiece
+        ? "Relaxed throughout. Drape pools naturally over footwear. Order true waist size."
+        : "Cut loose and oversized for natural streetwear layering. Order your true size, or size down for a standard fit.";
+    }
+
+    return {
+      material,
+      details,
+      fit,
+      care,
+    };
+  }, [product, productId, isBottomPiece]);
+
+  // Real Shopify Product Photography for gallery
+  const productImageUrl = useMemo(() => {
+    if (product?.images && product.images.length > 0) {
+      const img = product.images[1] || product.images[0];
+      return img?.src || img?.url || null;
+    }
+    return null;
+  }, [product]);
+
   // Size Guide Modal State
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const [sizeGuideUnit, setSizeGuideUnit] = useState<"in" | "cm">("in");
@@ -1115,76 +1277,68 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
             </figure>
           ))}
 
-          {/* 5th Card: The One Print / Textile Macro View */}
+          {/* 5th Card: Real Product Studio Detail */}
           <figure
             key="print-detail"
             className="ln-thumb ln-thumb--print ln-up"
           >
             <div className="ln-thumb-wrap">
               <img
-                src={activeLook.printImage}
-                alt={`${product?.title || "Garment"} ${activeLook.printTitle}`}
+                src={productImageUrl || activeLook.printImage}
+                alt={`${product?.title || "Garment"} studio still`}
                 loading="lazy"
               />
-              <span className="ln-print-chip">MACRO PRINT</span>
+              <span className="ln-print-chip">STUDIO DETAIL</span>
             </div>
             <figcaption className="ln-thumb-caption">
               <span className="ln-m" style={{ fontWeight: 700, color: "var(--ln-clay)" }}>
-                05 // PRINT &amp; WEAVE
+                05 // STUDIO DETAIL
               </span>
-              <span className="ln-m" style={{ fontSize: "10px" }}>Macro 1:1</span>
+              <span className="ln-m" style={{ fontSize: "10px" }}>Garment 1:1</span>
             </figcaption>
           </figure>
         </div>
       </section>
 
-      {/* Section 03: Editorial Spec Rows */}
+      {/* Section 03: Structured Garment Specs (Populated from Real Shopify Data) */}
       <section id="ln-specs" className="ln-specs-section">
         <div className="ln-row ln-up">
           <b className="ln-row-title">Material &amp; Weave</b>
           <span className="ln-row-line">
-            {isBottomPiece
-              ? `${activeLook.specGSM}. Shuttle-loomed or woven with high abrasion resistance, structured drape, and authentic twill fall.`
-              : `${activeLook.specGSM}. Sourced from specialist heritage mills with breathable, high-density yarn construction and an ultra-soft hand feel.`}
+            {shopifySpecs.material}
           </span>
           <span className="ln-m ln-row-meta">
-            Fabric GSM // High-Density Weave
+            Fabric // Textile Composition
           </span>
         </div>
 
         <div className="ln-row ln-up">
-          <b className="ln-row-title">Hardware &amp; Seams</b>
+          <b className="ln-row-title">Garment Details</b>
           <span className="ln-row-line">
-            {isBottomPiece
-              ? `${activeLook.specHardware}. Heavy felled inseams with chain-stitched hems, copper shank rivets, and reinforced bar-tacks on stress apertures.`
-              : `${activeLook.specHardware}. Precision-machined trims with reinforced double-needle cover-stitching across collar, shoulders, and hems.`}
+            {shopifySpecs.details}
           </span>
           <span className="ln-m ln-row-meta">
-            Precision Machined // Sealed
+            Specification // Atelier Details
           </span>
         </div>
 
         <div className="ln-row ln-up">
           <b className="ln-row-title">Cut &amp; Silhouette</b>
           <span className="ln-row-line">
-            {isBottomPiece
-              ? `${activeLook.specSilhouette}. Drafted with generous ease through seat and thigh, falling into an exaggerated wide straight break over footwear.`
-              : `${activeLook.specSilhouette}. Engineered with relaxed dropped shoulders and an ergonomic block for versatile standalone wear and effortless layering.`}
+            {shopifySpecs.fit}
           </span>
           <span className="ln-m ln-row-meta">
-            Pattern Drafting // Articulated
+            Silhouette // Sizing &amp; Fit
           </span>
         </div>
 
         <div className="ln-row ln-up">
           <b className="ln-row-title">Provenance &amp; Care</b>
           <span className="ln-row-line">
-            {isBottomPiece
-              ? `${activeLook.specOrigin}. Turn garment inside out before cold wash on gentle cycle. Hang dry in shade to preserve raw dye saturation and fabric rigidity.`
-              : `${activeLook.specOrigin}. Gentle cycle cold wash with like tones. Lay flat to dry away from direct heat to preserve garment geometry and print depth.`}
+            {shopifySpecs.care}
           </span>
           <span className="ln-m ln-row-meta">
-            Handcrafted Batch // Care Guide
+            VIVRE-CLUB // Care Guide
           </span>
         </div>
       </section>
