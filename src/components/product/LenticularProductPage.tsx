@@ -1,8 +1,45 @@
 import React, { useEffect, useRef, useState, useMemo } from "react";
+import { createPortal } from "react-dom";
 import { Link } from "@tanstack/react-router";
-import { Check, Play, Pause } from "lucide-react";
+import { Check, Play, Pause, X, Ruler } from "lucide-react";
 import { useVivre } from "@/components/northline/VivreContext";
 import "@/components/product/lenticular.css";
+
+export const TOP_MEASUREMENTS = {
+  in: [
+    { size: "XS", chest: "40\"", shoulder: "20\"", sleeve: "23.5\"", length: "26.5\"" },
+    { size: "S", chest: "42\"", shoulder: "21\"", sleeve: "24.0\"", length: "27.5\"" },
+    { size: "M", chest: "44\"", shoulder: "22\"", sleeve: "24.5\"", length: "28.5\"" },
+    { size: "L", chest: "46\"", shoulder: "23\"", sleeve: "25.0\"", length: "29.5\"" },
+    { size: "XL", chest: "48\"", shoulder: "24\"", sleeve: "25.5\"", length: "30.5\"" },
+  ],
+  cm: [
+    { size: "XS", chest: "102 cm", shoulder: "51 cm", sleeve: "60 cm", length: "67 cm" },
+    { size: "S", chest: "107 cm", shoulder: "53 cm", sleeve: "61 cm", length: "70 cm" },
+    { size: "M", chest: "112 cm", shoulder: "56 cm", sleeve: "62 cm", length: "72 cm" },
+    { size: "L", chest: "117 cm", shoulder: "58 cm", sleeve: "64 cm", length: "75 cm" },
+    { size: "XL", chest: "122 cm", shoulder: "61 cm", sleeve: "65 cm", length: "77 cm" },
+  ],
+};
+
+export const BOTTOM_MEASUREMENTS = {
+  in: [
+    { size: "26", waist: "27\"", hip: "37\"", inseam: "31.5\"", rise: "12.0\"", leg: "20.5\"" },
+    { size: "28", waist: "29\"", hip: "39\"", inseam: "32.0\"", rise: "12.5\"", leg: "21.0\"" },
+    { size: "30", waist: "31\"", hip: "41\"", inseam: "32.5\"", rise: "13.0\"", leg: "22.0\"" },
+    { size: "32", waist: "33\"", hip: "43\"", inseam: "33.0\"", rise: "13.5\"", leg: "23.0\"" },
+    { size: "34", waist: "35\"", hip: "45\"", inseam: "33.5\"", rise: "14.0\"", leg: "24.0\"" },
+    { size: "36", waist: "37\"", hip: "47\"", inseam: "34.0\"", rise: "14.5\"", leg: "25.0\"" },
+  ],
+  cm: [
+    { size: "26", waist: "69 cm", hip: "94 cm", inseam: "80 cm", rise: "30.5 cm", leg: "52 cm" },
+    { size: "28", waist: "74 cm", hip: "99 cm", inseam: "81 cm", rise: "32.0 cm", leg: "53 cm" },
+    { size: "30", waist: "79 cm", hip: "104 cm", inseam: "83 cm", rise: "33.0 cm", leg: "56 cm" },
+    { size: "32", waist: "84 cm", hip: "109 cm", inseam: "84 cm", rise: "34.0 cm", leg: "58 cm" },
+    { size: "34", waist: "89 cm", hip: "114 cm", inseam: "85 cm", rise: "36.0 cm", leg: "61 cm" },
+    { size: "36", waist: "94 cm", hip: "119 cm", inseam: "86 cm", rise: "37.0 cm", leg: "64 cm" },
+  ],
+};
 
 // 7 Real Model Scan Looks matching Runway Hero in exact order
 export interface HeroLookPiece {
@@ -312,15 +349,86 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
     return "GBP £185.00";
   }, [product]);
 
-  // Clean description HTML
-  const cleanDescription = useMemo(() => {
+  // Determine whether this piece is a bottom (pants/denim/cargo) or top/outerwear
+  const isBottomPiece = useMemo(() => {
+    const t = (product?.productType || "").toLowerCase();
+    const h = (product?.handle || productId || "").toLowerCase();
+    const title = (product?.title || "").toLowerCase();
+    const str = `${t} ${h} ${title}`;
+    return (
+      str.includes("denim") ||
+      str.includes("jean") ||
+      str.includes("cargo") ||
+      str.includes("trouser") ||
+      str.includes("pant")
+    );
+  }, [product, productId]);
+
+  // Dynamic extraction of clean description and embedded size guide
+  const { descriptionHtml, sizeGuideHtml } = useMemo(() => {
     const raw = product?.descriptionHtml || product?.description || "";
     if (!raw) {
-      return "Engineered utility garment tailored with an oversized streetwear drape, taped waterproof seams, and four-way articulation.";
+      return {
+        descriptionHtml: "Engineered utility garment tailored with an oversized streetwear drape, reinforced seams, and four-way articulation.",
+        sizeGuideHtml: null,
+      };
     }
-    // Remove size guide if embedded
-    return raw.replace(/<[^>]*size guide[^>]*>[\s\S]*$/i, "").trim() || raw;
+
+    if (typeof window === "undefined") {
+      const clean = raw.replace(/<[^>]*size guide[^>]*>[\s\S]*$/i, "").trim() || raw;
+      return { descriptionHtml: clean, sizeGuideHtml: null };
+    }
+
+    try {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(raw, "text/html");
+      let foundSizeGuide = false;
+      let extractedSizeGuide = "";
+
+      const children = Array.from(doc.body.children);
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+        if (!foundSizeGuide && child.textContent?.toLowerCase().includes("size guide")) {
+          foundSizeGuide = true;
+        }
+
+        if (foundSizeGuide) {
+          extractedSizeGuide += child.outerHTML;
+          child.remove();
+        }
+      }
+
+      if (foundSizeGuide) {
+        return {
+          descriptionHtml: doc.body.innerHTML || raw,
+          sizeGuideHtml: extractedSizeGuide,
+        };
+      }
+    } catch (e) {
+      console.warn("DOMParser error parsing description HTML", e);
+    }
+
+    const clean = raw.replace(/<[^>]*size guide[^>]*>[\s\S]*$/i, "").trim() || raw;
+    return { descriptionHtml: clean, sizeGuideHtml: null };
   }, [product]);
+
+  // Size Guide Modal State
+  const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
+  const [sizeGuideUnit, setSizeGuideUnit] = useState<"in" | "cm">("in");
+  const [sizeGuideCategory, setSizeGuideCategory] = useState<"tops" | "bottoms">("tops");
+
+  useEffect(() => {
+    setSizeGuideCategory(isBottomPiece ? "bottoms" : "tops");
+  }, [isBottomPiece]);
+
+  useEffect(() => {
+    if (!sizeGuideOpen) return;
+    const onEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSizeGuideOpen(false);
+    };
+    window.addEventListener("keydown", onEsc);
+    return () => window.removeEventListener("keydown", onEsc);
+  }, [sizeGuideOpen]);
 
   // Change frame helper
   const changeFrame = (next: number) => {
@@ -469,9 +577,10 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
               </span>
             </div>
 
-            <p className="ln-hero-desc">
-              {cleanDescription}
-            </p>
+            <div
+              className="ln-hero-desc"
+              dangerouslySetInnerHTML={{ __html: descriptionHtml }}
+            />
 
             <div className="ln-hero-price-row">
               <span className="ln-price-val">{priceFormatted}</span>
@@ -492,13 +601,20 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
               </div>
             )}
 
-            <div style={{ display: "flex", gap: "1.5rem", alignItems: "center", marginTop: "2rem" }}>
+            <div style={{ display: "flex", gap: "1.5rem", alignItems: "center", marginTop: "2rem", flexWrap: "wrap" }}>
               <a href="#ln-views" className="ln-m" style={{ textDecoration: "underline", color: "var(--ln-ink)", fontWeight: 700 }}>
                 Four views &amp; print ↓
               </a>
               <a href="#ln-specs" className="ln-m" style={{ textDecoration: "underline", color: "var(--ln-ink-muted)" }}>
                 Specifications ↓
               </a>
+              <button
+                type="button"
+                onClick={() => setSizeGuideOpen(true)}
+                className="ln-m ln-size-guide-inline-btn"
+              >
+                Size Guide ↗
+              </button>
             </div>
           </div>
 
@@ -699,10 +815,21 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
               {/* Sizing Selector */}
               <div className="ln-side-option-group">
                 <div className="ln-side-option-header">
-                  <span className="ln-m" style={{ color: "var(--ln-ink)", fontWeight: 700 }}>SELECT SIZE</span>
-                  <span className="ln-m" style={{ color: "var(--ln-clay)", fontSize: "10px" }}>
-                    MODEL IS 6'1" WEARING SIZE L
-                  </span>
+                  <div className="ln-side-size-label-wrap">
+                    <span className="ln-m" style={{ color: "var(--ln-ink)", fontWeight: 700 }}>SELECT SIZE</span>
+                    <span className="ln-m" style={{ color: "var(--ln-clay)", fontSize: "10px" }}>
+                      {isBottomPiece ? "MODEL IS 6'1\" WEARING WAIST 32 / L" : "MODEL IS 6'1\" WEARING SIZE L"}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setSizeGuideOpen(true)}
+                    className="ln-side-size-guide-btn"
+                    title="Open Size Guide modal"
+                  >
+                    <Ruler size={11} />
+                    <span>Size Guide</span>
+                  </button>
                 </div>
                 <div className="ln-side-size-pills">
                   {sizes.map((sz: string) => (
@@ -882,7 +1009,9 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
         <div className="ln-row ln-up">
           <b className="ln-row-title">Material &amp; Weave</b>
           <span className="ln-row-line">
-            {activeLook.specGSM}. Sourced from specialist heritage mills, treated with a durable water-repellent finish that preserves breathability and natural handle.
+            {isBottomPiece
+              ? `${activeLook.specGSM}. Shuttle-loomed or woven with high abrasion resistance, structured drape, and authentic twill fall.`
+              : `${activeLook.specGSM}. Sourced from specialist heritage mills with breathable, high-density yarn construction and an ultra-soft hand feel.`}
           </span>
           <span className="ln-m ln-row-meta">
             Fabric GSM // High-Density Weave
@@ -892,7 +1021,9 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
         <div className="ln-row ln-up">
           <b className="ln-row-title">Hardware &amp; Seams</b>
           <span className="ln-row-line">
-            {activeLook.specHardware}. Bonded internal seam allowances with reinforced bar-tacking along high-stress pocket apertures and zip ends.
+            {isBottomPiece
+              ? `${activeLook.specHardware}. Heavy felled inseams with chain-stitched hems, copper shank rivets, and reinforced bar-tacks on stress apertures.`
+              : `${activeLook.specHardware}. Precision-machined trims with reinforced double-needle cover-stitching across collar, shoulders, and hems.`}
           </span>
           <span className="ln-m ln-row-meta">
             Precision Machined // Sealed
@@ -902,7 +1033,9 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
         <div className="ln-row ln-up">
           <b className="ln-row-title">Cut &amp; Silhouette</b>
           <span className="ln-row-line">
-            {activeLook.specSilhouette}. Drafted with ergonomic underarm gussets for unrestricted reach and clean horizontal drape over heavy knitwear.
+            {isBottomPiece
+              ? `${activeLook.specSilhouette}. Drafted with generous ease through seat and thigh, falling into an exaggerated wide straight break over footwear.`
+              : `${activeLook.specSilhouette}. Engineered with relaxed dropped shoulders and an ergonomic block for versatile standalone wear and effortless layering.`}
           </span>
           <span className="ln-m ln-row-meta">
             Pattern Drafting // Articulated
@@ -912,13 +1045,174 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
         <div className="ln-row ln-up">
           <b className="ln-row-title">Provenance &amp; Care</b>
           <span className="ln-row-line">
-            {activeLook.specOrigin}. Spot clean or gentle hand wash cold. Lay flat to dry away from direct heat to preserve fabric structure and deep dye saturation.
+            {isBottomPiece
+              ? `${activeLook.specOrigin}. Turn garment inside out before cold wash on gentle cycle. Hang dry in shade to preserve raw dye saturation and fabric rigidity.`
+              : `${activeLook.specOrigin}. Gentle cycle cold wash with like tones. Lay flat to dry away from direct heat to preserve garment geometry and print depth.`}
           </span>
           <span className="ln-m ln-row-meta">
             Handcrafted Batch // Care Guide
           </span>
         </div>
       </section>
+
+      {/* Interactive Size & Fit Guide Modal */}
+      {sizeGuideOpen && typeof document !== "undefined" && createPortal(
+        <div
+          className="ln-size-modal-backdrop"
+          onClick={() => setSizeGuideOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Size and Fit Guide"
+        >
+          <div
+            className="ln-size-modal-panel"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="ln-size-modal-header">
+              <div className="ln-size-modal-title-wrap">
+                <span className="ln-m ln-size-modal-tag">
+                  ● DROP 001 // SIZING SPECIFICATIONS
+                </span>
+                <h3 className="ln-size-modal-heading">SIZE &amp; FIT GUIDE</h3>
+                <span className="ln-size-modal-model-note">
+                  Chamber Model Reference: 6'1" (185 cm) wearing Size L / 32" Waist
+                </span>
+              </div>
+
+              <button
+                type="button"
+                className="ln-size-modal-close-btn"
+                onClick={() => setSizeGuideOpen(false)}
+                aria-label="Close size guide"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Modal Controls: Category Tabs & Unit Switcher */}
+            <div className="ln-size-modal-controls">
+              <div className="ln-size-modal-tabs">
+                <button
+                  type="button"
+                  className={`ln-size-tab-btn ${sizeGuideCategory === "tops" ? "active" : ""}`}
+                  onClick={() => setSizeGuideCategory("tops")}
+                >
+                  Tops &amp; Outerwear
+                </button>
+                <button
+                  type="button"
+                  className={`ln-size-tab-btn ${sizeGuideCategory === "bottoms" ? "active" : ""}`}
+                  onClick={() => setSizeGuideCategory("bottoms")}
+                >
+                  Bottoms &amp; Trousers
+                </button>
+              </div>
+
+              <div className="ln-size-unit-toggle">
+                <span className="ln-m" style={{ fontSize: "10px", color: "var(--ln-ink-muted)", marginRight: "6px" }}>UNIT:</span>
+                <button
+                  type="button"
+                  className={`ln-unit-pill ${sizeGuideUnit === "in" ? "active" : ""}`}
+                  onClick={() => setSizeGuideUnit("in")}
+                >
+                  IN
+                </button>
+                <button
+                  type="button"
+                  className={`ln-unit-pill ${sizeGuideUnit === "cm" ? "active" : ""}`}
+                  onClick={() => setSizeGuideUnit("cm")}
+                >
+                  CM
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Body: Scrollable Table */}
+            <div className="ln-size-modal-body">
+              {sizeGuideHtml ? (
+                <div
+                  className="ln-size-extracted-content"
+                  dangerouslySetInnerHTML={{ __html: sizeGuideHtml }}
+                />
+              ) : sizeGuideCategory === "tops" ? (
+                <div className="ln-size-table-wrap">
+                  <table className="ln-size-table">
+                    <thead>
+                      <tr>
+                        <th>Size</th>
+                        <th>Chest ({sizeGuideUnit.toUpperCase()})</th>
+                        <th>Shoulder ({sizeGuideUnit.toUpperCase()})</th>
+                        <th>Sleeve ({sizeGuideUnit.toUpperCase()})</th>
+                        <th>Length ({sizeGuideUnit.toUpperCase()})</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {TOP_MEASUREMENTS[sizeGuideUnit].map((row) => (
+                        <tr key={row.size} className={selectedSize === row.size ? "is-selected-size" : ""}>
+                          <td className="size-label">{row.size}</td>
+                          <td>{row.chest}</td>
+                          <td>{row.shoulder}</td>
+                          <td>{row.sleeve}</td>
+                          <td>{row.length}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="ln-size-table-wrap">
+                  <table className="ln-size-table">
+                    <thead>
+                      <tr>
+                        <th>Waist Size</th>
+                        <th>Waist ({sizeGuideUnit.toUpperCase()})</th>
+                        <th>Hip ({sizeGuideUnit.toUpperCase()})</th>
+                        <th>Inseam ({sizeGuideUnit.toUpperCase()})</th>
+                        <th>Front Rise ({sizeGuideUnit.toUpperCase()})</th>
+                        <th>Leg Opening ({sizeGuideUnit.toUpperCase()})</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {BOTTOM_MEASUREMENTS[sizeGuideUnit].map((row) => (
+                        <tr key={row.size} className={selectedSize === row.size ? "is-selected-size" : ""}>
+                          <td className="size-label">{row.size}</td>
+                          <td>{row.waist}</td>
+                          <td>{row.hip}</td>
+                          <td>{row.inseam}</td>
+                          <td>{row.rise}</td>
+                          <td>{row.leg}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              {/* Fit & Measuring Guidance Box */}
+              <div className="ln-size-guidance-card">
+                <b className="ln-size-guidance-title">
+                  {sizeGuideCategory === "tops" ? "TOPS FIT &amp; STYLING NOTES" : "BOTTOMS FIT &amp; STYLING NOTES"}
+                </b>
+                <p className="ln-size-guidance-text">
+                  {sizeGuideCategory === "tops"
+                    ? "Our tops, hoodies, and jackets are drafted with a dropped forward shoulder and relaxed boxy chest drape. If you prefer the authentic atelier streetwear aesthetic, order your true size. For a more conventional or closer tailored fit, we suggest sizing down one."
+                    : "Our denim and trousers are cut intentionally wide through the leg with a generous inseam designed to puddle naturally over sneakers, clogs, and combat boots. The waistband sits comfortably at the natural mid-to-high waist."}
+                </p>
+                <div className="ln-size-guarantee-row">
+                  <span className="ln-m" style={{ color: "var(--ln-clay)", fontSize: "11px", fontWeight: 700 }}>
+                    COMPLIMENTARY SIZE EXCHANGES
+                  </span>
+                  <span className="ln-m" style={{ color: "var(--ln-ink-muted)", fontSize: "10px" }}>
+                    Free prepaid return shipping on all size adjustments within 30 days.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 }

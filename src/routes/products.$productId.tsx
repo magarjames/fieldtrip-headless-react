@@ -184,7 +184,7 @@ const CATALOG_FALLBACKS: Record<string, any> = {
     title: "Vivre Sand Suede Zip Blouson Jacket",
     productType: "Outerwear & Jackets",
     lookId: "m3",
-    description: "Architectural blouson jacket crafted from 420 GSM supple sanded calf suede in warm sand tan. Styled with an pointed collar, full front zip closure, horizontal chest yoke detail, elasticized blouson hem, and designed for tailoring layers over dress shirts and ties.",
+    description: "Architectural blouson jacket crafted from 420 GSM supple sanded calf suede in warm sand tan. Styled with a pointed collar, full front zip closure, horizontal chest yoke detail, elasticized blouson hem, and designed for tailoring layers over dress shirts and ties.",
     variants: [{ id: "var-m3-1", price: { amount: "285.00", currencyCode: "GBP" }, title: "L / Sand Suede" }],
     options: [
       { name: "Color", values: [{ value: "Sand Suede" }, { value: "Warm Camel" }, { value: "Espresso" }] },
