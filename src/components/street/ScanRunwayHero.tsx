@@ -22,8 +22,8 @@ const LOOKS = [
     name: "Key To My Heart Zip",
     note: "Sky blue rhinestone 'Key To My Heart' zip hoodie with washed charcoal double-knee carpenter denim.",
     pieces: [
-      { name: "Rhinestone 'Key To My Heart' Zip Hoodie", hue: "#9fb9c9", keyword: "Hoodie", handle: "key-to-my-heart-zip-hoodie" },
-      { name: "Washed Charcoal Double-Knee Carpenter Jeans", hue: "#3a3a3d", keyword: "Carpenter", handle: "washed-charcoal-carpenter-jeans" },
+      { name: "Graphic Crew Sweatshirt", hue: "#ece3cb", keyword: "Sweatshirt", handle: "static-graphic-crew-sweatshirt" },
+      { name: "Longform Wide Leg Jeans – Deep Blue", hue: "#232d43", keyword: "Longform", handle: "longform-wide-leg-jeans-deep-blue" },
     ]
   },
   {
@@ -31,8 +31,8 @@ const LOOKS = [
     name: "Double Mouth Tee",
     note: "White tee with stacked blue glitter mouth prints paired with olive utility cargo trousers.",
     pieces: [
-      { name: "Double Blue Mouth Graphic Tee", hue: "#f5f5f5", keyword: "Mouth", handle: "double-blue-mouth-tee" },
-      { name: "Olive Drab Wide Utility Cargo Trousers", hue: "#585f47", keyword: "Cargo", handle: "olive-drab-cargo-trousers" },
+      { name: "Graphic Lip Boxy Tee – White", hue: "#f5f5f5", keyword: "Lip", handle: "graphic-lip-boxy-tee-white" },
+      { name: "Sidestep Cargo Wide Leg – Grey Green", hue: "#585f47", keyword: "Cargo", handle: "sidestep-cargo-wide-leg-jeans" },
     ]
   },
   {
@@ -40,17 +40,17 @@ const LOOKS = [
     name: "Second Skin Boatneck",
     note: "Optic white 3/4 sleeve boatneck top with belted deep indigo raw wide-leg denim.",
     pieces: [
-      { name: "Optic White 3/4 Boatneck Top", hue: "#ffffff", keyword: "Boatneck", handle: "optic-white-boatneck-top" },
-      { name: "Deep Indigo Raw Wide-Leg Jeans", hue: "#1c2438", keyword: "Indigo", handle: "deep-indigo-raw-wide-jeans" },
+      { name: "Shoreline Boat Neck Top – Women’s White", hue: "#ffffff", keyword: "Boatneck", handle: "shoreline-boat-neck-knit-top" },
+      { name: "Longform Wide Leg Jeans – Deep Blue", hue: "#1c2438", keyword: "Longform", handle: "longform-wide-leg-jeans-deep-blue" },
     ]
   },
   {
     id: "f3",
-    name: "Infatuated Graphic Crew",
-    note: "Cream 'Infatuated' graphic crew with printed sleeves and dark indigo wide-leg jeans.",
+    name: "Graphic Crew Sweatshirt",
+    note: "Cream 'Graphic Crew' sweatshirt with printed sleeves and dark indigo wide-leg jeans.",
     pieces: [
-      { name: "Infatuated Sleeve-Print Graphic Crew", hue: "#ece3cb", keyword: "Infatuated", handle: "infatuated-graphic-crew" },
-      { name: "Dark Indigo Raw Wide-Leg Jeans", hue: "#232d43", keyword: "Indigo", handle: "deep-indigo-raw-wide-jeans" },
+      { name: "Graphic Crew Sweatshirt", hue: "#ece3cb", keyword: "Sweatshirt", handle: "static-graphic-crew-sweatshirt" },
+      { name: "Longform Wide Leg Jeans – Deep Blue", hue: "#232d43", keyword: "Longform", handle: "longform-wide-leg-jeans-deep-blue" },
     ]
   },
   {
@@ -58,8 +58,8 @@ const LOOKS = [
     name: "Solid Black Boxy Tee",
     note: "Heavyweight solid black boxy tee with vintage razorcut distressed wide-leg jeans.",
     pieces: [
-      { name: "Solid Black Boxy Oversized Tee", hue: "#181818", keyword: "Boxy", handle: "solid-black-boxy-tee" },
-      { name: "Razorcut Distressed Knee-Panel Wide Jeans", hue: "#7892bd", keyword: "Razorcut", handle: "razorcut-distressed-wide-jeans" },
+      { name: "Black Boxy Tee", hue: "#181818", keyword: "Boxy", handle: "black-boxy-tee" },
+      { name: "Razorcut Ripped Wide Leg Jeans – Dark Blue", hue: "#7892bd", keyword: "Razorcut", handle: "razorcut-ripped-wide-leg-jeans" },
     ]
   },
   {
@@ -67,8 +67,8 @@ const LOOKS = [
     name: "Layered Grey Henley",
     note: "Heather grey 3-button knit henley layered over white tee with classic blue wide-leg jeans.",
     pieces: [
-      { name: "Heather Grey Knitted 3-Button Henley", hue: "#95989e", keyword: "Henley", handle: "heather-grey-knit-henley" },
-      { name: "Classic Blue Baggy Wide-Leg Jeans", hue: "#4f6e99", keyword: "Baggy", handle: "classic-blue-baggy-jeans" },
+      { name: "Layered Henley Knit Sweater – Black", hue: "#95989e", keyword: "Henley", handle: "layered-henley-knit-sweater-black" },
+      { name: "Overset Wide Leg Jeans – Navy", hue: "#4f6e99", keyword: "Overset", handle: "overset-wide-leg-jeans-navy" },
     ]
   },
   {
@@ -76,8 +76,8 @@ const LOOKS = [
     name: "Sand Suede Blouson",
     note: "Sand suede zip blouson layered over pinstripe shirt and plaid tie with 15oz raw selvedge denim.",
     pieces: [
-      { name: "Sand Suede Zip Blouson Jacket", hue: "#c7b192", keyword: "Suede", handle: "sand-suede-blouson-jacket" },
-      { name: "Ironwork 15oz Raw Selvedge Denim Jeans – Black", hue: "#252528", keyword: "Ironwork", handle: "ironwork-15oz-raw-denim-jeans" },
+      { name: "Driftwood Retro Leather Jacket – Men’s", hue: "#c7b192", keyword: "Jacket", handle: "driftwood-retro-leather-jacket" },
+      { name: "Ironwork 15oz Raw Denim Jeans – Black", hue: "#252528", keyword: "Ironwork", handle: "ironwork-raw-denim-jeans-black" },
     ]
   },
 ] as const;

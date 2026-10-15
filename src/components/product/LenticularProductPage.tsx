@@ -84,8 +84,8 @@ export const MODEL_SCAN_LOOKS: ModelScanLook[] = [
     printDesc: "Hand-applied crystal rhinestone lettering heat-sealed across split kangaroo pockets with embroidered heraldic chest crest.",
     printImage: "/brand/northline-detail-blue.jpg",
     pieces: [
-      { name: "Rhinestone 'Key To My Heart' Zip Hoodie", keyword: "Hoodie", hue: "#9fb9c9", handle: "key-to-my-heart-zip-hoodie" },
-      { name: "Washed Charcoal Double-Knee Carpenter Jeans", keyword: "Carpenter", hue: "#3a3a3d", handle: "washed-charcoal-carpenter-jeans" },
+      { name: "Graphic Crew Sweatshirt", keyword: "Sweatshirt", hue: "#ece3cb", handle: "static-graphic-crew-sweatshirt" },
+      { name: "Longform Wide Leg Jeans – Deep Blue", keyword: "Longform", hue: "#232d43", handle: "longform-wide-leg-jeans-deep-blue" },
     ],
   },
   {
@@ -104,8 +104,8 @@ export const MODEL_SCAN_LOOKS: ModelScanLook[] = [
     printDesc: "Two-stage discharge water-base print overlaid with micro-glitter pigment and reflective teeth detail.",
     printImage: "/brand/vivre-tag.jpg",
     pieces: [
-      { name: "Double Blue Mouth Graphic Tee", keyword: "Mouth", hue: "#f5f5f5", handle: "double-blue-mouth-tee" },
-      { name: "Olive Drab Wide Utility Cargo Trousers", keyword: "Cargo", hue: "#585f47", handle: "olive-drab-cargo-trousers" },
+      { name: "Graphic Lip Boxy Tee – White", keyword: "Lip", hue: "#f5f5f5", handle: "graphic-lip-boxy-tee-white" },
+      { name: "Sidestep Cargo Wide Leg – Grey Green", keyword: "Cargo", hue: "#585f47", handle: "sidestep-cargo-wide-leg-jeans" },
     ],
   },
   {
@@ -124,27 +124,27 @@ export const MODEL_SCAN_LOOKS: ModelScanLook[] = [
     printDesc: "Smooth, zero-grain tactile knit with clean bonded edges paired with unwashed deep indigo warp yarns.",
     printImage: "/brand/northline-materials.jpg",
     pieces: [
-      { name: "Optic White 3/4 Boatneck Top", keyword: "Boatneck", hue: "#ffffff", handle: "optic-white-boatneck-top" },
-      { name: "Deep Indigo Raw Wide-Leg Jeans", keyword: "Indigo", hue: "#1c2438", handle: "deep-indigo-raw-wide-jeans" },
+      { name: "Shoreline Boat Neck Top – Women’s White", keyword: "Boatneck", hue: "#ffffff", handle: "shoreline-boat-neck-knit-top" },
+      { name: "Longform Wide Leg Jeans – Deep Blue", keyword: "Longform", hue: "#1c2438", handle: "longform-wide-leg-jeans-deep-blue" },
     ],
   },
   {
     id: "f3",
     lookNumber: "04",
-    name: "Look 04 · Infatuated Graphic Crew",
-    heroName: "Infatuated Graphic Crew",
+    name: "Look 04 · Graphic Crew Sweatshirt",
+    heroName: "Graphic Crew Sweatshirt",
     gender: "f",
-    outfit: "Cream 'Infatuated' graphic crew with printed sleeves and dark indigo wide-leg jeans",
+    outfit: "Cream 'Graphic Crew' sweatshirt with printed sleeves and dark indigo wide-leg jeans",
     defaultCategory: "Sweaters & Knits",
     specGSM: "500 GSM Combed Cotton Loopback Fleece & 14oz Rigid Denim",
     specHardware: "Double-Needle Coverstitched Seams with 2x2 Heavy Spun Rib Trims",
     specSilhouette: "Boxy Slouch Drop-Shoulder with Full Extended Graphic Sleeves",
     specOrigin: "Loomed and Screened in Porto, Portugal",
-    printTitle: "'Infatuated' Multi-Pass Discharge & Dual Sleeve Typography",
+    printTitle: "'Graphic Crew' Multi-Pass Discharge & Dual Sleeve Typography",
     printDesc: "Soft water-based discharge printing on natural cream base with graphic portrait and typographic arm runs.",
     printImage: "/brand/northline-fabric-landscape.jpg",
     pieces: [
-      { name: "Infatuated Sleeve-Print Graphic Crew", keyword: "Infatuated", hue: "#ece3cb", handle: "infatuated-graphic-crew" },
+      { name: "Graphic Crew Sweatshirt", keyword: "Sweatshirt", hue: "#ece3cb", handle: "static-graphic-crew-sweatshirt" },
       { name: "Longform Wide Leg Jeans – Deep Blue", keyword: "Longform", hue: "#232d43", handle: "longform-wide-leg-jeans-deep-blue" },
     ],
   },
@@ -164,8 +164,8 @@ export const MODEL_SCAN_LOOKS: ModelScanLook[] = [
     printDesc: "Solid jet black pigment penetration paired with manual stone grinding and razor distressing.",
     printImage: "/brand/vivre-black.jpg",
     pieces: [
-      { name: "Solid Black Boxy Oversized Tee", keyword: "Boxy", hue: "#181818", handle: "solid-black-boxy-tee" },
-      { name: "Razorcut Distressed Knee-Panel Wide Jeans", keyword: "Razorcut", hue: "#7892bd", handle: "razorcut-distressed-wide-jeans" },
+      { name: "Black Boxy Tee", keyword: "Boxy", hue: "#181818", handle: "black-boxy-tee" },
+      { name: "Razorcut Ripped Wide Leg Jeans – Dark Blue", keyword: "Razorcut", hue: "#7892bd", handle: "razorcut-ripped-wide-leg-jeans" },
     ],
   },
   {
@@ -184,8 +184,8 @@ export const MODEL_SCAN_LOOKS: ModelScanLook[] = [
     printDesc: "Subtle two-tone heather melange rib structure paired with vintage rope-dyed indigo twill.",
     printImage: "/brand/northline-flatlay.jpg",
     pieces: [
-      { name: "Heather Grey Knitted 3-Button Henley", keyword: "Henley", hue: "#95989e", handle: "heather-grey-knit-henley" },
-      { name: "Classic Blue Baggy Wide-Leg Jeans", keyword: "Baggy", hue: "#4f6e99", handle: "classic-blue-baggy-jeans" },
+      { name: "Layered Henley Knit Sweater – Black", keyword: "Henley", hue: "#95989e", handle: "layered-henley-knit-sweater-black" },
+      { name: "Overset Wide Leg Jeans – Navy", keyword: "Overset", hue: "#4f6e99", handle: "overset-wide-leg-jeans-navy" },
     ],
   },
   {
@@ -204,8 +204,8 @@ export const MODEL_SCAN_LOOKS: ModelScanLook[] = [
     printDesc: "Soft velvety suede nap with natural tone depth, contrasted by unwashed 15oz raw shuttle loom twill.",
     printImage: "/brand/northline-materials.jpg",
     pieces: [
-      { name: "Sand Suede Zip Blouson Jacket", keyword: "Suede", hue: "#c7b192", handle: "sand-suede-blouson-jacket" },
-      { name: "Ironwork 15oz Raw Selvedge Denim Jeans – Black", keyword: "Ironwork", hue: "#252528", handle: "ironwork-15oz-raw-denim-jeans" },
+      { name: "Driftwood Retro Leather Jacket – Men’s", keyword: "Jacket", hue: "#c7b192", handle: "driftwood-retro-leather-jacket" },
+      { name: "Ironwork 15oz Raw Denim Jeans – Black", keyword: "Ironwork", hue: "#252528", handle: "ironwork-raw-denim-jeans-black" },
     ],
   },
 ];
@@ -246,13 +246,14 @@ export function getLookForProduct(product: any, productId?: string): ModelScanLo
     return MODEL_SCAN_LOOKS[2]; // f2
   }
 
-  // 5. Look 04 (f3) — Infatuated graphic crew sweatshirt & Longform wide leg jeans
+  // 5. Look 04 (f3) — Graphic crew sweatshirt & Longform wide leg jeans
   if (
-    s.includes("infatuated") ||
+    s.includes("static") ||
+    s.includes("crew-sweatshirt") ||
     s.includes("graphic-crew") ||
+    s.includes("infatuated") ||
     s.includes("archive") ||
     s.includes("f3") ||
-    s.includes("crew-sweatshirt") ||
     s.includes("longform") ||
     (s.includes("deep-blue") && s.includes("jean")) ||
     (s.includes("deep-blue") && s.includes("wide"))
@@ -278,8 +279,16 @@ export function getLookForProduct(product: any, productId?: string): ModelScanLo
     return MODEL_SCAN_LOOKS[5]; // m2
   }
 
-  // 8. Look 07 (m3) — Sand suede blouson jacket & Ironwork 15oz denim
-  if (s.includes("suede") || s.includes("blouson") || s.includes("m3") || s.includes("ironwork") || s.includes("15oz")) {
+  // 8. Look 07 (m3) — Driftwood leather jacket & Ironwork 15oz denim
+  if (
+    s.includes("driftwood") ||
+    s.includes("leather") ||
+    s.includes("suede") ||
+    s.includes("blouson") ||
+    s.includes("m3") ||
+    s.includes("ironwork") ||
+    s.includes("15oz")
+  ) {
     return MODEL_SCAN_LOOKS[6]; // m3
   }
 
@@ -369,17 +378,29 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
 
   // Find companion piece in this Runway Hero look
   const companionPiece = useMemo(() => {
+    const currentHandle = (product?.handle || productId || "").toLowerCase();
+    
+    // 1. Choose piece from this look that is NOT the current product
+    const candidate = activeLook.pieces?.find((p) => {
+      const h = (p.handle || "").toLowerCase();
+      return h !== currentHandle && !currentHandle.includes(h) && !h.includes(currentHandle);
+    });
+
+    if (candidate) return candidate;
+
+    // 2. Fallback based on top vs bottom if handle matching was ambiguous
     if (isBottomPiece) {
       return (
         activeLook.pieces?.find((p) => {
           const n = p.name.toLowerCase();
           return (
-            n.includes("hoodie") ||
+            n.includes("crew") ||
             n.includes("tee") ||
             n.includes("top") ||
-            n.includes("blouson") ||
+            n.includes("jacket") ||
             n.includes("henley") ||
-            n.includes("crew")
+            n.includes("sweatshirt") ||
+            n.includes("hoodie")
           );
         }) || activeLook.pieces?.[0]
       );
@@ -396,7 +417,7 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
         }) || activeLook.pieces?.[1]
       );
     }
-  }, [activeLook, isBottomPiece]);
+  }, [activeLook, isBottomPiece, product, productId]);
 
   // E-commerce state
   const colors = (product as any)?.options?.find((o: any) => o.name.toLowerCase() === 'color' || o.name.toLowerCase() === 'colour')?.values.map((v: any) => v.value) || ["Default"];
@@ -412,7 +433,7 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
   const priceFormatted = useMemo(() => {
     const raw = product?.variants?.[0]?.price?.amount;
     if (raw) return `GBP £${parseFloat(raw).toFixed(2)}`;
-    return "GBP £185.00";
+    return "GBP £44.99";
   }, [product]);
 
   // Dynamic extraction of clean description and embedded size guide

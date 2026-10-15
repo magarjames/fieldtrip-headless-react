@@ -11,245 +11,248 @@ export const Route = createFileRoute('/products/$productId')({
 // Rich catalog fallbacks when Shopify credentials are not set or handle is not in store
 // Rich catalog of products accurately matched to the 7 Runway Hero looks
 const CATALOG_FALLBACKS: Record<string, any> = {
-  // Look 01 (f4) — Key To My Heart zip & carpenter jeans
-  "key-to-my-heart-zip-hoodie": {
-    id: "prod-key-to-my-heart-hoodie",
-    handle: "key-to-my-heart-zip-hoodie",
-    title: "Vivre Rhinestone 'Key To My Heart' Zip Hoodie",
-    productType: "Hoodies & Fleece",
-    lookId: "f4",
-    description: "480 GSM heavy Japanese loopback cotton fleece in skyline pale blue. Features hand-set crystal rhinestone lettering 'YOU ARE THE KEY TO MY HEART' across split kangaroo pockets, heraldic embroidered chest crest patch, and custom two-way silver zipper.",
-    variants: [{ id: "var-f4-1", price: { amount: "195.00", currencyCode: "GBP" }, title: "M / Skyline Blue" }],
-    options: [
-      { name: "Color", values: [{ value: "Skyline Blue" }, { value: "Washed Charcoal" }, { value: "Bone White" }] },
-      { name: "Size", values: [{ value: "XS" }, { value: "S" }, { value: "M" }, { value: "L" }, { value: "XL" }] },
-      { name: "Fit", values: [{ value: "Cocoon Fit" }, { value: "Relaxed" }] },
-    ],
-  },
-  "washed-charcoal-carpenter-jeans": {
-    id: "prod-washed-charcoal-carpenter",
-    handle: "washed-charcoal-carpenter-jeans",
-    title: "Vivre Washed Charcoal Double-Knee Carpenter Jeans",
-    productType: "Trousers & Denim",
-    lookId: "f4",
-    description: "14.5oz rigid selvedge denim in a rich washed charcoal tint. Reinforced double-knee utility patch panels, carpenter hammer loop, contrast silver-grey stitching, and wide pooling cuffs.",
-    variants: [{ id: "var-f4-2", price: { amount: "175.00", currencyCode: "GBP" }, title: "32 / Washed Charcoal" }],
-    options: [
-      { name: "Color", values: [{ value: "Washed Charcoal" }, { value: "Faded Ink" }, { value: "Raw Black" }] },
-      { name: "Size", values: [{ value: "28" }, { value: "30" }, { value: "32" }, { value: "34" }, { value: "36" }] },
-      { name: "Fit", values: [{ value: "Double-Knee Wide" }, { value: "Puddle Stack" }] },
-    ],
-  },
-
-  // Look 02 (f1) — Double Mouth tee & olive cargo
-  "double-blue-mouth-tee": {
-    id: "prod-double-blue-mouth-tee",
-    handle: "double-blue-mouth-tee",
-    title: "Vivre Double Blue Mouth Graphic Tee",
-    productType: "Tees & Tops",
-    lookId: "f1",
-    description: "280 GSM heavyweight ring-spun compact cotton jersey. Dual stacked blue glitter and discharge mouth graphic with metallic grillz detail. Cut boxy with relaxed dropped shoulder and blind-stitched hem.",
-    variants: [{ id: "var-f1-1", price: { amount: "75.00", currencyCode: "GBP" }, title: "M / Optic White" }],
-    options: [
-      { name: "Color", values: [{ value: "Optic White" }, { value: "Vintage Black" }, { value: "Chalk" }] },
-      { name: "Size", values: [{ value: "XS" }, { value: "S" }, { value: "M" }, { value: "L" }, { value: "XL" }] },
-      { name: "Fit", values: [{ value: "Boxy Cut" }, { value: "Oversized" }] },
-    ],
-  },
-  "olive-drab-cargo-trousers": {
-    id: "prod-olive-drab-cargo",
-    handle: "olive-drab-cargo-trousers",
-    title: "Fieldtrip Olive Drab Wide Utility Cargo Trousers",
-    productType: "Trousers & Bottoms",
-    lookId: "f1",
-    description: "Heavyweight military-grade cotton ripstop in washed olive drab. Built with dual bellowed cargo thigh pockets with hidden storm flaps, articulated knee darts, and adjustable wide-leg hem cinches.",
-    variants: [{ id: "var-f1-2", price: { amount: "165.00", currencyCode: "GBP" }, title: "32 / Washed Olive" }],
-    options: [
-      { name: "Color", values: [{ value: "Washed Olive" }, { value: "Dark Earth" }, { value: "Charcoal" }] },
-      { name: "Size", values: [{ value: "28" }, { value: "30" }, { value: "32" }, { value: "34" }, { value: "36" }] },
-      { name: "Fit", values: [{ value: "Wide Utility" }, { value: "Cinch Ankle" }] },
-    ],
-  },
-
-  // Look 03 (f2) — Second skin boatneck & deep indigo wide jeans
-  "optic-white-boatneck-top": {
-    id: "prod-optic-white-boatneck",
-    handle: "optic-white-boatneck-top",
-    title: "Vivre Optic White 3/4 Boatneck Top",
-    productType: "Tops & Tunics",
-    lookId: "f2",
-    description: "260 GSM double-knit modal pima cotton interlock with four-way stretch. Elegant wide boatneck neckline, refined 3/4 elbow-length sleeve, and bonded seamless cuffs for a sculpted second-skin contour.",
-    variants: [{ id: "var-f2-1", price: { amount: "110.00", currencyCode: "GBP" }, title: "S / Optic White" }],
-    options: [
-      { name: "Color", values: [{ value: "Optic White" }, { value: "Ink Black" }, { value: "Slate" }] },
-      { name: "Size", values: [{ value: "XS" }, { value: "S" }, { value: "M" }, { value: "L" }] },
-      { name: "Fit", values: [{ value: "Fitted Line" }, { value: "Second Skin" }] },
-    ],
-  },
-  "deep-indigo-raw-wide-jeans": {
-    id: "prod-deep-indigo-wide-jeans",
-    handle: "deep-indigo-raw-wide-jeans",
-    title: "Vivre Deep Indigo Raw Wide-Leg Jeans",
-    productType: "Trousers & Denim",
-    lookId: "f2",
-    description: "14oz rigid unwashed deep ink raw denim. Tailored with a flattering high-rise waistband, contrast tobacco topstitching, custom brushed silver rectangular plaque belt loop buckle, and an exaggerated wide leg pooling hem.",
-    variants: [{ id: "var-f2-2", price: { amount: "190.00", currencyCode: "GBP" }, title: "30 / Deep Blue" }],
-    options: [
-      { name: "Color", values: [{ value: "Deep Blue" }, { value: "Ink Wash" }, { value: "Raw Indigo" }] },
-      { name: "Size", values: [{ value: "26" }, { value: "28" }, { value: "30" }, { value: "32" }, { value: "34" }] },
-      { name: "Fit", values: [{ value: "High-Rise Wide" }, { value: "Puddle Drape" }] },
-    ],
-  },
-
-  // Look 04 (f3) — Infatuated graphic crew
-  "infatuated-graphic-crew": {
-    id: "prod-infatuated-crew",
-    handle: "infatuated-graphic-crew",
-    title: "Fieldtrip 'Infatuated' Sleeve-Print Graphic Crew",
-    productType: "Sweaters & Knits",
+  // 1. Look 04 (f3) — Real Shopify Products
+  "static-graphic-crew-sweatshirt": {
+    id: "gid://shopify/Product/15963123679562",
+    handle: "static-graphic-crew-sweatshirt",
+    title: "Graphic Crew Sweatshirt",
+    productType: "Sweatshirts",
     lookId: "f3",
-    description: "500 GSM heavy combed organic cotton fleece in natural oatmeal cream. Features bold 'MENT INFATUATED / DONT FUCK YOURSELF' portrait chest graphic, full typographic typography down both sleeves, and heavy 2x2 ribbed trims.",
-    variants: [{ id: "var-f3-1", price: { amount: "180.00", currencyCode: "GBP" }, title: "M / Cream Oat" }],
+    description: "Heavy combed organic cotton fleece in apricot cream. Features vintage graphic portrait chest print, typographic typography down both sleeves, and heavy 2x2 ribbed trims.",
+    variants: [{ id: "var-crew-1", price: { amount: "44.99", currencyCode: "GBP" }, title: "M / Apricot" }],
     options: [
-      { name: "Color", values: [{ value: "Cream Oat" }, { value: "Heather Grey" }, { value: "Charcoal" }] },
-      { name: "Size", values: [{ value: "S" }, { value: "M" }, { value: "L" }, { value: "XL" }] },
-      { name: "Fit", values: [{ value: "Boxy Slouch" }, { value: "Drop Shoulder" }] },
+      { name: "Color", values: [{ value: "apricot" }] },
+      { name: "size", values: [{ value: "M" }, { value: "L" }, { value: "XL" }] },
     ],
   },
   "longform-wide-leg-jeans-deep-blue": {
-    id: "prod-longform-wide-leg-jeans-deep-blue",
+    id: "gid://shopify/Product/15960128651594",
     handle: "longform-wide-leg-jeans-deep-blue",
-    title: "Vivre Longform Wide Leg Jeans - Deep Blue",
-    productType: "Trousers & Denim",
+    title: "Longform Wide Leg Jeans – Deep Blue",
+    productType: "Jeans",
     lookId: "f3",
     description: "Loose wide leg jeans in deep blue, cut straight and left to fall. The weight of the denim does the work it drapes from the hip rather than holding a shape, which is what makes the leg read long instead of merely wide. Deep blue and black tea, in standard and lighter-weight versions. Floor length as intended. Do not hem it short.",
-    variants: [{ id: "var-f3-2", price: { amount: "49.99", currencyCode: "GBP" }, title: "Dark Blue (Regular) / M" }],
+    variants: [{ id: "var-longform-1", price: { amount: "49.99", currencyCode: "GBP" }, title: "Dark Blue (Regular) / M" }],
     options: [
-      { name: "Fit Silhouette", values: [{ value: "Dark Blue (Petite)" }, { value: "Dark Blue (Regular)" }, { value: "Dark Blue (Extended)" }] },
-      { name: "Size", values: [{ value: "XS" }, { value: "S" }, { value: "M" }, { value: "L" }, { value: "XL" }] },
+      { name: "Fit", values: [{ value: "Dark Blue (Petite)" }, { value: "Dark Blue (Regular)" }, { value: "Dark Blue (Extended)" }] },
+      { name: "size", values: [{ value: "XS" }, { value: "S" }, { value: "M" }, { value: "L" }, { value: "XL" }] },
     ],
   },
 
-  // Look 05 (m1) — Solid black boxy tee & razorcut jeans
-  "solid-black-boxy-tee": {
-    id: "prod-solid-black-boxy-tee",
-    handle: "solid-black-boxy-tee",
-    title: "Vivre Solid Black Boxy Oversized Tee",
-    productType: "Tees & Tops",
-    lookId: "m1",
-    description: "300 GSM ultra-heavy combed carded cotton jersey in pure solid pitch black. Engineered with a square boxy drape, dropped forward shoulder seams, 1.25\" thick bound ribbed collar, and wide elbow sleeves with zero exterior graphics.",
-    variants: [{ id: "var-m1-1", price: { amount: "85.00", currencyCode: "GBP" }, title: "L / Pitch Black" }],
+  // 2. Look 02 (f1) — Real Shopify Products
+  "graphic-lip-boxy-tee-white": {
+    id: "gid://shopify/Product/15960128618826",
+    handle: "graphic-lip-boxy-tee-white",
+    title: "Graphic Lip Boxy Tee – White",
+    productType: "T-Shirts",
+    lookId: "f1",
+    description: "280 GSM heavyweight ring-spun compact cotton jersey. Dual stacked blue glitter and discharge mouth graphic with metallic grillz detail. Cut boxy with relaxed dropped shoulder and blind-stitched hem.",
+    variants: [{ id: "var-lip-1", price: { amount: "22.99", currencyCode: "GBP" }, title: "M / White" }],
     options: [
-      { name: "Color", values: [{ value: "Pitch Black" }, { value: "Washed Black" }, { value: "Carbon" }] },
-      { name: "Size", values: [{ value: "S" }, { value: "M" }, { value: "L" }, { value: "XL" }] },
-      { name: "Fit", values: [{ value: "Square Boxy" }, { value: "Oversized Drop" }] },
+      { name: "Color", values: [{ value: "White" }] },
+      { name: "size", values: [{ value: "S" }, { value: "M" }, { value: "L" }, { value: "XL" }, { value: "XXL" }, { value: "XXXL" }] },
     ],
   },
-  "razorcut-distressed-wide-jeans": {
-    id: "prod-razorcut-distressed-jeans",
-    handle: "razorcut-distressed-wide-jeans",
-    title: "Vivre Razorcut Distressed Knee-Panel Wide Jeans – Light Blue",
-    productType: "Trousers & Denim",
+  "sidestep-cargo-wide-leg-jeans": {
+    id: "gid://shopify/Product/15960128717130",
+    handle: "sidestep-cargo-wide-leg-jeans",
+    title: "Sidestep Cargo Wide Leg – Grey Green",
+    productType: "Trousers",
+    lookId: "f1",
+    description: "Heavyweight military-grade cotton ripstop in washed grey green. Built with dual bellowed cargo thigh pockets with hidden storm flaps, articulated knee darts, and adjustable wide-leg hem cinches.",
+    variants: [{ id: "var-sidestep-1", price: { amount: "37.99", currencyCode: "GBP" }, title: "M / Gray-green" }],
+    options: [
+      { name: "Fit", values: [{ value: "Gray-green (petite 145-155CM)" }] },
+      { name: "size", values: [{ value: "XS" }, { value: "S" }, { value: "M" }, { value: "L" }, { value: "XL" }] },
+    ],
+  },
+
+  // 3. Look 03 (f2) — Real Shopify Products
+  "shoreline-boat-neck-knit-top": {
+    id: "gid://shopify/Product/15963129053514",
+    handle: "shoreline-boat-neck-knit-top",
+    title: "Shoreline Boat Neck Top – Women’s White",
+    productType: "T-Shirts",
+    lookId: "f2",
+    description: "260 GSM double-knit modal pima cotton interlock with four-way stretch. Elegant wide boatneck neckline, refined 3/4 elbow-length sleeve, and bonded seamless cuffs for a sculpted second-skin contour.",
+    variants: [{ id: "var-shoreline-1", price: { amount: "44.99", currencyCode: "GBP" }, title: "1 / White" }],
+    options: [
+      { name: "colour", values: [{ value: "White" }] },
+      { name: "size", values: [{ value: "0" }, { value: "1" }, { value: "2" }, { value: "3" }] },
+    ],
+  },
+
+  // 4. Look 05 (m1) — Real Shopify Products
+  "black-boxy-tee": {
+    id: "gid://shopify/Product/15963128987978",
+    handle: "black-boxy-tee",
+    title: "Black Boxy Tee",
+    productType: "T-Shirts",
+    lookId: "m1",
+    description: "300 GSM ultra-heavy combed carded cotton jersey in pure solid pitch black. Engineered with a square boxy drape, dropped forward shoulder seams, 1.25\" thick bound ribbed collar, and wide elbow sleeves.",
+    variants: [{ id: "var-black-tee-1", price: { amount: "24.99", currencyCode: "GBP" }, title: "L / Black" }],
+    options: [
+      { name: "Color", values: [{ value: "Black" }] },
+      { name: "size", values: [{ value: "XS" }, { value: "S" }, { value: "M" }, { value: "L" }, { value: "XL" }, { value: "2XL" }] },
+    ],
+  },
+  "razorcut-ripped-wide-leg-jeans": {
+    id: "gid://shopify/Product/15963063517514",
+    handle: "razorcut-ripped-wide-leg-jeans",
+    title: "Razorcut Ripped Wide Leg Jeans – Dark Blue",
+    productType: "Jeans",
     lookId: "m1",
     description: "14.5oz Japanese selvedge denim in a vintage stone bleach wash. Hand-applied horizontal razorcut abrasions, curved arc knee panel seams, and an exaggerated loose skate silhouette stacking over footwear.",
-    variants: [{ id: "var-m1-2", price: { amount: "210.00", currencyCode: "GBP" }, title: "32 / Light Vintage Blue" }],
+    variants: [{ id: "var-razorcut-1", price: { amount: "44.99", currencyCode: "GBP" }, title: "32 / Dark Blue" }],
     options: [
-      { name: "Color", values: [{ value: "Light Vintage Blue" }, { value: "Faded Bleach" }, { value: "Vintage Tint" }] },
-      { name: "Size", values: [{ value: "30" }, { value: "32" }, { value: "34" }, { value: "36" }] },
-      { name: "Fit", values: [{ value: "Skate Wide" }, { value: "Distressed Stack" }] },
+      { name: "Color", values: [{ value: "Dark blue" }] },
+      { name: "size", values: [{ value: "S" }, { value: "M" }, { value: "L" }, { value: "XL" }, { value: "2XL" }, { value: "3XL" }] },
     ],
   },
 
-  // Look 06 (m2) — Layered henley & baggy jeans
-  "heather-grey-knit-henley": {
-    id: "prod-heather-grey-henley",
-    handle: "heather-grey-knit-henley",
-    title: "Fieldtrip Heather Grey Knitted 3-Button Henley",
-    productType: "Thermal & Knits",
+  // 5. Look 06 (m2) — Real Shopify Products
+  "layered-henley-knit-sweater-black": {
+    id: "gid://shopify/Product/15960279417162",
+    handle: "layered-henley-knit-sweater-black",
+    title: "Layered Henley Knit Sweater – Black",
+    productType: "Knitwear",
     lookId: "m2",
-    description: "360 GSM ultra-fine merino and pima cotton ribbed knit in heather grey. Features a three-button placket with natural corozo nut buttons, designed for seamless layering over a clean white tee, with extended ribbed cuffs and relaxed body.",
-    variants: [{ id: "var-m2-1", price: { amount: "145.00", currencyCode: "GBP" }, title: "M / Heather Grey" }],
+    description: "360 GSM ultra-fine merino and pima cotton ribbed knit. Features a three-button placket with natural corozo nut buttons, designed for seamless layering over a clean white tee, with extended ribbed cuffs and relaxed body.",
+    variants: [{ id: "var-henley-1", price: { amount: "39.99", currencyCode: "GBP" }, title: "M / Light Grey" }],
     options: [
-      { name: "Color", values: [{ value: "Heather Grey" }, { value: "Deep Ink" }, { value: "Oatmeal" }] },
-      { name: "Size", values: [{ value: "S" }, { value: "M" }, { value: "L" }, { value: "XL" }] },
-      { name: "Fit", values: [{ value: "Relaxed Layer" }, { value: "Classic Fit" }] },
+      { name: "Color", values: [{ value: "light grey" }] },
+      { name: "size", values: [{ value: "M" }, { value: "L" }, { value: "XL" }, { value: "2XL" }, { value: "3XL" }] },
     ],
   },
-  "classic-blue-baggy-jeans": {
-    id: "prod-classic-blue-baggy-jeans",
-    handle: "classic-blue-baggy-jeans",
-    title: "Vivre Classic Blue Baggy Wide-Leg Jeans",
-    productType: "Trousers & Denim",
+  "overset-wide-leg-jeans-navy": {
+    id: "gid://shopify/Product/15953547854154",
+    handle: "overset-wide-leg-jeans-navy",
+    title: "Overset Wide Leg Jeans – Navy",
+    productType: "Jeans",
     lookId: "m2",
-    description: "14oz ring-spun denim in a classic 90s mid-blue wash. Cut roomy through seat and thigh with an authentic skate-inspired wide straight leg that settles with natural drape over low-profile sneakers.",
-    variants: [{ id: "var-m2-2", price: { amount: "195.00", currencyCode: "GBP" }, title: "32 / Classic Mid Blue" }],
+    description: "14oz ring-spun denim in a classic navy wash. Cut roomy through seat and thigh with an authentic skate-inspired wide straight leg that settles with natural drape over low-profile sneakers.",
+    variants: [{ id: "var-overset-1", price: { amount: "40.00", currencyCode: "GBP" }, title: "L / Navy" }],
     options: [
-      { name: "Color", values: [{ value: "Classic Mid Blue" }, { value: "Vintage Stone" }, { value: "Dark Wash" }] },
-      { name: "Size", values: [{ value: "30" }, { value: "32" }, { value: "34" }, { value: "36" }] },
-      { name: "Fit", values: [{ value: "Baggy Skate" }, { value: "Wide Straight" }] },
+      { name: "Color", values: [{ value: "Navy" }] },
+      { name: "size", values: [{ value: "M" }, { value: "L" }, { value: "XL" }] },
     ],
   },
 
-  // Look 07 (m3) — Sand suede blouson & raw selvedge
-  "sand-suede-blouson-jacket": {
-    id: "prod-sand-suede-blouson",
-    handle: "sand-suede-blouson-jacket",
-    title: "Vivre Sand Suede Zip Blouson Jacket",
-    productType: "Outerwear & Jackets",
+  // 6. Look 07 (m3) — Real Shopify Products
+  "driftwood-retro-leather-jacket": {
+    id: "gid://shopify/Product/15960279515466",
+    handle: "driftwood-retro-leather-jacket",
+    title: "Driftwood Retro Leather Jacket – Men’s",
+    productType: "Jackets",
     lookId: "m3",
-    description: "Architectural blouson jacket crafted from 420 GSM supple sanded calf suede in warm sand tan. Styled with a pointed collar, full front zip closure, horizontal chest yoke detail, elasticized blouson hem, and designed for tailoring layers over dress shirts and ties.",
-    variants: [{ id: "var-m3-1", price: { amount: "285.00", currencyCode: "GBP" }, title: "L / Sand Suede" }],
+    description: "Supple retro leather jacket in warm khaki. Styled with a pointed collar, full front zip closure, horizontal chest yoke detail, elasticized hem, and designed for tailoring layers over shirts and ties.",
+    variants: [{ id: "var-driftwood-1", price: { amount: "89.99", currencyCode: "GBP" }, title: "L / Khaki" }],
     options: [
-      { name: "Color", values: [{ value: "Sand Suede" }, { value: "Warm Camel" }, { value: "Espresso" }] },
-      { name: "Size", values: [{ value: "S" }, { value: "M" }, { value: "L" }, { value: "XL" }] },
-      { name: "Fit", values: [{ value: "Tailored Blouson" }, { value: "Relaxed Crop" }] },
+      { name: "Color", values: [{ value: "Khaki" }] },
+      { name: "size", values: [{ value: "S" }, { value: "M" }, { value: "L" }, { value: "XL" }, { value: "2XL" }, { value: "3XL" }] },
     ],
   },
-  "ironwork-15oz-raw-denim-jeans": {
-    id: "prod-ironwork-jeans",
-    handle: "ironwork-15oz-raw-denim-jeans",
-    title: "Vivre Ironwork 15oz Raw Selvedge Denim Jeans – Black",
-    productType: "Trousers & Denim",
+  "ironwork-raw-denim-jeans-black": {
+    id: "gid://shopify/Product/15961479217482",
+    handle: "ironwork-raw-denim-jeans-black",
+    title: "Ironwork 15oz Raw Denim Jeans – Black",
+    productType: "Jeans",
     lookId: "m3",
-    description: "15oz sanforized rigid raw black selvedge denim woven on vintage shuttle looms in Okayama. Finished with copper rivets, heavy redline selvedge ID, and a tailored wide straight fall.",
-    variants: [{ id: "var-m3-2", price: { amount: "220.00", currencyCode: "GBP" }, title: "32 / Raw Black" }],
+    description: "15oz sanforized rigid raw black denim. Finished with copper rivets, heavy redline selvedge ID, and a tailored wide straight fall.",
+    variants: [{ id: "var-ironwork-1", price: { amount: "69.99", currencyCode: "GBP" }, title: "L / Cow Black" }],
     options: [
-      { name: "Color", values: [{ value: "Raw Black" }, { value: "Double Black" }, { value: "Raw Indigo" }] },
-      { name: "Size", values: [{ value: "30" }, { value: "32" }, { value: "34" }, { value: "36" }] },
-      { name: "Fit", values: [{ value: "Straight Raw" }, { value: "Cuffed" }] },
+      { name: "Color", values: [{ value: "Cow Black" }] },
+      { name: "size", values: [{ value: "S" }, { value: "M" }, { value: "L" }, { value: "XL" }, { value: "2XL" }] },
     ],
   },
 
-  // Legacy route aliases & synonyms so no existing links break
-  "graphic-lip-boxy-tee-white": { $ref: "double-blue-mouth-tee" },
-  "graphic-lip-boxy-tee": { $ref: "double-blue-mouth-tee" },
-  "graphic-lip": { $ref: "double-blue-mouth-tee" },
-  "lip-boxy-tee": { $ref: "double-blue-mouth-tee" },
-  "lip-tee": { $ref: "double-blue-mouth-tee" },
-  "skyline-zip-hoodie": { $ref: "key-to-my-heart-zip-hoodie" },
-  "washed-charcoal-denim": { $ref: "washed-charcoal-carpenter-jeans" },
-  "mouth-tee": { $ref: "double-blue-mouth-tee" },
-  "olive-cargo-trousers": { $ref: "olive-drab-cargo-trousers" },
-  "shoreline-boat-neck-top": { $ref: "optic-white-boatneck-top" },
+  // 7. Look 01 (f4) — Transitional pairing
+  "key-to-my-heart-zip-hoodie": { $ref: "static-graphic-crew-sweatshirt" },
+  "washed-charcoal-carpenter-jeans": { $ref: "longform-wide-leg-jeans-deep-blue" },
+
+  // Aliases mapping old / generated handles directly to live Shopify products
+  "infatuated-graphic-crew": { $ref: "static-graphic-crew-sweatshirt" },
+  "infatuated-crew": { $ref: "static-graphic-crew-sweatshirt" },
+  "graphic-crew-sweatshirt": { $ref: "static-graphic-crew-sweatshirt" },
+  "tactical-crewneck": { $ref: "static-graphic-crew-sweatshirt" },
+  "double-blue-mouth-tee": { $ref: "graphic-lip-boxy-tee-white" },
+  "graphic-lip-boxy-tee": { $ref: "graphic-lip-boxy-tee-white" },
+  "graphic-lip": { $ref: "graphic-lip-boxy-tee-white" },
+  "lip-boxy-tee": { $ref: "graphic-lip-boxy-tee-white" },
+  "lip-tee": { $ref: "graphic-lip-boxy-tee-white" },
+  "mouth-tee": { $ref: "graphic-lip-boxy-tee-white" },
+  "olive-drab-cargo-trousers": { $ref: "sidestep-cargo-wide-leg-jeans" },
+  "olive-cargo-trousers": { $ref: "sidestep-cargo-wide-leg-jeans" },
+  "wide-leg-cargo": { $ref: "sidestep-cargo-wide-leg-jeans" },
+  "optic-white-boatneck-top": { $ref: "shoreline-boat-neck-knit-top" },
+  "shoreline-boat-neck-top": { $ref: "shoreline-boat-neck-knit-top" },
+  "boatneck-top": { $ref: "shoreline-boat-neck-knit-top" },
+  "deep-indigo-raw-wide-jeans": { $ref: "longform-wide-leg-jeans-deep-blue" },
   "longform-wide-leg-jeans": { $ref: "longform-wide-leg-jeans-deep-blue" },
-  "graphic-crew-sweatshirt": { $ref: "infatuated-graphic-crew" },
-  "black-boxy-tee": { $ref: "solid-black-boxy-tee" },
-  "razorcut-ripped-wide-leg-jeans": { $ref: "razorcut-distressed-wide-jeans" },
-  "grey-ribbed-henley": { $ref: "heather-grey-knit-henley" },
-  "overset-wide-leg-jeans": { $ref: "classic-blue-baggy-jeans" },
-  "sand-suede-jacket": { $ref: "sand-suede-blouson-jacket" },
-  "suede-jacket": { $ref: "sand-suede-blouson-jacket" },
-  "after-hours-tee": { $ref: "solid-black-boxy-tee" },
-  "layered-henley": { $ref: "heather-grey-knit-henley" },
-  "boatneck-top": { $ref: "optic-white-boatneck-top" },
-  "tactical-crewneck": { $ref: "infatuated-graphic-crew" },
-  "wide-leg-cargo": { $ref: "olive-drab-cargo-trousers" },
+  "solid-black-boxy-tee": { $ref: "black-boxy-tee" },
+  "after-hours-tee": { $ref: "black-boxy-tee" },
+  "razorcut-distressed-wide-jeans": { $ref: "razorcut-ripped-wide-leg-jeans" },
+  "heather-grey-knit-henley": { $ref: "layered-henley-knit-sweater-black" },
+  "layered-henley": { $ref: "layered-henley-knit-sweater-black" },
+  "grey-ribbed-henley": { $ref: "layered-henley-knit-sweater-black" },
+  "classic-blue-baggy-jeans": { $ref: "overset-wide-leg-jeans-navy" },
+  "overset-wide-leg-jeans": { $ref: "overset-wide-leg-jeans-navy" },
+  "sand-suede-blouson-jacket": { $ref: "driftwood-retro-leather-jacket" },
+  "sand-suede-jacket": { $ref: "driftwood-retro-leather-jacket" },
+  "suede-jacket": { $ref: "driftwood-retro-leather-jacket" },
+  "ironwork-15oz-raw-denim-jeans": { $ref: "ironwork-raw-denim-jeans-black" },
+  "skyline-zip-hoodie": { $ref: "static-graphic-crew-sweatshirt" },
+  "washed-charcoal-denim": { $ref: "longform-wide-leg-jeans-deep-blue" },
+};
+
+export const SHOPIFY_HANDLE_ALIASES: Record<string, string> = {
+  "infatuated-graphic-crew": "static-graphic-crew-sweatshirt",
+  "infatuated-crew": "static-graphic-crew-sweatshirt",
+  "graphic-crew-sweatshirt": "static-graphic-crew-sweatshirt",
+  "tactical-crewneck": "static-graphic-crew-sweatshirt",
+  "double-blue-mouth-tee": "graphic-lip-boxy-tee-white",
+  "mouth-tee": "graphic-lip-boxy-tee-white",
+  "graphic-lip": "graphic-lip-boxy-tee-white",
+  "graphic-lip-boxy-tee": "graphic-lip-boxy-tee-white",
+  "lip-boxy-tee": "graphic-lip-boxy-tee-white",
+  "lip-tee": "graphic-lip-boxy-tee-white",
+  "olive-drab-cargo-trousers": "sidestep-cargo-wide-leg-jeans",
+  "olive-cargo-trousers": "sidestep-cargo-wide-leg-jeans",
+  "wide-leg-cargo": "sidestep-cargo-wide-leg-jeans",
+  "optic-white-boatneck-top": "shoreline-boat-neck-knit-top",
+  "shoreline-boat-neck-top": "shoreline-boat-neck-knit-top",
+  "boatneck-top": "shoreline-boat-neck-knit-top",
+  "deep-indigo-raw-wide-jeans": "longform-wide-leg-jeans-deep-blue",
+  "longform-wide-leg-jeans": "longform-wide-leg-jeans-deep-blue",
+  "solid-black-boxy-tee": "black-boxy-tee",
+  "after-hours-tee": "black-boxy-tee",
+  "razorcut-distressed-wide-jeans": "razorcut-ripped-wide-leg-jeans",
+  "heather-grey-knit-henley": "layered-henley-knit-sweater-black",
+  "layered-henley": "layered-henley-knit-sweater-black",
+  "grey-ribbed-henley": "layered-henley-knit-sweater-black",
+  "classic-blue-baggy-jeans": "overset-wide-leg-jeans-navy",
+  "overset-wide-leg-jeans": "overset-wide-leg-jeans-navy",
+  "sand-suede-blouson-jacket": "driftwood-retro-leather-jacket",
+  "sand-suede-jacket": "driftwood-retro-leather-jacket",
+  "suede-jacket": "driftwood-retro-leather-jacket",
+  "ironwork-15oz-raw-denim-jeans": "ironwork-raw-denim-jeans-black",
+  "key-to-my-heart-zip-hoodie": "static-graphic-crew-sweatshirt",
+  "skyline-zip-hoodie": "static-graphic-crew-sweatshirt",
+  "washed-charcoal-carpenter-jeans": "longform-wide-leg-jeans-deep-blue",
+  "washed-charcoal-denim": "longform-wide-leg-jeans-deep-blue",
 };
 
 function generateFallbackProduct(handle: string) {
   const lower = handle.toLowerCase();
+  const resolved = SHOPIFY_HANDLE_ALIASES[lower] || lower;
   
-  // Check exact key match
+  // Check exact key match with resolved alias
+  if (CATALOG_FALLBACKS[resolved]) {
+    const item = CATALOG_FALLBACKS[resolved];
+    return item.$ref ? CATALOG_FALLBACKS[item.$ref] : item;
+  }
+
+  // Check exact key match with raw lower
   if (CATALOG_FALLBACKS[lower]) {
     const item = CATALOG_FALLBACKS[lower];
     return item.$ref ? CATALOG_FALLBACKS[item.$ref] : item;
@@ -257,48 +260,48 @@ function generateFallbackProduct(handle: string) {
 
   // Check partial key match
   for (const [key, prod] of Object.entries(CATALOG_FALLBACKS)) {
-    if (lower.includes(key) || key.includes(lower)) {
+    if (resolved.includes(key) || key.includes(resolved) || lower.includes(key) || key.includes(lower)) {
       return prod.$ref ? CATALOG_FALLBACKS[prod.$ref] : prod;
     }
   }
 
-  // Determine Look ID and characteristics intelligently
+  // Determine Look ID and characteristics intelligently with real pricing
   let lookId = "f4";
   let type = "Outerwear & Jackets";
-  let amount = "240.00";
+  let amount = "44.99";
 
   if (lower.includes("longform") || lower.includes("infatuated") || lower.includes("graphic-crew") || (lower.includes("deep-blue") && lower.includes("jean"))) {
     lookId = "f3";
-    type = lower.includes("denim") || lower.includes("jean") ? "Trousers & Denim" : "Sweaters & Knits";
-    amount = "49.99";
+    type = lower.includes("denim") || lower.includes("jean") ? "Jeans" : "Sweatshirts";
+    amount = "44.99";
   } else if (lower.includes("lip") || lower.includes("mouth") || lower.includes("cargo") || lower.includes("f1") || lower.includes("olive")) {
     lookId = "f1";
-    type = lower.includes("cargo") || lower.includes("trouser") ? "Trousers & Bottoms" : "Tees & Tops";
-    amount = "75.00";
-  } else if (lower.includes("suede") || lower.includes("m3") || lower.includes("ironwork") || lower.includes("blouson")) {
+    type = lower.includes("cargo") || lower.includes("trouser") ? "Trousers" : "T-Shirts";
+    amount = "22.99";
+  } else if (lower.includes("suede") || lower.includes("m3") || lower.includes("ironwork") || lower.includes("blouson") || lower.includes("leather")) {
     lookId = "m3";
-    type = lower.includes("denim") || lower.includes("jeans") ? "Trousers & Denim" : "Outerwear & Jackets";
-    amount = "285.00";
+    type = lower.includes("denim") || lower.includes("jeans") ? "Jeans" : "Jackets";
+    amount = "69.99";
   } else if (lower.includes("henley") || lower.includes("m2") || lower.includes("overset") || lower.includes("baggy")) {
     lookId = "m2";
-    type = lower.includes("denim") || lower.includes("jeans") ? "Trousers & Denim" : "Thermal & Knits";
-    amount = "145.00";
+    type = lower.includes("denim") || lower.includes("jeans") ? "Jeans" : "Knitwear";
+    amount = "39.99";
   } else if (lower.includes("boxy") || lower.includes("m1") || lower.includes("razorcut") || lower.includes("distressed")) {
     lookId = "m1";
-    type = lower.includes("denim") || lower.includes("jeans") ? "Trousers & Denim" : "Tees & Tops";
-    amount = "85.00";
-  } else if (lower.includes("graphic") || lower.includes("f3") || lower.includes("archive") || lower.includes("infatuated")) {
+    type = lower.includes("denim") || lower.includes("jeans") ? "Jeans" : "T-Shirts";
+    amount = "24.99";
+  } else if (lower.includes("graphic") || lower.includes("f3") || lower.includes("archive") || lower.includes("crew")) {
     lookId = "f3";
-    type = "Sweaters & Knits";
-    amount = "180.00";
+    type = "Sweatshirts";
+    amount = "44.99";
   } else if (lower.includes("shoreline") || lower.includes("boat") || lower.includes("f2") || lower.includes("optic-white")) {
     lookId = "f2";
-    type = lower.includes("denim") || lower.includes("jeans") ? "Trousers & Denim" : "Tops & Tunics";
-    amount = "110.00";
+    type = lower.includes("denim") || lower.includes("jeans") ? "Jeans" : "T-Shirts";
+    amount = "44.99";
   } else if (lower.includes("hoodie") || lower.includes("zip") || lower.includes("f4") || lower.includes("carpenter") || lower.includes("heart")) {
     lookId = "f4";
-    type = lower.includes("carpenter") || lower.includes("denim") || lower.includes("jeans") ? "Trousers & Denim" : "Hoodies & Fleece";
-    amount = "195.00";
+    type = lower.includes("carpenter") || lower.includes("denim") || lower.includes("jeans") ? "Jeans" : "Sweatshirts";
+    amount = "44.99";
   }
 
   // Format title from handle
@@ -316,49 +319,45 @@ function generateFallbackProduct(handle: string) {
     description: `Architectural utility piece cut and tailored in small studio runs. Articulated seam construction, high-tensile threading, and clean geometric drape.`,
     variants: [{ id: `var-${handle}`, price: { amount, currencyCode: "GBP" }, title: "M / Standard" }],
     options: [
-      { name: "Color", values: [{ value: "Standard Edition" }, { value: "Ink Black" }, { value: "Concrete" }] },
+      { name: "Color", values: [{ value: "Standard Edition" }] },
       { name: "Size", values: [{ value: "S" }, { value: "M" }, { value: "L" }, { value: "XL" }] },
-      { name: "Fit", values: [{ value: "Boxy Cut" }, { value: "Relaxed" }] },
     ],
   };
 }
 
 function ProductDetailsRoute() {
   const { productId } = Route.useParams();
-  const [product, setProduct] = useState<any>(() => generateFallbackProduct(productId));
+  const resolvedHandle = SHOPIFY_HANDLE_ALIASES[productId?.toLowerCase() || ""] || productId;
+  const [product, setProduct] = useState<any>(() => generateFallbackProduct(resolvedHandle));
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
 
-    if (import.meta.env.VITE_SHOPIFY_DOMAIN && import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN) {
-      shopifyClient.product
-        .fetchByHandle(productId)
-        .then((fetchedProduct) => {
-          if (!isMounted) return;
-          if (fetchedProduct) {
-            setProduct(fetchedProduct);
-          } else {
-            setProduct(generateFallbackProduct(productId));
-          }
+    // Direct fetch from live Shopify store using the resolved handle
+    shopifyClient.product
+      .fetchByHandle(resolvedHandle)
+      .then((fetchedProduct) => {
+        if (!isMounted) return;
+        if (fetchedProduct) {
+          setProduct(fetchedProduct);
+        } else {
+          setProduct(generateFallbackProduct(resolvedHandle));
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.warn("Shopify fetch failed, falling back to local verified catalog:", err);
+        if (isMounted) {
+          setProduct(generateFallbackProduct(resolvedHandle));
           setLoading(false);
-        })
-        .catch((err) => {
-          console.warn("Shopify fetch failed, falling back to local catalog:", err);
-          if (isMounted) {
-            setProduct(generateFallbackProduct(productId));
-            setLoading(false);
-          }
-        });
-    } else {
-      setProduct(generateFallbackProduct(productId));
-      setLoading(false);
-    }
+        }
+      });
 
     return () => {
       isMounted = false;
     };
-  }, [productId]);
+  }, [resolvedHandle]);
 
   if (loading) {
     return (
@@ -383,7 +382,7 @@ function ProductDetailsRoute() {
 
   return (
     <VivreLayout>
-      <LenticularProductPage product={product} productId={productId} />
+      <LenticularProductPage product={product} productId={resolvedHandle} />
     </VivreLayout>
   );
 }
