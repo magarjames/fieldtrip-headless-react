@@ -116,6 +116,19 @@ const CATALOG_FALLBACKS: Record<string, any> = {
       { name: "Fit", values: [{ value: "Boxy Slouch" }, { value: "Drop Shoulder" }] },
     ],
   },
+  "longform-wide-leg-jeans-deep-blue": {
+    id: "prod-longform-wide-leg-jeans-deep-blue",
+    handle: "longform-wide-leg-jeans-deep-blue",
+    title: "Vivre Longform Wide Leg Jeans - Deep Blue",
+    productType: "Trousers & Denim",
+    lookId: "f3",
+    description: "Loose wide leg jeans in deep blue, cut straight and left to fall. The weight of the denim does the work it drapes from the hip rather than holding a shape, which is what makes the leg read long instead of merely wide. Deep blue and black tea, in standard and lighter-weight versions. Floor length as intended. Do not hem it short.",
+    variants: [{ id: "var-f3-2", price: { amount: "49.99", currencyCode: "GBP" }, title: "Dark Blue (Regular) / M" }],
+    options: [
+      { name: "Fit Silhouette", values: [{ value: "Dark Blue (Petite)" }, { value: "Dark Blue (Regular)" }, { value: "Dark Blue (Extended)" }] },
+      { name: "Size", values: [{ value: "XS" }, { value: "S" }, { value: "M" }, { value: "L" }, { value: "XL" }] },
+    ],
+  },
 
   // Look 05 (m1) — Solid black boxy tee & razorcut jeans
   "solid-black-boxy-tee": {
@@ -218,7 +231,7 @@ const CATALOG_FALLBACKS: Record<string, any> = {
   "mouth-tee": { $ref: "double-blue-mouth-tee" },
   "olive-cargo-trousers": { $ref: "olive-drab-cargo-trousers" },
   "shoreline-boat-neck-top": { $ref: "optic-white-boatneck-top" },
-  "longform-wide-leg-jeans": { $ref: "deep-indigo-raw-wide-jeans" },
+  "longform-wide-leg-jeans": { $ref: "longform-wide-leg-jeans-deep-blue" },
   "graphic-crew-sweatshirt": { $ref: "infatuated-graphic-crew" },
   "black-boxy-tee": { $ref: "solid-black-boxy-tee" },
   "razorcut-ripped-wide-leg-jeans": { $ref: "razorcut-distressed-wide-jeans" },
@@ -254,7 +267,11 @@ function generateFallbackProduct(handle: string) {
   let type = "Outerwear & Jackets";
   let amount = "240.00";
 
-  if (lower.includes("lip") || lower.includes("mouth") || lower.includes("cargo") || lower.includes("f1") || lower.includes("olive")) {
+  if (lower.includes("longform") || lower.includes("infatuated") || lower.includes("graphic-crew") || (lower.includes("deep-blue") && lower.includes("jean"))) {
+    lookId = "f3";
+    type = lower.includes("denim") || lower.includes("jean") ? "Trousers & Denim" : "Sweaters & Knits";
+    amount = "49.99";
+  } else if (lower.includes("lip") || lower.includes("mouth") || lower.includes("cargo") || lower.includes("f1") || lower.includes("olive")) {
     lookId = "f1";
     type = lower.includes("cargo") || lower.includes("trouser") ? "Trousers & Bottoms" : "Tees & Tops";
     amount = "75.00";

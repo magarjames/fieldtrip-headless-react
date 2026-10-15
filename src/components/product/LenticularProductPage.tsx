@@ -145,7 +145,7 @@ export const MODEL_SCAN_LOOKS: ModelScanLook[] = [
     printImage: "/brand/northline-fabric-landscape.jpg",
     pieces: [
       { name: "Infatuated Sleeve-Print Graphic Crew", keyword: "Infatuated", hue: "#ece3cb", handle: "infatuated-graphic-crew" },
-      { name: "Dark Indigo Raw Wide-Leg Jeans", keyword: "Indigo", hue: "#232d43", handle: "deep-indigo-raw-wide-jeans" },
+      { name: "Longform Wide Leg Jeans – Deep Blue", keyword: "Longform", hue: "#232d43", handle: "longform-wide-leg-jeans-deep-blue" },
     ],
   },
   {
@@ -246,8 +246,17 @@ export function getLookForProduct(product: any, productId?: string): ModelScanLo
     return MODEL_SCAN_LOOKS[2]; // f2
   }
 
-  // 5. Look 04 (f3) — Infatuated graphic crew sweatshirt & Archive layer
-  if (s.includes("infatuated") || s.includes("graphic-crew") || s.includes("archive") || s.includes("f3") || s.includes("crew-sweatshirt")) {
+  // 5. Look 04 (f3) — Infatuated graphic crew sweatshirt & Longform wide leg jeans
+  if (
+    s.includes("infatuated") ||
+    s.includes("graphic-crew") ||
+    s.includes("archive") ||
+    s.includes("f3") ||
+    s.includes("crew-sweatshirt") ||
+    s.includes("longform") ||
+    (s.includes("deep-blue") && s.includes("jean")) ||
+    (s.includes("deep-blue") && s.includes("wide"))
+  ) {
     return MODEL_SCAN_LOOKS[3]; // f3
   }
 
