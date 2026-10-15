@@ -389,6 +389,23 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
     }
   }, [activeLook, isBottomPiece]);
 
+  // E-commerce state
+  const colors = (product as any)?.options?.find((o: any) => o.name.toLowerCase() === 'color' || o.name.toLowerCase() === 'colour')?.values.map((v: any) => v.value) || ["Default"];
+  const sizes = (product as any)?.options?.find((o: any) => o.name.toLowerCase() === 'size')?.values.map((v: any) => v.value) || ["S", "M", "L", "XL"];
+  const fits = (product as any)?.options?.find((o: any) => o.name.toLowerCase() === 'fit')?.values.map((v: any) => v.value) || [];
+
+  const [selectedColor, setSelectedColor] = useState<string>(colors[0] || "Default");
+  const [selectedSize, setSelectedSize] = useState<string>(sizes[0] || "M");
+  const [selectedFit, setSelectedFit] = useState<string>(fits[0] || "Boxy");
+  const [addedNotice, setAddedNotice] = useState(false);
+
+  // Price formatting
+  const priceFormatted = useMemo(() => {
+    const raw = product?.variants?.[0]?.price?.amount;
+    if (raw) return `GBP £${parseFloat(raw).toFixed(2)}`;
+    return "GBP £185.00";
+  }, [product]);
+
   // Dynamic extraction of clean description and embedded size guide
   const { descriptionHtml, sizeGuideHtml } = useMemo(() => {
     const raw = product?.descriptionHtml || product?.description || "";
