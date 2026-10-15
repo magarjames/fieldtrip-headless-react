@@ -369,7 +369,8 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
     const raw = product?.descriptionHtml || product?.description || "";
     if (!raw) {
       return {
-        descriptionHtml: "Engineered utility garment tailored with an oversized streetwear drape, reinforced seams, and four-way articulation.",
+        descriptionHtml:
+          "Engineered utility garment tailored with an oversized streetwear drape, reinforced seams, and four-way articulation.",
         sizeGuideHtml: null,
       };
     }
@@ -385,11 +386,45 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
       let foundSizeGuide = false;
       let extractedSizeGuide = "";
 
-      const children = Array.from(doc.body.children);
+      // Inspect root children or single-wrapper div
+      const rootEl =
+        doc.body.children.length === 1 &&
+        doc.body.children[0].tagName === "DIV" &&
+        doc.body.children[0].children.length > 1
+          ? doc.body.children[0]
+          : doc.body;
+
+      const children = Array.from(rootEl.children);
       for (let i = 0; i < children.length; i++) {
         const child = children[i];
-        if (!foundSizeGuide && child.textContent?.toLowerCase().includes("size guide")) {
-          foundSizeGuide = true;
+        if (!foundSizeGuide) {
+          const text = (child.textContent || "").trim();
+
+          // Reject casual descriptive sentences that refer to size guides
+          const isPointerSentence =
+            /(?:see|refer|check|view|consult)\s+(?:the\s+)?size\s+guide/i.test(text) ||
+            /size\s+guide\s+below/i.test(text) ||
+            /sizing\s+by\s+build/i.test(text) ||
+            /sizing\s+information\s+below/i.test(text);
+
+          if (!isPointerSentence) {
+            const hasTable = child.tagName === "TABLE" || Boolean(child.querySelector("table"));
+            const isHeadingTag = /^H[1-6]$/i.test(child.tagName);
+            const isStrictTitle =
+              /^(#+\s*)?(size\s*(?:&|and)?\s*fit\s*guide|size\s*guide|size\s*chart|sizing\s*guide|sizing\s*chart|measurements?)\s*:?$/i.test(
+                text
+              );
+            const hasStrongHeading = Boolean(
+              child.querySelector("strong, b, h1, h2, h3, h4, h5, h6") &&
+                /^(size\s*(?:&|and)?\s*fit\s*guide|size\s*guide|size\s*chart|sizing\s*guide|sizing\s*chart|measurements?)\s*:?$/i.test(
+                  (child.querySelector("strong, b, h1, h2, h3, h4, h5, h6")?.textContent || "").trim()
+                )
+            );
+
+            if (hasTable || isStrictTitle || (isHeadingTag && /size\s*(guide|chart)/i.test(text)) || hasStrongHeading) {
+              foundSizeGuide = true;
+            }
+          }
         }
 
         if (foundSizeGuide) {
@@ -399,9 +434,32 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
       }
 
       if (foundSizeGuide) {
+        // Sanitize extracted table elements with clean wrapper & classes
+        const guideDoc = parser.parseFromString(extractedSizeGuide, "text/html");
+        const tables = guideDoc.querySelectorAll("table");
+        tables.forEach((tbl) => {
+          tbl.removeAttribute("style");
+          tbl.removeAttribute("width");
+          tbl.removeAttribute("height");
+          tbl.classList.add("ln-size-table", "ln-extracted-table");
+
+          tbl.querySelectorAll("tr, th, td").forEach((cell) => {
+            cell.removeAttribute("style");
+            cell.removeAttribute("width");
+            cell.removeAttribute("height");
+          });
+
+          if (!tbl.parentElement?.classList.contains("ln-size-table-wrap")) {
+            const wrap = guideDoc.createElement("div");
+            wrap.className = "ln-size-table-wrap";
+            tbl.parentNode?.insertBefore(wrap, tbl);
+            wrap.appendChild(tbl);
+          }
+        });
+
         return {
-          descriptionHtml: doc.body.innerHTML || raw,
-          sizeGuideHtml: extractedSizeGuide,
+          descriptionHtml: rootEl.innerHTML || raw,
+          sizeGuideHtml: guideDoc.body.innerHTML || extractedSizeGuide,
         };
       }
     } catch (e) {
@@ -415,11 +473,15 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
   // Size Guide Modal State
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const [sizeGuideUnit, setSizeGuideUnit] = useState<"in" | "cm">("in");
-  const [sizeGuideCategory, setSizeGuideCategory] = useState<"tops" | "bottoms">("tops");
+  const [sizeGuideCategory, setSizeGuideCategory] = useState<"product" | "tops" | "bottoms">("tops");
 
   useEffect(() => {
-    setSizeGuideCategory(isBottomPiece ? "bottoms" : "tops");
-  }, [isBottomPiece]);
+    if (sizeGuideHtml) {
+      setSizeGuideCategory("product");
+    } else {
+      setSizeGuideCategory(isBottomPiece ? "bottoms" : "tops");
+    }
+  }, [sizeGuideHtml, isBottomPiece]);
 
   useEffect(() => {
     if (!sizeGuideOpen) return;
@@ -1093,44 +1155,55 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
             {/* Modal Controls: Category Tabs & Unit Switcher */}
             <div className="ln-size-modal-controls">
               <div className="ln-size-modal-tabs">
+                {sizeGuideHtml && (
+                  <button
+                    type="button"
+                    className={`ln-size-tab-btn ${sizeGuideCategory === "product" ? "active" : ""}`}
+                    onClick={() => setSizeGuideCategory("product")}
+                  >
+                    Product Chart
+                  </button>
+                )}
                 <button
                   type="button"
                   className={`ln-size-tab-btn ${sizeGuideCategory === "tops" ? "active" : ""}`}
                   onClick={() => setSizeGuideCategory("tops")}
                 >
-                  Tops &amp; Outerwear
+                  Tops & Outerwear
                 </button>
                 <button
                   type="button"
                   className={`ln-size-tab-btn ${sizeGuideCategory === "bottoms" ? "active" : ""}`}
                   onClick={() => setSizeGuideCategory("bottoms")}
                 >
-                  Bottoms &amp; Trousers
+                  Bottoms & Trousers
                 </button>
               </div>
 
-              <div className="ln-size-unit-toggle">
-                <span className="ln-m" style={{ fontSize: "10px", color: "var(--ln-ink-muted)", marginRight: "6px" }}>UNIT:</span>
-                <button
-                  type="button"
-                  className={`ln-unit-pill ${sizeGuideUnit === "in" ? "active" : ""}`}
-                  onClick={() => setSizeGuideUnit("in")}
-                >
-                  IN
-                </button>
-                <button
-                  type="button"
-                  className={`ln-unit-pill ${sizeGuideUnit === "cm" ? "active" : ""}`}
-                  onClick={() => setSizeGuideUnit("cm")}
-                >
-                  CM
-                </button>
-              </div>
+              {sizeGuideCategory !== "product" && (
+                <div className="ln-size-unit-toggle">
+                  <span className="ln-m" style={{ fontSize: "10px", color: "var(--ln-ink-muted)", marginRight: "6px" }}>UNIT:</span>
+                  <button
+                    type="button"
+                    className={`ln-unit-pill ${sizeGuideUnit === "in" ? "active" : ""}`}
+                    onClick={() => setSizeGuideUnit("in")}
+                  >
+                    IN
+                  </button>
+                  <button
+                    type="button"
+                    className={`ln-unit-pill ${sizeGuideUnit === "cm" ? "active" : ""}`}
+                    onClick={() => setSizeGuideUnit("cm")}
+                  >
+                    CM
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Modal Body: Scrollable Table */}
             <div className="ln-size-modal-body">
-              {sizeGuideHtml ? (
+              {sizeGuideCategory === "product" && sizeGuideHtml ? (
                 <div
                   className="ln-size-extracted-content"
                   dangerouslySetInnerHTML={{ __html: sizeGuideHtml }}
@@ -1192,7 +1265,11 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
               {/* Fit & Measuring Guidance Box */}
               <div className="ln-size-guidance-card">
                 <b className="ln-size-guidance-title">
-                  {sizeGuideCategory === "tops" ? "TOPS FIT &amp; STYLING NOTES" : "BOTTOMS FIT &amp; STYLING NOTES"}
+                  {sizeGuideCategory === "product"
+                    ? "GARMENT FIT & STYLING NOTES"
+                    : sizeGuideCategory === "tops"
+                    ? "TOPS FIT & STYLING NOTES"
+                    : "BOTTOMS FIT & STYLING NOTES"}
                 </b>
                 <p className="ln-size-guidance-text">
                   {sizeGuideCategory === "tops"
