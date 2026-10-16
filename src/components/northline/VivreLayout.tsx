@@ -9,8 +9,20 @@ import { shopifyClient } from "@/lib/shopify";
 import "./northline.css";
 
 export function VivreLayout({ children }: { children: React.ReactNode }) {
-  const { bag, bagOpen, setBagOpen, removeFromBag, checkout, isCheckingOut, searchOpen, setSearchOpen } = useVivre();
-  
+  const {
+    bag,
+    bagCount,
+    subtotalFormatted,
+    bagOpen,
+    setBagOpen,
+    removeFromBag,
+    updateQuantity,
+    checkout,
+    isCheckingOut,
+    searchOpen,
+    setSearchOpen,
+  } = useVivre();
+
   // Search state
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
@@ -19,11 +31,14 @@ export function VivreLayout({ children }: { children: React.ReactNode }) {
   // Load all products for search
   useEffect(() => {
     if (searchOpen && allProducts.length === 0) {
-      if (import.meta.env.VITE_SHOPIFY_DOMAIN && import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN) {
-        shopifyClient.product.fetchAll().then((products) => {
+      shopifyClient.product
+        .fetchAll()
+        .then((products) => {
           setAllProducts(products as any);
+        })
+        .catch((err) => {
+          console.error("Failed to fetch search catalog:", err);
         });
-      }
     }
   }, [searchOpen, allProducts.length]);
 
@@ -34,20 +49,24 @@ export function VivreLayout({ children }: { children: React.ReactNode }) {
       return;
     }
     const q = searchQuery.toLowerCase();
-    const results = allProducts.filter(p => 
-      p.title.toLowerCase().includes(q) || 
-      p.productType.toLowerCase().includes(q)
+    const results = allProducts.filter(
+      (p) =>
+        p.title?.toLowerCase().includes(q) ||
+        p.productType?.toLowerCase().includes(q)
     );
     setSearchResults(results);
   }, [searchQuery, allProducts]);
 
   return (
-    <div className="ft" style={{ 
-      minHeight: '100vh', 
-      backgroundColor: '#ffffff',
-      color: 'var(--ink)',
-      position: 'relative'
-    }}>
+    <div
+      className="ft"
+      style={{
+        minHeight: "100vh",
+        backgroundColor: "#ffffff",
+        color: "var(--ink)",
+        position: "relative",
+      }}
+    >
       <style>{`
         .ft{
           --paper:#FFFFFF; --ink:#141317; --dim:#565462; --hair:rgba(20,19,23,0.16);
@@ -63,32 +82,39 @@ export function VivreLayout({ children }: { children: React.ReactNode }) {
           transition:transform .2s cubic-bezier(.16,1,.3,1) }
         .ft .btn:active{ transform:scale(.97) }
       `}</style>
-      
+
       {/* Background */}
-      <div style={{ position: 'fixed', inset: 0, zIndex: 0 }}>
+      <div style={{ position: "fixed", inset: 0, zIndex: 0 }}>
         <FoldBackdropV8 />
       </div>
 
       {/* Header */}
-      <header className="shell flex items-center gap-4 py-4" style={{ 
-        position: 'sticky', 
-        top: 0, 
-        zIndex: 50, 
-        background: 'rgba(255, 255, 255, 0.05)', 
-        backdropFilter: 'blur(24px) saturate(150%)', 
-        WebkitBackdropFilter: 'blur(24px) saturate(150%)', 
-        borderBottom: '1px solid rgba(0, 0, 0, 0.2)' 
-      }}>
-        <Link to="/" className="text-[1.15rem] font-black tracking-[-0.05em]" style={{ color: 'var(--ink)', textDecoration: 'none' }}>
+      <header
+        className="shell flex items-center gap-4 py-4"
+        style={{
+          position: "sticky",
+          top: 0,
+          zIndex: 50,
+          background: "rgba(255, 255, 255, 0.05)",
+          backdropFilter: "blur(24px) saturate(150%)",
+          WebkitBackdropFilter: "blur(24px) saturate(150%)",
+          borderBottom: "1px solid rgba(0, 0, 0, 0.2)",
+        }}
+      >
+        <Link
+          to="/"
+          className="text-[1.15rem] font-black tracking-[-0.05em]"
+          style={{ color: "var(--ink)", textDecoration: "none" }}
+        >
           <img src="/logos/vivre-wordmark.svg" alt="Vivre" className="h-5" />
         </Link>
         <span className="lbl hidden sm:inline" style={{ color: "var(--dim)" }}>
           Drop 001
         </span>
-        
+
         <span className="flex-1" />
-        
-        <button 
+
+        <button
           onClick={() => setSearchOpen(true)}
           className="p-2 hover:bg-black/5 rounded-full transition-colors mr-2"
           aria-label="Search products"
@@ -107,14 +133,36 @@ export function VivreLayout({ children }: { children: React.ReactNode }) {
             border: "1px solid color-mix(in srgb, var(--ink) 20%, transparent)",
             color: "var(--ink)",
           }}
+          aria-label={`Open shopping bag (${bagCount} ${bagCount === 1 ? "item" : "items"})`}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-          {bag.length > 0 && <span style={{ marginLeft: '0.4rem' }}>{bag.length}</span>}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="9" cy="21" r="1" />
+            <circle cx="20" cy="21" r="1" />
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+          </svg>
+          {bagCount > 0 && <span style={{ marginLeft: "0.4rem" }}>{bagCount}</span>}
         </button>
       </header>
 
       {/* Main Content Area */}
-      <main style={{ position: 'relative', zIndex: 10, minHeight: '100vh', paddingBottom: '100px' }}>
+      <main
+        style={{
+          position: "relative",
+          zIndex: 10,
+          minHeight: "100vh",
+          paddingBottom: "100px",
+        }}
+      >
         {children}
       </main>
 
@@ -122,99 +170,177 @@ export function VivreLayout({ children }: { children: React.ReactNode }) {
       <NorthlineFooter />
 
       {/* Slide-out Bag Modal */}
-      {bagOpen && typeof document !== "undefined" && createPortal(
-        <div className="nl-layer">
-          <button
-            className="nl-layer-backdrop"
-            type="button"
-            aria-label="Close bag"
-            onClick={() => setBagOpen(false)}
-            style={{
-              background: 'rgba(255, 255, 255, 0.05)',
-              backdropFilter: 'blur(24px) saturate(150%)',
-              WebkitBackdropFilter: 'blur(24px) saturate(150%)',
-              transform: 'translateZ(0)',
-              willChange: 'transform, backdrop-filter',
-            }}
-          />
-          <aside
-            className="nl-bag-drawer"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="bag-title"
-            style={{ 
-              paddingTop: '3rem', 
-              paddingLeft: '1.5rem', 
-              paddingRight: '1.5rem',
-              background: 'rgba(255, 255, 255, 0.1)',
-              backdropFilter: 'blur(24px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-              color: '#000000',
-              boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.4), inset 0 0 0 1px rgba(255,255,255,0.15), -20px 0 60px rgba(0, 0, 0, 0.15)'
-            }}
-          >
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'flex-start', 
-              width: '100%',
-              paddingBottom: '1.5rem',
-              borderBottom: '1px solid rgba(0, 0, 0, 0.2)',
-              marginBottom: '1.5rem'
-            }}>
-              <h2 id="bag-title" style={{ margin: 0, color: '#000000', fontSize: '3.5rem', fontWeight: 800, letterSpacing: '-0.05em', lineHeight: 1 }}>Your bag</h2>
-              <button
-                className="nl-dialog-close"
-                type="button"
-                onClick={() => setBagOpen(false)}
-                style={{ 
-                  position: 'relative', 
-                  top: 'auto', 
-                  right: 'auto', 
-                  flexShrink: 0,
-                  color: '#000000',
-                  borderColor: 'rgba(0,0,0,0.1)',
-                  background: 'rgba(255,255,255,0.8)'
+      {bagOpen &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div className="nl-layer">
+            <button
+              className="nl-layer-backdrop"
+              type="button"
+              aria-label="Close bag"
+              onClick={() => setBagOpen(false)}
+              style={{
+                background: "rgba(255, 255, 255, 0.05)",
+                backdropFilter: "blur(24px) saturate(150%)",
+                WebkitBackdropFilter: "blur(24px) saturate(150%)",
+                transform: "translateZ(0)",
+                willChange: "transform, backdrop-filter",
+              }}
+            />
+            <aside
+              className="nl-bag-drawer"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="bag-title"
+              style={{
+                paddingTop: "2.5rem",
+                paddingLeft: "1.5rem",
+                paddingRight: "1.5rem",
+                background: "rgba(255, 255, 255, 0.88)",
+                backdropFilter: "blur(28px) saturate(180%)",
+                WebkitBackdropFilter: "blur(28px) saturate(180%)",
+                color: "#000000",
+                boxShadow:
+                  "inset 0 1px 1px rgba(255,255,255,0.6), inset 0 0 0 1px rgba(0,0,0,0.08), -20px 0 60px rgba(0, 0, 0, 0.18)",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  width: "100%",
+                  paddingBottom: "1.25rem",
+                  borderBottom: "1px solid rgba(0, 0, 0, 0.15)",
+                  marginBottom: "1.25rem",
                 }}
               >
-                Close
-              </button>
-            </div>
-            {bag.length > 0 ? (
-              <>
-                <ul className="nl-bag-list">
-                  {bag.map((item, index) => (
-                    <li key={item.id + "-" + index}>
-                      <img src={item.image} alt="" decoding="async" />
-                      <div>
-                        <h3>{item.name}</h3>
-                        {item.variantTitle && <p className="text-sm font-medium mb-1">{item.variantTitle}</p>}
-                        <p>{item.price}</p>
-                      </div>
-                      <button type="button" onClick={() => removeFromBag(index)}>
-                        Remove
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-                <div className="nl-bag-footer">
-                  <button 
-                    className="nl-button nl-button-primary nl-bag-checkout" 
-                    type="button"
-                    onClick={checkout}
-                    disabled={isCheckingOut}
-                    style={{ opacity: isCheckingOut ? 0.7 : 1 }}
+                <div>
+                  <h2
+                    id="bag-title"
+                    style={{
+                      margin: 0,
+                      color: "#000000",
+                      fontSize: "2.75rem",
+                      fontWeight: 800,
+                      letterSpacing: "-0.05em",
+                      lineHeight: 1,
+                    }}
                   >
-                    {isCheckingOut ? "Loading checkout..." : "Checkout via Shopify"}
-                  </button>
+                    Your bag
+                  </h2>
+                  <p
+                    style={{
+                      margin: "0.4rem 0 0",
+                      fontSize: "0.82rem",
+                      fontWeight: 600,
+                      color: "rgba(0, 0, 0, 0.55)",
+                    }}
+                  >
+                    {bagCount} {bagCount === 1 ? "item" : "items"}
+                  </p>
                 </div>
-              </>
-            ) : (
-              <p className="nl-empty-bag">Your bag is ready when you are.</p>
-            )}
-          </aside>
-        </div>, document.body
-      )}
+                <button
+                  className="nl-dialog-close"
+                  type="button"
+                  onClick={() => setBagOpen(false)}
+                  style={{
+                    position: "relative",
+                    top: "auto",
+                    right: "auto",
+                    flexShrink: 0,
+                    color: "#000000",
+                    borderColor: "rgba(0,0,0,0.15)",
+                    background: "rgba(255,255,255,0.9)",
+                  }}
+                >
+                  Close
+                </button>
+              </div>
+              {bag.length > 0 ? (
+                <>
+                  <ul className="nl-bag-list">
+                    {bag.map((item, index) => {
+                      const qty = item.quantity || 1;
+                      return (
+                        <li key={item.id + "-" + (item.variantTitle || "") + "-" + index}>
+                          <img src={item.image} alt="" decoding="async" />
+                          <div className="nl-bag-item-info">
+                            <h3>{item.name}</h3>
+                            {item.variantTitle && (
+                              <p className="nl-bag-item-variant">{item.variantTitle}</p>
+                            )}
+                            <p className="nl-bag-item-price">{item.price}</p>
+                            <div className="nl-bag-qty-row">
+                              <div className="nl-bag-qty-controls" aria-label="Quantity controls">
+                                <button
+                                  type="button"
+                                  className="nl-bag-qty-btn"
+                                  onClick={() => updateQuantity(index, -1)}
+                                  aria-label={`Decrease quantity of ${item.name}`}
+                                >
+                                  −
+                                </button>
+                                <span className="nl-bag-qty-val" aria-live="polite">
+                                  {qty}
+                                </span>
+                                <button
+                                  type="button"
+                                  className="nl-bag-qty-btn"
+                                  onClick={() => updateQuantity(index, 1)}
+                                  aria-label={`Increase quantity of ${item.name}`}
+                                >
+                                  +
+                                </button>
+                              </div>
+                              <button
+                                type="button"
+                                className="nl-bag-remove-btn"
+                                onClick={() => removeFromBag(index)}
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  <div className="nl-bag-footer">
+                    <div className="nl-bag-summary">
+                      <div className="nl-bag-summary-row nl-bag-summary-row--subtotal">
+                        <span>Subtotal</span>
+                        <strong>{subtotalFormatted}</strong>
+                      </div>
+                      <div className="nl-bag-summary-row">
+                        <span>Express delivery</span>
+                        <span>Free</span>
+                      </div>
+                      <p className="nl-bag-delivery-note">
+                        Dispatched within 24h · Estimated delivery 2–4 business days · Duties &amp;
+                        taxes included
+                      </p>
+                    </div>
+                    <button
+                      className="nl-button nl-button-primary nl-bag-checkout"
+                      type="button"
+                      onClick={checkout}
+                      disabled={isCheckingOut}
+                      style={{ opacity: isCheckingOut ? 0.7 : 1 }}
+                    >
+                      {isCheckingOut
+                        ? "Loading checkout..."
+                        : `Checkout via Shopify — ${subtotalFormatted}`}
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <p className="nl-empty-bag">Your bag is ready when you are.</p>
+              )}
+            </aside>
+          </div>,
+          document.body
+        )}
 
       {/* Split Search Layout: Right Drawer + Left Grid */}
       {searchOpen && typeof document !== "undefined" && createPortal(

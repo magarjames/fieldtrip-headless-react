@@ -332,7 +332,7 @@ export interface LenticularProductProps {
 }
 
 export function LenticularProductPage({ product, productId }: LenticularProductProps) {
-  const { addToBag, bag, setBagOpen } = useVivre();
+  const { addToBag, bag, bagCount, setBagOpen } = useVivre();
 
   // Accurately determine Runway Hero look model based on product
   const initialLook = useMemo(() => getLookForProduct(product, productId), [product, productId]);
@@ -420,14 +420,25 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
   }, [activeLook, isBottomPiece, product, productId]);
 
   // E-commerce state
-  const colors = (product as any)?.options?.find((o: any) => o.name.toLowerCase() === 'color' || o.name.toLowerCase() === 'colour')?.values.map((v: any) => v.value) || ["Default"];
-  const sizes = (product as any)?.options?.find((o: any) => o.name.toLowerCase() === 'size')?.values.map((v: any) => v.value) || ["S", "M", "L", "XL"];
+  const colors = (product as any)?.options?.find((o: any) => o.name.toLowerCase() === 'color' || o.name.toLowerCase() === 'colour')?.values.map((v: any) => v.value) || ["Black"];
+  const sizes = (product as any)?.options?.find((o: any) => o.name.toLowerCase() === 'size')?.values.map((v: any) => v.value) || ["XS", "S", "M", "L", "XL"];
   const fits = (product as any)?.options?.find((o: any) => o.name.toLowerCase() === 'fit')?.values.map((v: any) => v.value) || [];
 
-  const [selectedColor, setSelectedColor] = useState<string>(colors[0] || "Default");
-  const [selectedSize, setSelectedSize] = useState<string>(sizes[0] || "M");
+  const [selectedColor, setSelectedColor] = useState<string>(colors[0] || "Black");
+  const [selectedSize, setSelectedSize] = useState<string>(
+    sizes.length === 1 && sizes[0]?.toLowerCase() === "one size" ? sizes[0] : ""
+  );
   const [selectedFit, setSelectedFit] = useState<string>(fits[0] || "Boxy");
-  const [addedNotice, setAddedNotice] = useState(false);
+  const [sizeError, setSizeError] = useState(false);
+  const [addedSummary, setAddedSummary] = useState<string | null>(null);
+
+  useEffect(() => {
+    setSelectedColor(colors[0] || "Black");
+    setSelectedSize(sizes.length === 1 && sizes[0]?.toLowerCase() === "one size" ? sizes[0] : "");
+    setSelectedFit(fits[0] || "Boxy");
+    setSizeError(false);
+    setAddedSummary(null);
+  }, [product?.id, productId]);
 
   // Price formatting
   const priceFormatted = useMemo(() => {
@@ -817,6 +828,31 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
   };
 
   const handleAddBagClick = () => {
+    if (sizes.length > 0 && !selectedSize) {
+      setSizeError(true);
+      return;
+    }
+
+    let resolvedVariantId = product?.variants?.[0]?.id?.toString();
+    if (product?.variants && Array.isArray(product.variants)) {
+      const matched = product.variants.find((v: any) => {
+        const opts = v.selectedOptions || [];
+        const sizeMatch = !selectedSize || opts.some((o: any) => o.name.toLowerCase() === "size" && o.value === selectedSize);
+        const colorMatch =
+          !selectedColor ||
+          selectedColor === "Default" ||
+          opts.some((o: any) => (o.name.toLowerCase() === "color" || o.name.toLowerCase() === "colour") && o.value === selectedColor);
+        return sizeMatch && colorMatch;
+      });
+      if (matched?.id) {
+        resolvedVariantId = matched.id.toString();
+      }
+    }
+
+    const sizeLabel = selectedSize || "One Size";
+    const colorLabel = selectedColor && selectedColor !== "Default" ? selectedColor : "Black";
+    const summaryText = `${sizeLabel} / ${colorLabel}`;
+
     const itemToAdd = {
       id: (product?.id || productId || activeLook.id).toString(),
       name: product?.title || activeLook.name,
@@ -825,16 +861,15 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
       image: frameUrl(activeLook.id, 0),
       alt: product?.title || activeLook.outfit,
       description: product?.description || activeLook.outfit,
-      colors: selectedColor ? [selectedColor] : [],
-      sizes: selectedSize ? [selectedSize] : [],
+      colors: [colorLabel],
+      sizes: [sizeLabel],
       fits: selectedFit ? [selectedFit] : undefined,
-      shopifyVariantId: product?.variants?.[0]?.id?.toString(),
-      variantTitle: `${selectedSize} / ${selectedColor}${selectedFit ? ` / ${selectedFit}` : ""}`,
+      shopifyVariantId: resolvedVariantId,
+      variantTitle: summaryText,
     };
-    addToBag(itemToAdd as any);
-    setAddedNotice(true);
-    setTimeout(() => setAddedNotice(false), 2400);
-    setBagOpen(true);
+    addToBag(itemToAdd as any, { openDrawer: false });
+    setSizeError(false);
+    setAddedSummary(summaryText);
   };
 
   // Scan chamber optical echo indices matching ScanRunwayHero
@@ -1112,7 +1147,9 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
               <div className="ln-side-option-group">
                 <div className="ln-side-option-header">
                   <div className="ln-side-size-label-wrap">
-                    <span className="ln-m" style={{ color: "var(--ln-ink)", fontWeight: 700 }}>SELECT SIZE</span>
+                    <span className="ln-m" style={{ color: "var(--ln-ink)", fontWeight: 700 }}>
+                      SIZE: {selectedSize ? selectedSize : "Choose your size"}
+                    </span>
                   </div>
                   <button
                     type="button"
@@ -1130,12 +1167,21 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
                       key={sz}
                       type="button"
                       className={`ln-side-size-btn ${selectedSize === sz ? "active" : ""}`}
-                      onClick={() => setSelectedSize(sz)}
+                      onClick={() => {
+                        setSelectedSize(sz);
+                        setSizeError(false);
+                        setAddedSummary(null);
+                      }}
                     >
                       {sz}
                     </button>
                   ))}
                 </div>
+                {sizeError && !selectedSize && (
+                  <p className="ln-m" style={{ color: "var(--ln-clay)", fontSize: "10px", marginTop: "6px" }}>
+                    Please choose a size before adding to your bag.
+                  </p>
+                )}
               </div>
 
               {/* Colorway Selector */}
@@ -1153,7 +1199,10 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
                         key={c}
                         type="button"
                         className={`ln-side-color-btn ${selectedColor === c ? "active" : ""}`}
-                        onClick={() => setSelectedColor(c)}
+                        onClick={() => {
+                          setSelectedColor(c);
+                          setAddedSummary(null);
+                        }}
                       >
                         {c}
                       </button>
@@ -1193,15 +1242,72 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
                   className="ln-side-submit-btn"
                   onClick={handleAddBagClick}
                 >
-                  {addedNotice ? (
-                    <>
-                      <Check size={16} />
-                      <span>Added to Bag</span>
-                    </>
+                  {!selectedSize && sizes.length > 0 ? (
+                    <span>Choose your size — {priceFormatted}</span>
                   ) : (
-                    <span>Add to Bag — {priceFormatted}</span>
+                    <span>Add to bag — {priceFormatted}</span>
                   )}
                 </button>
+
+                {addedSummary && (
+                  <div
+                    role="status"
+                    aria-live="polite"
+                    style={{
+                      marginTop: "10px",
+                      padding: "12px",
+                      borderRadius: "6px",
+                      background: "rgba(18, 22, 25, 0.06)",
+                      border: "1px solid rgba(18, 22, 25, 0.16)",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "8px",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: "6px", fontWeight: 700, fontSize: "12px", color: "var(--ln-ink)" }}>
+                      <Check size={15} />
+                      <span>Added to bag — {addedSummary}</span>
+                    </div>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+                      <button
+                        type="button"
+                        onClick={() => setBagOpen(true)}
+                        style={{
+                          padding: "8px 10px",
+                          background: "var(--ln-ink)",
+                          color: "#fff",
+                          border: "none",
+                          borderRadius: "4px",
+                          fontSize: "11px",
+                          fontWeight: 700,
+                          letterSpacing: "0.06em",
+                          textTransform: "uppercase",
+                          cursor: "pointer",
+                        }}
+                      >
+                        View bag ({bagCount})
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setAddedSummary(null)}
+                        style={{
+                          padding: "8px 10px",
+                          background: "transparent",
+                          color: "var(--ln-ink)",
+                          border: "1px solid rgba(18, 22, 25, 0.25)",
+                          borderRadius: "4px",
+                          fontSize: "11px",
+                          fontWeight: 600,
+                          letterSpacing: "0.05em",
+                          textTransform: "uppercase",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Continue shopping
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 <div className="ln-side-cta-meta">
                   <button
@@ -1209,7 +1315,7 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
                     className="ln-side-view-bag-link"
                     onClick={() => setBagOpen(true)}
                   >
-                    View Bag ({bag.length}) →
+                    View Bag ({bagCount}) →
                   </button>
                   <span className="ln-m" style={{ fontSize: "10px", color: "var(--ln-ink-muted)" }}>
                     Free express global shipping

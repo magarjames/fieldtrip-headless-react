@@ -165,13 +165,14 @@ export function ScanRunwayHero({
   }, [look.id, nextLook.id]);
 
   useEffect(() => {
-    if (import.meta.env.VITE_SHOPIFY_DOMAIN && import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN) {
-      shopifyClient.product.fetchAll().then((fetchedProducts) => {
+    shopifyClient.product
+      .fetchAll()
+      .then((fetchedProducts) => {
         setShopifyProducts(fetchedProducts as any);
-      }).catch(err => {
+      })
+      .catch((err) => {
         console.error("Shopify fetch error:", err);
       });
-    }
   }, []);
 
   useEffect(() => {
@@ -618,11 +619,13 @@ export function ScanRunwayHero({
         </div>
 
         <div className="scan-runway__command-bar">
-          <a href={primaryHref}>SHOP COLLECTION</a>
+          <a className="scan-runway__primary-cta" href={primaryHref}>
+            Shop Drop 001
+          </a>
         </div>
 
         <a className="scan-runway__runway-link" href={secondaryHref}>
-          RUNWAY
+          Explore the runway
         </a>
       </div>
     </section>

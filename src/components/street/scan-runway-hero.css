@@ -588,26 +588,46 @@
   display: flex;
   align-items: center;
   gap: 0.85rem;
-  min-height: 2.45rem;
-  padding: 0 1.5rem;
-  color: var(--scan-command-ink);
-  background: var(--scan-command-bg);
+  min-height: 3.2rem;
+  padding: 0;
+  color: #111214;
+  background: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.95);
   border-radius: 999px;
   transform: translateX(-50%);
-  backdrop-filter: blur(14px);
-  box-shadow: 0 12px 38px rgba(0, 0, 0, 0.19);
+  box-shadow:
+    0 16px 44px rgba(0, 0, 0, 0.38),
+    0 2px 10px rgba(0, 0, 0, 0.2);
   text-shadow: none;
+  transition:
+    transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 200ms ease,
+    background 200ms ease;
+}
+
+.scan-runway__command-bar:hover {
+  transform: translateX(-50%) translateY(-2px) scale(1.02);
+  background: #ffffff;
+  box-shadow:
+    0 20px 52px rgba(0, 0, 0, 0.46),
+    0 4px 14px rgba(0, 0, 0, 0.24);
 }
 
 .scan-runway__command-bar button,
 .scan-runway__command-bar a {
-  display: grid;
-  min-height: 2.45rem;
-  place-items: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.2rem;
+  padding: 0 2.25rem;
   border: 0;
-  color: inherit;
+  color: #111214;
   background: transparent;
-  font: inherit;
+  font:
+    800 0.88rem/1 Archivo,
+    sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   white-space: nowrap;
   cursor: pointer;
   text-decoration: none;
@@ -649,8 +669,32 @@
 }
 
 .scan-runway__runway-link {
-  right: clamp(4.6rem, 7.4vw, 9rem);
+  right: clamp(2rem, 5vw, 6.5rem);
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  padding: 0 1.15rem;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 999px;
+  background: rgba(14, 15, 20, 0.42);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   color: var(--scan-ui-color);
+  font:
+    600 0.74rem/1 Archivo,
+    sans-serif;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  transition:
+    background 200ms ease,
+    border-color 200ms ease,
+    transform 200ms ease;
+}
+
+.scan-runway__runway-link:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.65);
+  transform: translateY(-1px);
 }
 
 .scan-runway__handoff {

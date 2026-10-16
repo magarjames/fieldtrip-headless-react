@@ -44,17 +44,16 @@ export function NorthlineShop() {
 
   // Fetch real products from Shopify
   useEffect(() => {
-    if (import.meta.env.VITE_SHOPIFY_DOMAIN && import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN) {
-      shopifyClient.product.fetchAll().then((fetchedProducts) => {
+    shopifyClient.product
+      .fetchAll()
+      .then((fetchedProducts) => {
         setShopifyProducts(fetchedProducts as any);
         setShopifyLoading(false);
-      }).catch(err => {
+      })
+      .catch((err) => {
         console.error("Shopify fetch error:", err);
         setShopifyLoading(false);
       });
-    } else {
-      setShopifyLoading(false); // mock loading finish if no env vars
-    }
   }, []);
 
   // Map live Shopify products

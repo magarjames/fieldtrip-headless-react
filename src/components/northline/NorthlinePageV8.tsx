@@ -32,6 +32,8 @@ type Product = {
   name: string;
   group: string;
   price: string;
+  rawPrice?: number;
+  handle?: string;
   image: string;
   alt: string;
   description: string;
@@ -104,7 +106,21 @@ export function NorthlinePageV8({
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedFit, setSelectedFit] = useState("");
-  const { bag, bagOpen, setBagOpen, isCheckingOut, addToBag: contextAddToBag, removeFromBag, checkout } = useVivre();
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [sizeError, setSizeError] = useState(false);
+  const [addedConfirmation, setAddedConfirmation] = useState<string | null>(null);
+  const {
+    bag,
+    bagCount,
+    subtotalFormatted,
+    bagOpen,
+    setBagOpen,
+    isCheckingOut,
+    addToBag: contextAddToBag,
+    removeFromBag,
+    updateQuantity,
+    checkout,
+  } = useVivre();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [signupMessage, setSignupMessage] = useState("");
@@ -314,55 +330,81 @@ export function NorthlinePageV8({
 
   // Fetch real products from Shopify collection DROP 001
   useEffect(() => {
-    if (import.meta.env.VITE_SHOPIFY_DOMAIN && import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN) {
-      shopifyClient.collection.fetchAllWithProducts().then((collections) => {
-        const dropCollection = collections.find((c: any) => c.title.toLowerCase().includes("drop 001")) || collections[0];
+    shopifyClient.collection
+      .fetchAllWithProducts()
+      .then((collections) => {
+        const dropCollection =
+          collections.find((c: any) => c.title.toLowerCase().includes("drop 001")) ||
+          collections[0];
         if (dropCollection) {
           setCollectionDetails({
             title: dropCollection.title,
             description: dropCollection.description || "",
           });
-          if (dropCollection.products) {
+          if (dropCollection.products && dropCollection.products.length > 0) {
             setShopifyProducts(dropCollection.products as any);
+          } else {
+            shopifyClient.product.fetchAll().then((fetchedProducts) => {
+              setShopifyProducts(fetchedProducts as any);
+            });
           }
         } else {
           shopifyClient.product.fetchAll().then((fetchedProducts) => {
             setShopifyProducts(fetchedProducts as any);
           });
         }
-      }).catch(err => {
+      })
+      .catch((err) => {
         console.error("Shopify fetch error:", err);
         shopifyClient.product.fetchAll().then((fetchedProducts) => {
           setShopifyProducts(fetchedProducts as any);
         });
       });
-    }
   }, []);
 
   // Map live Shopify products
-  const liveProducts: Product[] = shopifyProducts.map(sp => ({
+  const liveProducts: Product[] = shopifyProducts.map((sp) => ({
     id: sp.id.toString(),
     name: sp.title,
-    group: (sp.productType || "New Arrivals").charAt(0).toUpperCase() + (sp.productType || "New Arrivals").slice(1),
-    price: `GBP £${parseFloat(sp.variants?.[0]?.price?.amount || '0').toFixed(2)}`,
+    group:
+      (sp.productType || "New Arrivals").charAt(0).toUpperCase() +
+      (sp.productType || "New Arrivals").slice(1),
+    price: `GBP £${parseFloat(sp.variants?.[0]?.price?.amount || "0").toFixed(2)}`,
+    rawPrice: parseFloat(sp.variants?.[0]?.price?.amount || "0"),
+    handle: (sp as any).handle || sp.id.toString().split("/").pop(),
     image: sp.images?.[0]?.src || flatlay,
     alt: sp.title,
-    description: sp.descriptionHtml || sp.description || sp.vendor || "A purposeful new addition to the line.",
-    colors: (sp.options?.find((o: any) => o.name.toLowerCase() === 'color' || o.name.toLowerCase() === 'colour')
-      ?.values as unknown as any[])?.map((v: any) => typeof v === 'object' && v !== null ? v.value : v) || ["Default"],
-    sizes: (sp.options?.find((o: any) => o.name.toLowerCase() === 'size')
-      ?.values as unknown as any[])?.map((v: any) => typeof v === 'object' && v !== null ? v.value : v) || ["One Size"],
-    fits: (sp.options?.find((o: any) => o.name.toLowerCase() === 'fit')
-      ?.values as unknown as any[])?.map((v: any) => typeof v === 'object' && v !== null ? v.value : v) || [],
+    description:
+      sp.descriptionHtml ||
+      sp.description ||
+      sp.vendor ||
+      "A purposeful new addition to the line.",
+    colors:
+      (
+        sp.options?.find(
+          (o: any) => o.name.toLowerCase() === "color" || o.name.toLowerCase() === "colour"
+        )?.values as unknown as any[]
+      )?.map((v: any) => (typeof v === "object" && v !== null ? v.value : v)) || ["Black"],
+    sizes:
+      (
+        sp.options?.find((o: any) => o.name.toLowerCase() === "size")?.values as unknown as any[]
+      )?.map((v: any) => (typeof v === "object" && v !== null ? v.value : v)) || ["One Size"],
+    fits:
+      (
+        sp.options?.find((o: any) => o.name.toLowerCase() === "fit")?.values as unknown as any[]
+      )?.map((v: any) => (typeof v === "object" && v !== null ? v.value : v)) || [],
     shopifyVariantId: (sp.variants?.[0] as any)?.id,
     variants: sp.variants,
-    images: sp.images?.map((img: any) => img.src) || [sp.images?.[0]?.src || flatlay]
+    images: sp.images?.map((img: any) => img.src) || [sp.images?.[0]?.src || flatlay],
   }));
 
-  const dynamicFilters = ["All", ...Array.from(new Set(liveProducts.map(p => p.group).filter(Boolean)))];
+  const dynamicFilters = [
+    "All",
+    ...Array.from(new Set(liveProducts.map((p) => p.group).filter(Boolean))),
+  ];
 
   const shownProducts = liveProducts.filter(
-    (product) => deferredFilter === "All" || product.group === deferredFilter,
+    (product) => deferredFilter === "All" || product.group === deferredFilter
   );
 
   useEffect(() => {
@@ -383,7 +425,7 @@ export function NorthlinePageV8({
     const handleOpenBag = () => setBagOpen(true);
     window.addEventListener("open-northline-bag", handleOpenBag);
     return () => window.removeEventListener("open-northline-bag", handleOpenBag);
-  }, []);
+  }, [setBagOpen]);
 
   useEffect(() => {
     if (!continuation || !splitNavigation) return;
@@ -426,7 +468,7 @@ export function NorthlinePageV8({
       const edgeDistance = Math.min(window.innerHeight * 0.58, 520);
       const edgeProgress = Math.min(
         1,
-        Math.max(0, (window.innerHeight - collectionTop) / edgeDistance),
+        Math.max(0, (window.innerHeight - collectionTop) / edgeDistance)
       );
       const easedEdgeProgress = 1 - Math.pow(1 - edgeProgress, 3);
       const edgeLift = Math.min(126, Math.max(82, window.innerWidth * 0.064));
@@ -436,7 +478,8 @@ export function NorthlinePageV8({
       const linkWidths = cachedLinkWidths;
       const horizontalGap = Math.min(38, Math.max(22, window.innerWidth * 0.022));
       const totalWidth =
-        linkWidths.reduce((total, width) => total + width, 0) + horizontalGap * (links.length - 1);
+        linkWidths.reduce((total, width) => total + width, 0) +
+        horizontalGap * (links.length - 1);
       const initialLeft = Math.max(20, (window.innerWidth - totalWidth) / 2);
       const railLeft = Math.min(80, Math.max(20, window.innerWidth * 0.05));
       const entryTop = Math.min(54, Math.max(42, window.innerHeight * 0.052));
@@ -446,7 +489,7 @@ export function NorthlinePageV8({
       edgeMotionRef.current.progress = easedEdgeProgress;
       edge?.style.setProperty(
         "transform",
-        `translate3d(0, ${(-edgeLift * easedEdgeProgress).toFixed(2)}px, 0)`,
+        `translate3d(0, ${(-edgeLift * easedEdgeProgress).toFixed(2)}px, 0)`
       );
 
       let horizontalOffset = 0;
@@ -526,7 +569,10 @@ export function NorthlinePageV8({
         }
 
         const sectionTop = section.getBoundingClientRect().top;
-        const progress = Math.min(1, Math.max(0, (window.innerHeight - sectionTop) / edgeDistance));
+        const progress = Math.min(
+          1,
+          Math.max(0, (window.innerHeight - sectionTop) / edgeDistance)
+        );
         const easedProgress = 1 - Math.pow(1 - progress, 3);
         const offset = (-edgeLift * easedProgress).toFixed(2);
         motion.current.progress = easedProgress;
@@ -561,24 +607,50 @@ export function NorthlinePageV8({
   }, [materialsVideoSrc, risingEdge]);
 
   function openProduct(product: Product) {
+    const isSingleOneSize =
+      product.sizes.length === 1 &&
+      (product.sizes[0].toLowerCase() === "one size" ||
+        product.sizes[0].toLowerCase() === "default title");
     setActiveProduct(product);
-    setSelectedColor(product.colors[0]);
-    setSelectedSize(product.sizes[0]);
+    setSelectedColor(product.colors[0] || "Black");
+    setSelectedSize(isSingleOneSize ? product.sizes[0] : "");
     setSelectedFit(product.fits?.[0] || "");
+    setActiveImageIndex(0);
+    setSizeError(false);
+    setAddedConfirmation(null);
+  }
+
+  function handleCardAddToBag(product: Product) {
+    const isSingleOneSize =
+      product.sizes.length === 1 &&
+      (product.sizes[0].toLowerCase() === "one size" ||
+        product.sizes[0].toLowerCase() === "default title");
+    if (!isSingleOneSize) {
+      openProduct(product);
+      return;
+    }
+    openProduct(product);
   }
 
   function addToBag(product: Product) {
+    if (!selectedSize) {
+      setSizeError(true);
+      return;
+    }
+    setSizeError(false);
+
     let finalVariantId = product.shopifyVariantId;
-    
+
     // Resolve the selected variant ID if we have variants and selections
     if (product.variants && (selectedSize || selectedColor || selectedFit)) {
       const matched = product.variants.find((v: any) => {
         return v.selectedOptions?.every((opt: any) => {
           const name = opt.name.toLowerCase();
-          if (name === 'size' && selectedSize) return opt.value === selectedSize;
-          if ((name === 'color' || name === 'colour') && selectedColor) return opt.value === selectedColor;
-          if (name === 'fit' && selectedFit) return opt.value === selectedFit;
-          return true; // Ignore options we don't track
+          if (name === "size" && selectedSize) return opt.value === selectedSize;
+          if ((name === "color" || name === "colour") && selectedColor)
+            return opt.value === selectedColor;
+          if (name === "fit" && selectedFit) return opt.value === selectedFit;
+          return true;
         });
       });
       if (matched && matched.id) {
@@ -586,17 +658,24 @@ export function NorthlinePageV8({
       }
     }
 
-    let variantTitle = "";
-    if (product.variants && finalVariantId) {
-      const matched = product.variants.find((v: any) => v.id === finalVariantId);
-      if (matched && matched.title && matched.title !== "Default Title") {
-        variantTitle = matched.title;
-      }
-    }
+    const displayColor =
+      selectedColor && selectedColor !== "Default" && selectedColor !== "Default Title"
+        ? selectedColor
+        : "Black";
+    const displayFit =
+      selectedFit && selectedFit !== "Default Title" ? selectedFit : "";
+    const summaryLabel = [selectedSize, displayColor, displayFit].filter(Boolean).join(" / ");
 
     startTransition(() => {
-      contextAddToBag({ ...product, shopifyVariantId: finalVariantId, variantTitle });
-      setActiveProduct(null);
+      contextAddToBag(
+        {
+          ...product,
+          shopifyVariantId: finalVariantId,
+          variantTitle: summaryLabel,
+        },
+        { openDrawer: false }
+      );
+      setAddedConfirmation(summaryLabel);
     });
   }
 
@@ -625,33 +704,35 @@ export function NorthlinePageV8({
         <button
           className="scan-runway__cart-button"
           style={{
-            position: 'fixed',
-            top: 'clamp(1rem, 4vw, 2.5rem)',
-            right: 'clamp(1rem, 4vw, 2.5rem)',
+            position: "fixed",
+            top: "clamp(1rem, 4vw, 2.5rem)",
+            right: "clamp(1rem, 4vw, 2.5rem)",
             zIndex: 100,
           }}
           onClick={() => setBagOpen(true)}
-          aria-label="Open shopping bag"
+          aria-label={`Open shopping bag (${bagCount} ${bagCount === 1 ? "item" : "items"})`}
         >
           <ShoppingCart size={20} strokeWidth={1.8} />
-          {bag.length > 0 && (
-            <span style={{
-              position: 'absolute',
-              top: '-4px',
-              right: '-4px',
-              background: '#000',
-              color: '#fff',
-              borderRadius: '50%',
-              minWidth: '18px',
-              height: '18px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '10px',
-              fontWeight: 700,
-              padding: '0 4px'
-            }}>
-              {bag.length}
+          {bagCount > 0 && (
+            <span
+              style={{
+                position: "absolute",
+                top: "-4px",
+                right: "-4px",
+                background: "#000",
+                color: "#fff",
+                borderRadius: "50%",
+                minWidth: "18px",
+                height: "18px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "10px",
+                fontWeight: 700,
+                padding: "0 4px",
+              }}
+            >
+              {bagCount}
             </span>
           )}
         </button>
@@ -659,12 +740,12 @@ export function NorthlinePageV8({
 
       {showHeader && (
         <header className="nl-header">
-          <a className="nl-wordmark" href="#" aria-label="Vivre home">
+          <a className="nl-wordmark" href={homeHref} aria-label="Vivre home">
             Vivre
           </a>
           <nav className="nl-header-nav" aria-label="Main">
             <Link to="/s/v8/shop">Shop All</Link>
-            <a href="#">Lookbook</a>
+            <a href={homeHref}>Lookbook</a>
             <a href="#materials">Capsule</a>
           </nav>
           <div className="nl-header-actions">
@@ -674,7 +755,7 @@ export function NorthlinePageV8({
               onClick={() => setBagOpen(true)}
               aria-haspopup="dialog"
             >
-              Bag <span>{bag.length}</span>
+              Bag <span>{bagCount}</span>
             </button>
             <button
               className="nl-menu-button"
@@ -695,7 +776,7 @@ export function NorthlinePageV8({
               <Link to="/s/v8/shop" onClick={() => setMobileMenuOpen(false)}>
                 Shop All
               </Link>
-              <a href="#" onClick={() => setMobileMenuOpen(false)}>
+              <a href={homeHref} onClick={() => setMobileMenuOpen(false)}>
                 Lookbook
               </a>
               <a href="#materials" onClick={() => setMobileMenuOpen(false)}>
@@ -729,10 +810,10 @@ export function NorthlinePageV8({
                 Purposeful layers and carry goods for platforms, pavements, and everything after.
               </p>
               <div className="nl-hero-actions">
-                <a className="nl-button nl-button-primary" href="#">
-                  Shop the system
+                <a className="nl-button nl-button-primary" href="#collection">
+                  Shop Drop 001
                 </a>
-                <a className="nl-button nl-button-quiet" href="#">
+                <a className="nl-button nl-button-quiet" href="#materials">
                   See the material
                 </a>
               </div>
@@ -749,22 +830,20 @@ export function NorthlinePageV8({
               aria-label="Collection navigation"
             >
               <Link to="/s/v8/shop">Shop All</Link>
-              <a href="#">Lookbook</a>
+              <a href={homeHref}>Lookbook</a>
               <a href="#materials">Capsule</a>
             </nav>
           )}
           {!splitNavigation && (
             <nav className="nl-footer-nav" aria-label="Footer">
               <Link to="/s/v8/shop">Shop All</Link>
-              <a href="#">Lookbook</a>
+              <a href={homeHref}>Lookbook</a>
               <a href="#materials">Capsule</a>
             </nav>
           )}
           <div className="nl-collection-intro nl-reveal">
             <div>
-              <h2>
-                {collectionDetails?.title || "DROP 001"}
-              </h2>
+              <h2>{collectionDetails?.title || "DROP 001"}</h2>
             </div>
             {collectionDetails?.description && <p>{collectionDetails.description}</p>}
           </div>
@@ -803,7 +882,7 @@ export function NorthlinePageV8({
                   <button type="button" onClick={() => openProduct(product)}>
                     Quick view
                   </button>
-                  <button type="button" onClick={() => addToBag(product)}>
+                  <button type="button" onClick={() => handleCardAddToBag(product)}>
                     Add to bag
                   </button>
                 </div>
@@ -915,226 +994,445 @@ export function NorthlinePageV8({
             </div>
           </div>
         </section>
-
       </main>
 
-      <div style={{ position: 'relative', overflow: 'hidden', backgroundColor: '#ffffff' }}>
-        <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+      <div style={{ position: "relative", overflow: "hidden", backgroundColor: "#ffffff" }}>
+        <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
           <FoldBackdropV8 />
         </div>
-        <div style={{ position: 'relative', zIndex: 1 }}>
+        <div style={{ position: "relative", zIndex: 1 }}>
           <NorthlineFooter />
         </div>
       </div>
 
-      {activeProduct && typeof document !== "undefined" && createPortal(
-        <div className="nl-layer is-immersive">
-          <div 
-            className="nl-layer-backdrop-image"
-            style={{ backgroundImage: `url(${activeProduct.image})` }}
-          />
-          <button
-            className="nl-layer-backdrop"
-            type="button"
-            aria-label="Close product details"
-            onClick={() => setActiveProduct(null)}
-          />
-          <section
-            className="nl-product-dialog"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="northline-product-title"
-          >
+      {activeProduct &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div className="nl-layer is-immersive">
             <button
-              className="nl-dialog-close"
+              className="nl-layer-backdrop"
               type="button"
+              aria-label="Close product details"
               onClick={() => setActiveProduct(null)}
+            />
+            <section
+              className="nl-product-dialog nl-qv-dialog"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="northline-product-title"
             >
-              Close
-            </button>
-            <div className="nl-dialog-glass-content">
-              <div className="nl-dialog-glass-left">
-                <p className="nl-dialog-group">{activeProduct.group}</p>
-                <h2 id="northline-product-title">{activeProduct.name}</h2>
-                <div className="nl-dialog-divider"></div>
-                <div className="nl-dialog-logistics">
-                  <div className="nl-dialog-option-group">
-                    <span className="nl-dialog-option-label">PRICE</span>
-                    <span className="nl-dialog-option-value">{activeProduct.price}</span>
-                  </div>
-                  <fieldset className="nl-dialog-option-fieldset">
-                    <legend className="nl-dialog-option-label">COLOR</legend>
-                    <div className="nl-option-row">
-                      {activeProduct.colors.map((color) => (
-                        <button
-                          key={color}
-                          type="button"
-                          className={selectedColor === color ? "is-selected" : ""}
-                          onClick={() => setSelectedColor(color)}
-                        >
-                          {color}
-                        </button>
-                      ))}
-                    </div>
-                  </fieldset>
-                  {activeProduct.fits && activeProduct.fits.length > 0 && activeProduct.fits[0] !== 'Default Title' && (
-                    <fieldset className="nl-dialog-option-fieldset">
-                      <legend className="nl-dialog-option-label">FIT</legend>
-                      <div className="nl-option-row">
-                        {activeProduct.fits.map((fit) => (
-                          <button
-                            key={fit}
-                            type="button"
-                            className={selectedFit === fit ? "is-selected" : ""}
-                            onClick={() => setSelectedFit(fit)}
-                          >
-                            {fit}
-                          </button>
-                        ))}
-                      </div>
-                    </fieldset>
-                  )}
-                  <fieldset className="nl-dialog-option-fieldset">
-                    <legend className="nl-dialog-option-label">SIZE</legend>
-                    <div className="nl-option-row">
-                      {activeProduct.sizes.map((size) => (
-                        <button
-                          key={size}
-                          type="button"
-                          className={selectedSize === size ? "is-selected" : ""}
-                          onClick={() => setSelectedSize(size)}
-                        >
-                          {size}
-                        </button>
-                      ))}
-                    </div>
-                  </fieldset>
-                </div>
-              </div>
-              <div className="nl-dialog-glass-right">
-                <div className="nl-dialog-sideable-images" ref={sideableImagesRef}>
-                  {activeProduct.images?.map((img, i) => (
-                    <img key={i} src={img} alt={`${activeProduct.alt} view ${i + 1}`} loading="lazy" />
-                  ))}
-                </div>
-              </div>
-              <div className="nl-dialog-glass-description">
-                <h3 className="nl-dialog-group" style={{ marginBottom: '1rem', border: 'none' }}>Description</h3>
-                <div 
-                  className="nl-dialog-description-long"
-                  dangerouslySetInnerHTML={{ __html: descriptionContent }}
-                />
-                {sizeGuideContent && (
-                  <div className="nl-dialog-description-long size-guide-content" style={{ marginTop: '2rem' }} dangerouslySetInnerHTML={{ __html: sizeGuideContent }} />
-                )}
-              </div>
-            </div>
-            <div className="nl-dialog-glass-footer">
-              <button
-                className="nl-button nl-button-primary nl-dialog-glass-add"
-                type="button"
-                onClick={() => addToBag(activeProduct)}
-              >
-                Add to cart
-              </button>
-            </div>
-          </section>
-        </div>, document.body
-      )}
-
-      {bagOpen && typeof document !== "undefined" && createPortal(
-        <div className="nl-layer">
-          <button
-            className="nl-layer-backdrop"
-            type="button"
-            aria-label="Close bag"
-            onClick={() => setBagOpen(false)}
-            style={{
-              background: 'rgba(255, 255, 255, 0.05)',
-              backdropFilter: 'blur(24px) saturate(150%)',
-              WebkitBackdropFilter: 'blur(24px) saturate(150%)',
-              transform: 'translateZ(0)',
-              willChange: 'transform, backdrop-filter',
-            }}
-          />
-          <aside
-            className="nl-bag-drawer"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="bag-title"
-            style={{ 
-              paddingTop: '3rem', 
-              paddingLeft: '1.5rem', 
-              paddingRight: '1.5rem',
-              background: 'rgba(255, 255, 255, 0.1)',
-              backdropFilter: 'blur(24px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-              color: '#000000',
-              boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.4), inset 0 0 0 1px rgba(255,255,255,0.15), -20px 0 60px rgba(0, 0, 0, 0.15)'
-            }}
-          >
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'flex-start', 
-              width: '100%',
-              paddingBottom: '1.5rem',
-              borderBottom: '1px solid rgba(0, 0, 0, 0.2)',
-              marginBottom: '1.5rem'
-            }}>
-              <h2 id="bag-title" style={{ margin: 0, color: '#000000', fontSize: '3.5rem', fontWeight: 800, letterSpacing: '-0.05em', lineHeight: 1 }}>Your bag</h2>
               <button
                 className="nl-dialog-close"
                 type="button"
-                onClick={() => setBagOpen(false)}
-                style={{ 
-                  position: 'relative', 
-                  top: 'auto', 
-                  right: 'auto', 
-                  flexShrink: 0,
-                  color: '#000000',
-                  borderColor: 'rgba(0,0,0,0.1)',
-                  background: 'rgba(255,255,255,0.8)'
-                }}
+                onClick={() => setActiveProduct(null)}
               >
                 Close
               </button>
-            </div>
-            {bag.length > 0 ? (
-              <>
-                <ul className="nl-bag-list">
-                  {bag.map((item, index) => (
-                    <li key={item.id + "-" + index}>
-                      <img src={item.image} alt="" decoding="async" />
-                      <div>
-                        <h3>{item.name}</h3>
-                        {item.variantTitle && <p className="text-sm font-medium mb-1">{item.variantTitle}</p>}
-                        <p>{item.price}</p>
-                      </div>
-                      <button type="button" onClick={() => removeFromBag(index)}>
-                        Remove
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-                <div className="nl-bag-footer">
-                  <button 
-                    className="nl-button nl-button-primary nl-bag-checkout" 
-                    type="button"
-                    onClick={checkout}
-                    disabled={isCheckingOut}
-                    style={{ opacity: isCheckingOut ? 0.7 : 1 }}
+
+              <div className="nl-qv-layout">
+                {/* Left Column: Spacious Product Image Gallery */}
+                <div className="nl-qv-media">
+                  <div className="nl-qv-main-photo-wrap">
+                    <img
+                      className="nl-qv-main-photo"
+                      src={
+                        activeProduct.images?.[activeImageIndex] ||
+                        activeProduct.image
+                      }
+                      alt={`${activeProduct.alt} view ${activeImageIndex + 1}`}
+                    />
+                  </div>
+                  {activeProduct.images && activeProduct.images.length > 1 && (
+                    <div className="nl-qv-thumbnails" role="list" aria-label="Product views">
+                      {activeProduct.images.map((img, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          className={`nl-qv-thumb-btn ${activeImageIndex === i ? "is-active" : ""}`}
+                          onClick={() => setActiveImageIndex(i)}
+                          aria-label={`View image ${i + 1}`}
+                        >
+                          <img src={img} alt="" loading="lazy" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  <Link
+                    to={`/products/${activeProduct.handle || activeProduct.id.split("/").pop()}`}
+                    onClick={() => setActiveProduct(null)}
+                    className="nl-qv-full-link"
                   >
-                    {isCheckingOut ? "Loading checkout..." : "Checkout via Shopify"}
-                  </button>
+                    Open full 360° product view →
+                  </Link>
                 </div>
-              </>
-            ) : (
-              <p className="nl-empty-bag">Your bag is ready when you are.</p>
-            )}
-          </aside>
-        </div>, document.body
-      )}
+
+                {/* Right Column: Grouped Name, Price, Size & High-Contrast Add to Bag + Expandable Sections */}
+                <div className="nl-qv-details">
+                  <div className="nl-qv-purchase-group">
+                    <p className="nl-dialog-group">{activeProduct.group}</p>
+                    <div className="nl-qv-header-row">
+                      <h2 id="northline-product-title">{activeProduct.name}</h2>
+                      <span className="nl-qv-price">{activeProduct.price}</span>
+                    </div>
+
+                    <div className="nl-dialog-divider" />
+
+                    {/* Color Selector */}
+                    {activeProduct.colors.length > 0 &&
+                      activeProduct.colors[0] !== "Default" &&
+                      activeProduct.colors[0] !== "Default Title" && (
+                        <fieldset className="nl-dialog-option-fieldset">
+                          <div className="nl-qv-option-head">
+                            <legend className="nl-dialog-option-label">COLOR</legend>
+                            <span className="nl-qv-option-current">{selectedColor}</span>
+                          </div>
+                          <div className="nl-option-row">
+                            {activeProduct.colors.map((color) => (
+                              <button
+                                key={color}
+                                type="button"
+                                className={selectedColor === color ? "is-selected" : ""}
+                                onClick={() => {
+                                  setSelectedColor(color);
+                                  setAddedConfirmation(null);
+                                }}
+                              >
+                                {color}
+                              </button>
+                            ))}
+                          </div>
+                        </fieldset>
+                      )}
+
+                    {/* Fit Selector */}
+                    {activeProduct.fits &&
+                      activeProduct.fits.length > 0 &&
+                      activeProduct.fits[0] !== "Default Title" && (
+                        <fieldset className="nl-dialog-option-fieldset">
+                          <div className="nl-qv-option-head">
+                            <legend className="nl-dialog-option-label">FIT</legend>
+                            <span className="nl-qv-option-current">{selectedFit}</span>
+                          </div>
+                          <div className="nl-option-row">
+                            {activeProduct.fits.map((fit) => (
+                              <button
+                                key={fit}
+                                type="button"
+                                className={selectedFit === fit ? "is-selected" : ""}
+                                onClick={() => {
+                                  setSelectedFit(fit);
+                                  setAddedConfirmation(null);
+                                }}
+                              >
+                                {fit}
+                              </button>
+                            ))}
+                          </div>
+                        </fieldset>
+                      )}
+
+                    {/* Intentional Size Selector */}
+                    <fieldset className="nl-dialog-option-fieldset">
+                      <div className="nl-qv-option-head">
+                        <legend className="nl-dialog-option-label">SIZE</legend>
+                        <span
+                          className={`nl-qv-size-status ${
+                            selectedSize ? "is-picked" : "is-unpicked"
+                          }`}
+                        >
+                          {selectedSize ? `Selected: ${selectedSize}` : "Choose your size"}
+                        </span>
+                      </div>
+                      <div className="nl-option-row">
+                        {activeProduct.sizes.map((size) => (
+                          <button
+                            key={size}
+                            type="button"
+                            className={selectedSize === size ? "is-selected" : ""}
+                            onClick={() => {
+                              setSelectedSize(size);
+                              setSizeError(false);
+                              setAddedConfirmation(null);
+                            }}
+                          >
+                            {size}
+                          </button>
+                        ))}
+                      </div>
+                      {sizeError && !selectedSize && (
+                        <p className="nl-qv-size-error" role="alert">
+                          Choose your size above before adding to bag.
+                        </p>
+                      )}
+                    </fieldset>
+
+                    {/* High-Contrast Add to Bag Button */}
+                    <button
+                      className={`nl-button nl-button-primary nl-qv-submit-btn ${
+                        !selectedSize ? "is-awaiting-size" : ""
+                      }`}
+                      type="button"
+                      onClick={() => addToBag(activeProduct)}
+                    >
+                      {selectedSize
+                        ? `Add to bag — ${activeProduct.price}`
+                        : "Choose your size"}
+                    </button>
+
+                    {/* Clear Add-to-Bag Confirmation State */}
+                    {addedConfirmation && (
+                      <div className="nl-qv-confirmation" role="status" aria-live="polite">
+                        <div className="nl-qv-confirmation-head">
+                          <span className="nl-qv-confirmation-check" aria-hidden="true">
+                            ✓
+                          </span>
+                          <div>
+                            <strong>Added to bag — {addedConfirmation}</strong>
+                            <p>
+                              Bag updated · {bagCount} {bagCount === 1 ? "item" : "items"} in your
+                              bag
+                            </p>
+                          </div>
+                        </div>
+                        <div className="nl-qv-confirmation-actions">
+                          <button
+                            type="button"
+                            className="nl-qv-confirm-primary"
+                            onClick={() => {
+                              setActiveProduct(null);
+                              setAddedConfirmation(null);
+                              setBagOpen(true);
+                            }}
+                          >
+                            View bag ({bagCount})
+                          </button>
+                          <button
+                            type="button"
+                            className="nl-qv-confirm-secondary"
+                            onClick={() => {
+                              setActiveProduct(null);
+                              setAddedConfirmation(null);
+                            }}
+                          >
+                            Continue shopping
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Expandable Sections for Lengthy Details */}
+                  <div className="nl-qv-accordions">
+                    <details className="nl-qv-accordion" open>
+                      <summary>Description &amp; details</summary>
+                      <div
+                        className="nl-qv-accordion-body nl-dialog-description-long"
+                        dangerouslySetInnerHTML={{ __html: descriptionContent }}
+                      />
+                    </details>
+
+                    <details className="nl-qv-accordion">
+                      <summary>Size &amp; fit guide</summary>
+                      <div className="nl-qv-accordion-body size-guide-content">
+                        {sizeGuideContent ? (
+                          <div dangerouslySetInnerHTML={{ __html: sizeGuideContent }} />
+                        ) : (
+                          <p>
+                            Cut with a relaxed streetwear drape. Order your regular size for the
+                            intended oversized silhouette, or size down for a closer fit.
+                          </p>
+                        )}
+                      </div>
+                    </details>
+
+                    <details className="nl-qv-accordion">
+                      <summary>Shipping &amp; returns</summary>
+                      <div className="nl-qv-accordion-body">
+                        <p>
+                          Free express global shipping on all Drop 001 orders (estimated 2–4
+                          business days). Duties and import taxes included. 30-day returns.
+                        </p>
+                      </div>
+                    </details>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>,
+          document.body
+        )}
+
+      {bagOpen &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div className="nl-layer">
+            <button
+              className="nl-layer-backdrop"
+              type="button"
+              aria-label="Close bag"
+              onClick={() => setBagOpen(false)}
+              style={{
+                background: "rgba(255, 255, 255, 0.05)",
+                backdropFilter: "blur(24px) saturate(150%)",
+                WebkitBackdropFilter: "blur(24px) saturate(150%)",
+                transform: "translateZ(0)",
+                willChange: "transform, backdrop-filter",
+              }}
+            />
+            <aside
+              className="nl-bag-drawer"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="bag-title"
+              style={{
+                paddingTop: "2.5rem",
+                paddingLeft: "1.5rem",
+                paddingRight: "1.5rem",
+                background: "rgba(255, 255, 255, 0.88)",
+                backdropFilter: "blur(28px) saturate(180%)",
+                WebkitBackdropFilter: "blur(28px) saturate(180%)",
+                color: "#000000",
+                boxShadow:
+                  "inset 0 1px 1px rgba(255,255,255,0.6), inset 0 0 0 1px rgba(0,0,0,0.08), -20px 0 60px rgba(0, 0, 0, 0.18)",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  width: "100%",
+                  paddingBottom: "1.25rem",
+                  borderBottom: "1px solid rgba(0, 0, 0, 0.15)",
+                  marginBottom: "1.25rem",
+                }}
+              >
+                <div>
+                  <h2
+                    id="bag-title"
+                    style={{
+                      margin: 0,
+                      color: "#000000",
+                      fontSize: "2.75rem",
+                      fontWeight: 800,
+                      letterSpacing: "-0.05em",
+                      lineHeight: 1,
+                    }}
+                  >
+                    Your bag
+                  </h2>
+                  <p
+                    style={{
+                      margin: "0.4rem 0 0",
+                      fontSize: "0.82rem",
+                      fontWeight: 600,
+                      color: "rgba(0, 0, 0, 0.55)",
+                    }}
+                  >
+                    {bagCount} {bagCount === 1 ? "item" : "items"}
+                  </p>
+                </div>
+                <button
+                  className="nl-dialog-close"
+                  type="button"
+                  onClick={() => setBagOpen(false)}
+                  style={{
+                    position: "relative",
+                    top: "auto",
+                    right: "auto",
+                    flexShrink: 0,
+                    color: "#000000",
+                    borderColor: "rgba(0,0,0,0.15)",
+                    background: "rgba(255,255,255,0.9)",
+                  }}
+                >
+                  Close
+                </button>
+              </div>
+              {bag.length > 0 ? (
+                <>
+                  <ul className="nl-bag-list">
+                    {bag.map((item, index) => {
+                      const qty = item.quantity || 1;
+                      return (
+                        <li key={item.id + "-" + (item.variantTitle || "") + "-" + index}>
+                          <img src={item.image} alt="" decoding="async" />
+                          <div className="nl-bag-item-info">
+                            <h3>{item.name}</h3>
+                            {item.variantTitle && (
+                              <p className="nl-bag-item-variant">{item.variantTitle}</p>
+                            )}
+                            <p className="nl-bag-item-price">{item.price}</p>
+                            <div className="nl-bag-qty-row">
+                              <div className="nl-bag-qty-controls" aria-label="Quantity controls">
+                                <button
+                                  type="button"
+                                  className="nl-bag-qty-btn"
+                                  onClick={() => updateQuantity(index, -1)}
+                                  aria-label={`Decrease quantity of ${item.name}`}
+                                >
+                                  −
+                                </button>
+                                <span className="nl-bag-qty-val" aria-live="polite">
+                                  {qty}
+                                </span>
+                                <button
+                                  type="button"
+                                  className="nl-bag-qty-btn"
+                                  onClick={() => updateQuantity(index, 1)}
+                                  aria-label={`Increase quantity of ${item.name}`}
+                                >
+                                  +
+                                </button>
+                              </div>
+                              <button
+                                type="button"
+                                className="nl-bag-remove-btn"
+                                onClick={() => removeFromBag(index)}
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  <div className="nl-bag-footer">
+                    <div className="nl-bag-summary">
+                      <div className="nl-bag-summary-row nl-bag-summary-row--subtotal">
+                        <span>Subtotal</span>
+                        <strong>{subtotalFormatted}</strong>
+                      </div>
+                      <div className="nl-bag-summary-row">
+                        <span>Express delivery</span>
+                        <span>Free</span>
+                      </div>
+                      <p className="nl-bag-delivery-note">
+                        Dispatched within 24h · Estimated delivery 2–4 business days · Duties &amp;
+                        taxes included
+                      </p>
+                    </div>
+                    <button
+                      className="nl-button nl-button-primary nl-bag-checkout"
+                      type="button"
+                      onClick={checkout}
+                      disabled={isCheckingOut}
+                      style={{ opacity: isCheckingOut ? 0.7 : 1 }}
+                    >
+                      {isCheckingOut
+                        ? "Loading checkout..."
+                        : `Checkout via Shopify — ${subtotalFormatted}`}
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <p className="nl-empty-bag">Your bag is ready when you are.</p>
+              )}
+            </aside>
+          </div>,
+          document.body
+        )}
     </div>
   );
 }
