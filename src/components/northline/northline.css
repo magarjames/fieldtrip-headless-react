@@ -4443,3 +4443,335 @@
   transform: scale(1.10) translateY(-1%);
   transform-origin: center center;
 }
+
+/* ── PHONE & TABLET QUICK VIEW LAYOUT OPTIMISATION ── */
+
+.nl-qv-layout {
+  color-scheme: dark;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+}
+
+.nl-qv-layout::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+  background: transparent;
+}
+
+.nl-qv-layout::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.nl-qv-layout::-webkit-scrollbar-track {
+  background: transparent;
+  margin-block: 14px;
+}
+
+.nl-qv-layout::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+}
+
+@media (max-width: 900px) {
+  .nl-layer.is-immersive {
+    padding: 0.75rem;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .nl-product-dialog.nl-qv-dialog {
+    width: 100%;
+    max-height: calc(100dvh - 1.5rem);
+    border-radius: 22px;
+  }
+
+  .nl-product-dialog.nl-qv-dialog .nl-dialog-close {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    z-index: 20;
+    min-height: 2.15rem;
+    padding: 0.4rem 0.78rem;
+    font-size: 0.76rem;
+    background: rgba(15, 18, 24, 0.86);
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  }
+
+  .nl-qv-layout {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nl-qv-media {
+    padding: 0.9rem 1rem 0.85rem;
+    gap: 0.65rem;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: visible;
+  }
+
+  /* Leave room on the right for the Close button so tabs never collide */
+  .nl-qv-media-bar {
+    padding-right: 4.6rem;
+    gap: 0.45rem;
+  }
+
+  .nl-qv-main-photo-wrap,
+  .nl-qv-scan-stage {
+    min-height: 18.5rem;
+    max-height: 22rem;
+    height: 44dvh;
+    border-radius: 14px;
+  }
+
+  .nl-qv-main-photo {
+    max-height: 100%;
+  }
+
+  .nl-qv-scan-figure,
+  .nl-qv-scan-figure--female {
+    max-height: 100%;
+    height: 100%;
+    width: auto;
+    padding-top: 0.25rem;
+    padding-bottom: 2.65rem;
+    transform: scale(1.1) translateY(-1%);
+  }
+
+  .nl-qv-scan-figure--male {
+    max-height: 100%;
+    height: 100%;
+    width: auto;
+    padding-top: 0.35rem;
+    padding-bottom: 2.8rem;
+    transform: scale(1.06) translateY(-1%);
+  }
+
+  .nl-qv-details {
+    padding: 1.15rem 1.1rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
+    margin-right: 0;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 640px) {
+  .nl-layer.is-immersive {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .nl-product-dialog.nl-qv-dialog {
+    width: 100%;
+    max-height: 94dvh;
+    border-radius: 22px 22px 0 0;
+    border-bottom: none;
+  }
+
+  .nl-product-dialog.nl-qv-dialog .nl-dialog-close {
+    top: 0.75rem;
+    right: 0.75rem;
+    min-height: 2rem;
+    padding: 0.35rem 0.7rem;
+    font-size: 0.72rem;
+  }
+
+  .nl-qv-media {
+    padding: 0.75rem 0.85rem 0.75rem;
+    gap: 0.55rem;
+  }
+
+  .nl-qv-media-bar {
+    padding-right: 4.1rem;
+    gap: 0.38rem;
+  }
+
+  .nl-qv-mode-tabs {
+    padding: 0.16rem;
+  }
+
+  .nl-qv-mode-tab {
+    padding: 0.34rem 0.68rem;
+    font-size: 0.66rem;
+    letter-spacing: 0.03em;
+  }
+
+  .nl-qv-scan-meta {
+    gap: 0.35rem;
+  }
+
+  .nl-qv-scan-badge {
+    font-size: 0.64rem;
+    padding: 0.24rem 0.5rem;
+  }
+
+  .nl-qv-orbit-btn {
+    font-size: 0.64rem;
+    padding: 0.26rem 0.58rem;
+  }
+
+  .nl-qv-main-photo-wrap,
+  .nl-qv-scan-stage {
+    min-height: 16.5rem;
+    max-height: 19.5rem;
+    height: 40dvh;
+    border-radius: 12px;
+  }
+
+  .nl-qv-scan-figure,
+  .nl-qv-scan-figure--female {
+    padding-top: 0.2rem;
+    padding-bottom: 2.35rem;
+    transform: scale(1.09) translateY(-1%);
+  }
+
+  .nl-qv-scan-figure--male {
+    padding-top: 0.3rem;
+    padding-bottom: 2.45rem;
+    transform: scale(1.05) translateY(-1%);
+  }
+
+  .nl-qv-scan-hud {
+    left: 0.45rem;
+    right: 0.45rem;
+    bottom: 0.45rem;
+    padding: 0.38rem 0.45rem;
+    gap: 0.18rem;
+    border-radius: 11px;
+  }
+
+  .nl-qv-scan-controls {
+    gap: 0.22rem;
+  }
+
+  .nl-qv-scan-step {
+    width: 1.55rem;
+    height: 1.55rem;
+    font-size: 0.92rem;
+  }
+
+  .nl-qv-angle-pills {
+    gap: 0.16rem;
+    scrollbar-width: none;
+  }
+
+  .nl-qv-angle-pills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nl-qv-angle-pill {
+    padding: 0.22rem 0.38rem;
+    font-size: 0.6rem;
+  }
+
+  .nl-qv-scan-hint {
+    font-size: 0.58rem;
+  }
+
+  .nl-qv-thumbnails {
+    gap: 0.45rem;
+    padding-bottom: 0.1rem;
+  }
+
+  .nl-qv-thumb-btn {
+    width: 3rem;
+    height: 3.65rem;
+    border-radius: 8px;
+  }
+
+  .nl-qv-thumb-badge {
+    font-size: 0.54rem;
+    padding: 1px 3px;
+    bottom: 3px;
+  }
+
+  .nl-qv-full-link {
+    font-size: 0.72rem;
+    padding-top: 0.05rem;
+  }
+
+  .nl-qv-details {
+    padding: 0.95rem 0.95rem calc(1.35rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .nl-qv-details .nl-dialog-group {
+    font-size: 0.66rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .nl-qv-header-row {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.65rem;
+  }
+
+  .nl-qv-header-row h2 {
+    font-size: clamp(1.2rem, 5vw, 1.45rem);
+    line-height: 1.08;
+  }
+
+  .nl-qv-price {
+    font-size: 1rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .nl-qv-details .nl-dialog-divider {
+    margin: 0.75rem 0;
+  }
+
+  .nl-qv-details .nl-dialog-option-fieldset {
+    margin-bottom: 0.9rem;
+  }
+
+  .nl-qv-option-head {
+    margin-bottom: 0.45rem;
+  }
+
+  .nl-qv-details .nl-option-row {
+    gap: 0.38rem;
+  }
+
+  .nl-qv-details .nl-option-row button:not(.nl-color-swatch) {
+    min-height: 2.25rem;
+    padding: 0.4rem 0.72rem;
+    font-size: 0.8rem;
+  }
+
+  .nl-qv-submit-btn {
+    min-height: 3rem;
+    font-size: 0.9rem;
+    margin-top: 0.15rem;
+  }
+
+  .nl-qv-confirmation {
+    margin-top: 0.75rem;
+    padding: 0.8rem 0.85rem;
+    gap: 0.65rem;
+  }
+
+  .nl-qv-confirm-primary,
+  .nl-qv-confirm-secondary {
+    min-height: 2.4rem;
+    font-size: 0.76rem;
+    padding: 0.4rem 0.65rem;
+  }
+
+  .nl-qv-accordions {
+    margin-top: 1.15rem;
+  }
+
+  .nl-qv-accordion summary {
+    padding: 0.82rem 0;
+    font-size: 0.78rem;
+  }
+
+  .nl-qv-accordion-body {
+    font-size: 0.85rem;
+    padding-bottom: 0.85rem;
+  }
+}
