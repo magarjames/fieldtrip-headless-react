@@ -4405,3 +4405,16 @@
 .nl-bag-drawer::-webkit-scrollbar-corner {
   background: transparent;
 }
+
+/* ── SCALE UP QUICK VIEW 360° SCAN MODEL ── */
+
+.nl-qv-scan-stage {
+  min-height: 27rem;
+}
+
+.nl-qv-scan-figure {
+  max-height: 40rem;
+  padding-bottom: 2.2rem;
+  transform: scale(1.18) translateY(-1.5%);
+  transform-origin: center center;
+}
