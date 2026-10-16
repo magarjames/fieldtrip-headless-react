@@ -1139,7 +1139,11 @@ export function NorthlinePageV8({
                     >
                       {/* Active 360° Scan Frame */}
                       <img
-                        className="nl-qv-main-photo nl-qv-scan-figure"
+                        className={`nl-qv-main-photo nl-qv-scan-figure ${
+                          activeScanLook.gender === "m"
+                            ? "nl-qv-scan-figure--male"
+                            : "nl-qv-scan-figure--female"
+                        }`}
                         src={frameUrl(activeScanLook.id, qvScanFrame)}
                         alt={`${activeProduct.name} — 360° scan angle ${ANGLES[qvScanFrame]}°`}
                         draggable={false}

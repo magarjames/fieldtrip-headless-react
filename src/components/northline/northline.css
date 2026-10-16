@@ -4418,3 +4418,19 @@
   transform: scale(1.18) translateY(-1.5%);
   transform-origin: center center;
 }
+
+.nl-qv-scan-figure--female {
+  max-height: 39rem;
+  padding-top: 0.4rem;
+  padding-bottom: 2.5rem;
+  transform: scale(1.13) translateY(-1%);
+  transform-origin: center center;
+}
+
+.nl-qv-scan-figure--male {
+  max-height: 36.5rem;
+  padding-top: 0.9rem;
+  padding-bottom: 3.3rem;
+  transform: scale(1.02) translateY(0%);
+  transform-origin: center center;
+}
