@@ -1137,22 +1137,6 @@ export function NorthlinePageV8({
                         qvDragRef.current.active = false;
                       }}
                     >
-                      {/* Subtle side optical echo frames */}
-                      <img
-                        className="nl-qv-scan-echo nl-qv-scan-echo--left"
-                        src={frameUrl(activeScanLook.id, wrapFrame(qvScanFrame - 2))}
-                        alt=""
-                        aria-hidden="true"
-                        draggable={false}
-                      />
-                      <img
-                        className="nl-qv-scan-echo nl-qv-scan-echo--right"
-                        src={frameUrl(activeScanLook.id, wrapFrame(qvScanFrame + 2))}
-                        alt=""
-                        aria-hidden="true"
-                        draggable={false}
-                      />
-
                       {/* Active 360° Scan Frame */}
                       <img
                         className="nl-qv-main-photo nl-qv-scan-figure"

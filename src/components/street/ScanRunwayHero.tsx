@@ -474,31 +474,6 @@ export function ScanRunwayHero({
             </text>
           </svg>
 
-          <img
-            className="scan-runway__echo scan-runway__echo--left"
-            src={frameUrl(look.id, leftFrame)}
-            alt=""
-            width={960}
-            height={1720}
-            decoding="async"
-          />
-          <img
-            className="scan-runway__echo scan-runway__echo--rear"
-            src={frameUrl(look.id, rearFrame)}
-            alt=""
-            width={960}
-            height={1720}
-            decoding="async"
-          />
-          <img
-            className="scan-runway__echo scan-runway__echo--right"
-            src={frameUrl(look.id, rightFrame)}
-            alt=""
-            width={960}
-            height={1720}
-            decoding="async"
-          />
-
           <div className="scan-runway__floor-ring">
             {ANGLES.slice(0, 4).map((angle, index) => (
               <span key={angle} style={{ ["--tick" as string]: index }}>

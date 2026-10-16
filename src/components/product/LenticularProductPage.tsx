@@ -980,39 +980,6 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
                   </div>
                 </div>
 
-                {/* Left Echo Silhouette */}
-                <img
-                  className="ln-scan-echo ln-scan-echo--left"
-                  src={frameUrl(activeLook.id, leftFrame)}
-                  alt=""
-                  width={960}
-                  height={1720}
-                  decoding="async"
-                  draggable={false}
-                />
-
-                {/* Rear Echo Silhouette */}
-                <img
-                  className="ln-scan-echo ln-scan-echo--rear"
-                  src={frameUrl(activeLook.id, rearFrame)}
-                  alt=""
-                  width={960}
-                  height={1720}
-                  decoding="async"
-                  draggable={false}
-                />
-
-                {/* Right Echo Silhouette */}
-                <img
-                  className="ln-scan-echo ln-scan-echo--right"
-                  src={frameUrl(activeLook.id, rightFrame)}
-                  alt=""
-                  width={960}
-                  height={1720}
-                  decoding="async"
-                  draggable={false}
-                />
-
                 {/* Primary Model Scan Frame */}
                 <img
                   className="ln-scan-model-frame"
