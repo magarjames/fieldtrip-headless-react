@@ -4434,3 +4434,12 @@
   transform: scale(1.02) translateY(0%);
   transform-origin: center center;
 }
+
+/* ── MIDDLE-GROUND SCALE FOR MALE 360° SCAN MODEL ── */
+.nl-qv-scan-figure--male {
+  max-height: 38.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 2.7rem;
+  transform: scale(1.10) translateY(-1%);
+  transform-origin: center center;
+}
