@@ -610,6 +610,7 @@
   font: inherit;
   white-space: nowrap;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .scan-runway__command-bar span {

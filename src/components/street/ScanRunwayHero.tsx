@@ -618,11 +618,7 @@ export function ScanRunwayHero({
         </div>
 
         <div className="scan-runway__command-bar">
-          <button type="button" onClick={() => changeFrame(frameIndexRef.current + 1)}>
-            ROTATE
-          </button>
-          <span aria-hidden>↔</span>
-          <a href={primaryHref}>ENTER</a>
+          <a href={primaryHref}>SHOP COLLECTION</a>
         </div>
 
         <a className="scan-runway__runway-link" href={secondaryHref}>
