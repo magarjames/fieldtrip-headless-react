@@ -22,6 +22,13 @@ import type { Product as ShopifyProduct } from "shopify-buy";
 import { NorthlineScrollFilm } from "@/components/northline/NorthlineScrollFilm";
 import { NorthlineFooter } from "@/components/northline/NorthlineFooter";
 import { FoldBackdropV8 } from "@/components/street/FoldBackdropV8";
+import {
+  getLookForProduct,
+  FRAME_NAMES,
+  ANGLES,
+  frameUrl,
+  wrapFrame,
+} from "@/components/product/LenticularProductPage";
 import detailBlue from "@/assets/northline/detail-blue.jpg";
 import flatlay from "@/assets/northline/flatlay.jpg";
 import heroDawn from "@/assets/northline/hero-dawn.png";
@@ -107,8 +114,19 @@ export function NorthlinePageV8({
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedFit, setSelectedFit] = useState("");
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [qvMediaMode, setQvMediaMode] = useState<"scan" | "photos">("scan");
+  const [qvScanFrame, setQvScanFrame] = useState(0);
+  const [qvAutoOrbit, setQvAutoOrbit] = useState(false);
+  const qvDragRef = useRef({ active: false, startX: 0, startFrame: 0 });
   const [sizeError, setSizeError] = useState(false);
   const [addedConfirmation, setAddedConfirmation] = useState<string | null>(null);
+  const activeScanLook = useMemo(
+    () =>
+      activeProduct
+        ? getLookForProduct(activeProduct, activeProduct.handle || activeProduct.id)
+        : null,
+    [activeProduct]
+  );
   const {
     bag,
     bagCount,
@@ -606,6 +624,23 @@ export function NorthlinePageV8({
     };
   }, [materialsVideoSrc, risingEdge]);
 
+  useEffect(() => {
+    if (!activeScanLook) return;
+    FRAME_NAMES.forEach((_, idx) => {
+      const img = new Image();
+      img.decoding = "async";
+      img.src = frameUrl(activeScanLook.id, idx);
+    });
+  }, [activeScanLook]);
+
+  useEffect(() => {
+    if (!activeProduct || qvMediaMode !== "scan" || !qvAutoOrbit) return;
+    const timer = window.setInterval(() => {
+      setQvScanFrame((prev) => wrapFrame(prev + 1));
+    }, 650);
+    return () => window.clearInterval(timer);
+  }, [activeProduct, qvMediaMode, qvAutoOrbit]);
+
   function openProduct(product: Product) {
     const isSingleOneSize =
       product.sizes.length === 1 &&
@@ -616,6 +651,9 @@ export function NorthlinePageV8({
     setSelectedSize(isSingleOneSize ? product.sizes[0] : "");
     setSelectedFit(product.fits?.[0] || "");
     setActiveImageIndex(0);
+    setQvMediaMode("scan");
+    setQvScanFrame(0);
+    setQvAutoOrbit(false);
     setSizeError(false);
     setAddedConfirmation(null);
   }
@@ -1030,39 +1068,200 @@ export function NorthlinePageV8({
               </button>
 
               <div className="nl-qv-layout">
-                {/* Left Column: Spacious Product Image Gallery */}
+                {/* Left Column: Interactive 360° Scan View + Studio Product Gallery */}
                 <div className="nl-qv-media">
-                  <div className="nl-qv-main-photo-wrap">
-                    <img
-                      className="nl-qv-main-photo"
-                      src={
-                        activeProduct.images?.[activeImageIndex] ||
-                        activeProduct.image
-                      }
-                      alt={`${activeProduct.alt} view ${activeImageIndex + 1}`}
-                    />
-                  </div>
-                  {activeProduct.images && activeProduct.images.length > 1 && (
-                    <div className="nl-qv-thumbnails" role="list" aria-label="Product views">
-                      {activeProduct.images.map((img, i) => (
+                  <div className="nl-qv-media-bar">
+                    <div className="nl-qv-mode-tabs" role="tablist" aria-label="Product media mode">
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={qvMediaMode === "scan"}
+                        className={`nl-qv-mode-tab ${qvMediaMode === "scan" ? "is-active" : ""}`}
+                        onClick={() => setQvMediaMode("scan")}
+                      >
+                        360° Scan View
+                      </button>
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={qvMediaMode === "photos"}
+                        className={`nl-qv-mode-tab ${qvMediaMode === "photos" ? "is-active" : ""}`}
+                        onClick={() => {
+                          setQvAutoOrbit(false);
+                          setQvMediaMode("photos");
+                        }}
+                      >
+                        Product Photos ({activeProduct.images?.length || 1})
+                      </button>
+                    </div>
+
+                    {qvMediaMode === "scan" && activeScanLook && (
+                      <div className="nl-qv-scan-meta">
+                        <span className="nl-qv-scan-badge">
+                          {activeScanLook.lookLabel} · {ANGLES[qvScanFrame]}°
+                        </span>
                         <button
-                          key={i}
                           type="button"
-                          className={`nl-qv-thumb-btn ${activeImageIndex === i ? "is-active" : ""}`}
-                          onClick={() => setActiveImageIndex(i)}
-                          aria-label={`View image ${i + 1}`}
+                          className={`nl-qv-orbit-btn ${qvAutoOrbit ? "is-active" : ""}`}
+                          onClick={() => setQvAutoOrbit((prev) => !prev)}
                         >
-                          <img src={img} alt="" loading="lazy" />
+                          {qvAutoOrbit ? "Pause 360°" : "Auto-Rotate"}
                         </button>
-                      ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {qvMediaMode === "scan" && activeScanLook ? (
+                    <div
+                      className="nl-qv-main-photo-wrap nl-qv-scan-stage"
+                      onPointerDown={(e) => {
+                        if ((e.target as HTMLElement).closest("button")) return;
+                        e.currentTarget.setPointerCapture(e.pointerId);
+                        qvDragRef.current = {
+                          active: true,
+                          startX: e.clientX,
+                          startFrame: qvScanFrame,
+                        };
+                        if (qvAutoOrbit) setQvAutoOrbit(false);
+                      }}
+                      onPointerMove={(e) => {
+                        if (!qvDragRef.current.active) return;
+                        const deltaX = e.clientX - qvDragRef.current.startX;
+                        const step = Math.round(deltaX / 36);
+                        setQvScanFrame(wrapFrame(qvDragRef.current.startFrame + step));
+                      }}
+                      onPointerUp={() => {
+                        qvDragRef.current.active = false;
+                      }}
+                      onPointerCancel={() => {
+                        qvDragRef.current.active = false;
+                      }}
+                    >
+                      {/* Subtle side optical echo frames */}
+                      <img
+                        className="nl-qv-scan-echo nl-qv-scan-echo--left"
+                        src={frameUrl(activeScanLook.id, wrapFrame(qvScanFrame - 2))}
+                        alt=""
+                        aria-hidden="true"
+                        draggable={false}
+                      />
+                      <img
+                        className="nl-qv-scan-echo nl-qv-scan-echo--right"
+                        src={frameUrl(activeScanLook.id, wrapFrame(qvScanFrame + 2))}
+                        alt=""
+                        aria-hidden="true"
+                        draggable={false}
+                      />
+
+                      {/* Active 360° Scan Frame */}
+                      <img
+                        className="nl-qv-main-photo nl-qv-scan-figure"
+                        src={frameUrl(activeScanLook.id, qvScanFrame)}
+                        alt={`${activeProduct.name} — 360° scan angle ${ANGLES[qvScanFrame]}°`}
+                        draggable={false}
+                      />
+
+                      {/* Bottom 360° Scrub & Angle Controls */}
+                      <div className="nl-qv-scan-hud">
+                        <div className="nl-qv-scan-controls">
+                          <button
+                            type="button"
+                            className="nl-qv-scan-step"
+                            aria-label="Previous 360 angle"
+                            onClick={() => {
+                              setQvAutoOrbit(false);
+                              setQvScanFrame((prev) => wrapFrame(prev - 1));
+                            }}
+                          >
+                            ‹
+                          </button>
+                          <div className="nl-qv-angle-pills" role="group" aria-label="360 degree angles">
+                            {ANGLES.map((deg, idx) => (
+                              <button
+                                key={deg}
+                                type="button"
+                                className={`nl-qv-angle-pill ${qvScanFrame === idx ? "is-active" : ""}`}
+                                onClick={() => {
+                                  setQvAutoOrbit(false);
+                                  setQvScanFrame(idx);
+                                }}
+                              >
+                                {deg}°
+                              </button>
+                            ))}
+                          </div>
+                          <button
+                            type="button"
+                            className="nl-qv-scan-step"
+                            aria-label="Next 360 angle"
+                            onClick={() => {
+                              setQvAutoOrbit(false);
+                              setQvScanFrame((prev) => wrapFrame(prev + 1));
+                            }}
+                          >
+                            ›
+                          </button>
+                        </div>
+                        <span className="nl-qv-scan-hint">
+                          Drag horizontally or select an angle to inspect 360°
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="nl-qv-main-photo-wrap">
+                      <img
+                        className="nl-qv-main-photo"
+                        src={
+                          activeProduct.images?.[activeImageIndex] ||
+                          activeProduct.image
+                        }
+                        alt={`${activeProduct.alt} view ${activeImageIndex + 1}`}
+                      />
                     </div>
                   )}
+
+                  <div className="nl-qv-thumbnails" role="list" aria-label="Product views">
+                    {activeScanLook && (
+                      <button
+                        type="button"
+                        className={`nl-qv-thumb-btn nl-qv-thumb-btn--scan ${
+                          qvMediaMode === "scan" ? "is-active" : ""
+                        }`}
+                        onClick={() => setQvMediaMode("scan")}
+                        aria-label="Switch to 360 degree scan view"
+                      >
+                        <img src={frameUrl(activeScanLook.id, 0)} alt="" loading="lazy" />
+                        <span className="nl-qv-thumb-badge">360°</span>
+                      </button>
+                    )}
+                    {(activeProduct.images && activeProduct.images.length > 0
+                      ? activeProduct.images
+                      : [activeProduct.image]
+                    ).map((img, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        className={`nl-qv-thumb-btn ${
+                          qvMediaMode === "photos" && activeImageIndex === i ? "is-active" : ""
+                        }`}
+                        onClick={() => {
+                          setQvAutoOrbit(false);
+                          setQvMediaMode("photos");
+                          setActiveImageIndex(i);
+                        }}
+                        aria-label={`View photo ${i + 1}`}
+                      >
+                        <img src={img} alt="" loading="lazy" />
+                      </button>
+                    ))}
+                  </div>
+
                   <Link
                     to={`/products/${activeProduct.handle || activeProduct.id.split("/").pop()}`}
                     onClick={() => setActiveProduct(null)}
                     className="nl-qv-full-link"
                   >
-                    Open full 360° product view →
+                    Open full product page →
                   </Link>
                 </div>
 

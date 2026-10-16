@@ -217,8 +217,8 @@ export function getLookForProduct(product: any, productId?: string): ModelScanLo
     if (found) return found;
   }
 
-  const pId = (productId || "").toLowerCase();
-  const title = (product?.title || "").toLowerCase();
+  const pId = (productId || product?.id || "").toLowerCase();
+  const title = (product?.title || product?.name || "").toLowerCase();
   const handle = (product?.handle || "").toLowerCase();
   const desc = (product?.description || "").toLowerCase();
   const s = `${pId} ${title} ${handle} ${desc}`;

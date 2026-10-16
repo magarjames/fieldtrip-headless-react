@@ -4075,3 +4075,243 @@
 
 
 
+
+/* ── QUICK VIEW 360° SCAN STAGE & CONTROLS ── */
+
+.nl-qv-media-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.nl-qv-mode-tabs {
+  display: inline-flex;
+  padding: 0.22rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  gap: 0.2rem;
+}
+
+.nl-qv-mode-tab {
+  padding: 0.42rem 0.9rem;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.nl-qv-mode-tab:hover {
+  color: #ffffff;
+}
+
+.nl-qv-mode-tab.is-active {
+  background: #ffffff;
+  color: #0b0d12;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.nl-qv-scan-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nl-qv-scan-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+  padding: 0.32rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.nl-qv-orbit-btn {
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.nl-qv-orbit-btn:hover,
+.nl-qv-orbit-btn.is-active {
+  background: #ffffff;
+  color: #0b0d12;
+  border-color: #ffffff;
+}
+
+.nl-qv-scan-stage {
+  background: radial-gradient(
+    circle at 50% 42%,
+    #ffffff 0%,
+    #f1efe9 56%,
+    #e2dfd7 100%
+  );
+  cursor: grab;
+  user-select: none;
+  touch-action: pan-y;
+}
+
+.nl-qv-scan-stage:active {
+  cursor: grabbing;
+}
+
+.nl-qv-scan-echo {
+  position: absolute;
+  top: 6%;
+  height: 82%;
+  width: auto;
+  object-fit: contain;
+  opacity: 0.16;
+  filter: grayscale(0.35) contrast(0.95);
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.nl-qv-scan-echo--left {
+  left: -4%;
+  transform: scale(0.86);
+}
+
+.nl-qv-scan-echo--right {
+  right: -4%;
+  transform: scale(0.86);
+}
+
+.nl-qv-scan-figure {
+  position: relative;
+  z-index: 2;
+  padding-bottom: 3.4rem;
+  pointer-events: none;
+  filter: drop-shadow(0 18px 28px rgba(15, 18, 24, 0.16));
+}
+
+.nl-qv-scan-hud {
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 14px;
+  background: rgba(15, 18, 24, 0.84);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.nl-qv-scan-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  width: 100%;
+}
+
+.nl-qv-scan-step {
+  width: 1.85rem;
+  height: 1.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.16s ease;
+}
+
+.nl-qv-scan-step:hover {
+  background: #ffffff;
+  color: #0b0d12;
+}
+
+.nl-qv-angle-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.nl-qv-angle-pill {
+  padding: 0.28rem 0.52rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.nl-qv-angle-pill:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.nl-qv-angle-pill.is-active {
+  background: #ffffff;
+  color: #0b0d12;
+  font-weight: 800;
+}
+
+.nl-qv-scan-hint {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.nl-qv-thumb-btn--scan {
+  position: relative;
+  background: #f1efe9;
+}
+
+.nl-qv-thumb-btn--scan img {
+  object-fit: contain;
+}
+
+.nl-qv-thumb-badge {
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  padding: 2px 4px;
+  border-radius: 999px;
+  background: rgba(15, 18, 24, 0.88);
+  color: #ffffff;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
