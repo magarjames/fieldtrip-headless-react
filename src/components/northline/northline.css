@@ -4775,3 +4775,165 @@
     padding-bottom: 0.85rem;
   }
 }
+
+/* ── PORTRAIT MODEL VIEW & ALIGNED LAYOUT SPACING ── */
+
+.nl-qv-media {
+  padding: clamp(1.5rem, 2.5vw, 2.25rem);
+  gap: 0.85rem;
+}
+
+.nl-qv-details {
+  padding: clamp(1.5rem, 2.5vw, 2.25rem);
+  padding-top: clamp(1.5rem, 2.5vw, 2.25rem);
+}
+
+.nl-qv-purchase-group {
+  padding-right: 4.5rem;
+}
+
+.nl-qv-main-photo-wrap,
+.nl-qv-scan-stage {
+  aspect-ratio: 4 / 5;
+  width: 100%;
+  height: auto;
+  min-height: 26rem;
+  max-height: 36rem;
+}
+
+@media (max-width: 900px) {
+  .nl-product-dialog.nl-qv-dialog .nl-dialog-close {
+    top: 1rem;
+    right: 1.15rem;
+  }
+
+  .nl-qv-media {
+    padding: 1rem 1.15rem 1.1rem;
+    gap: 0.75rem;
+  }
+
+  .nl-qv-media-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding-right: 0;
+    gap: 0.6rem;
+  }
+
+  .nl-qv-mode-tabs {
+    align-self: flex-start;
+    max-width: calc(100% - 4.75rem);
+  }
+
+  .nl-qv-scan-meta {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nl-qv-main-photo-wrap,
+  .nl-qv-scan-stage {
+    aspect-ratio: 3 / 4;
+    width: 100%;
+    height: auto;
+    min-height: 24rem;
+    max-height: none;
+    border-radius: 14px;
+  }
+
+  .nl-qv-scan-figure,
+  .nl-qv-scan-figure--female {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    padding-top: 0.4rem;
+    padding-bottom: 2.8rem;
+    transform: scale(1.12) translateY(-1%);
+  }
+
+  .nl-qv-scan-figure--male {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    padding-top: 0.45rem;
+    padding-bottom: 2.9rem;
+    transform: scale(1.08) translateY(-1%);
+  }
+
+  .nl-qv-details {
+    padding: 1.15rem 1.15rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .nl-qv-purchase-group {
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .nl-product-dialog.nl-qv-dialog .nl-dialog-close {
+    top: 0.9rem;
+    right: 1rem;
+    min-height: 2.1rem;
+    padding: 0.38rem 0.78rem;
+  }
+
+  .nl-qv-media {
+    padding: 0.9rem 1rem 1rem;
+    gap: 0.7rem;
+  }
+
+  .nl-qv-media-bar {
+    padding-right: 0;
+    gap: 0.55rem;
+  }
+
+  .nl-qv-mode-tabs {
+    max-width: calc(100% - 4.5rem);
+  }
+
+  .nl-qv-scan-meta {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .nl-qv-main-photo-wrap,
+  .nl-qv-scan-stage {
+    aspect-ratio: 3 / 4;
+    width: 100%;
+    height: auto;
+    min-height: 22.5rem;
+    max-height: none;
+    border-radius: 14px;
+  }
+
+  .nl-qv-scan-figure,
+  .nl-qv-scan-figure--female {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    padding-top: 0.35rem;
+    padding-bottom: 2.75rem;
+    transform: scale(1.12) translateY(-1%);
+  }
+
+  .nl-qv-scan-figure--male {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    padding-top: 0.4rem;
+    padding-bottom: 2.85rem;
+    transform: scale(1.08) translateY(-1%);
+  }
+
+  .nl-qv-scan-hud {
+    left: 0.6rem;
+    right: 0.6rem;
+    bottom: 0.6rem;
+    padding: 0.45rem 0.55rem;
+  }
+
+  .nl-qv-details {
+    padding: 1.1rem 1rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  }
+}
