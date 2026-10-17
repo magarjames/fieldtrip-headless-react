@@ -4937,3 +4937,47 @@
     padding: 1.1rem 1rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
   }
 }
+
+/* ── FIX MOBILE FLEX/GRID TRACK SHRINKING & OVERLAP ── */
+
+.nl-qv-main-photo-wrap,
+.nl-qv-scan-stage {
+  flex: 0 0 auto;
+}
+
+.nl-qv-thumbnails,
+.nl-qv-full-link {
+  flex: 0 0 auto;
+  margin-top: 0;
+}
+
+@media (max-width: 900px) {
+  .nl-qv-layout {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .nl-qv-media,
+  .nl-qv-details {
+    flex: 0 0 auto;
+    width: 100%;
+    min-height: auto;
+    height: auto;
+    overflow: visible;
+    position: relative;
+  }
+
+  .nl-qv-main-photo-wrap,
+  .nl-qv-scan-stage {
+    flex: 0 0 auto;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+  }
+}
