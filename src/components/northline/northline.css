@@ -4776,180 +4776,24 @@
   }
 }
 
-/* ── PORTRAIT MODEL VIEW & ALIGNED LAYOUT SPACING ── */
+/* ── PC DEFAULT: HIDE MOBILE-ONLY OVERLAY & EXTERNAL DRAG BAR ── */
 
-.nl-qv-media {
-  padding: clamp(1.5rem, 2.5vw, 2.25rem);
-  gap: 0.85rem;
+.nl-qv-scan-top-overlay {
+  display: none;
 }
 
-.nl-qv-details {
-  padding: clamp(1.5rem, 2.5vw, 2.25rem);
-  padding-top: clamp(1.5rem, 2.5vw, 2.25rem);
+.nl-qv-scan-hud--mobile {
+  display: none;
 }
 
-.nl-qv-purchase-group {
-  padding-right: 4.5rem;
+.nl-qv-media-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-top: auto;
 }
 
-.nl-qv-main-photo-wrap,
-.nl-qv-scan-stage {
-  aspect-ratio: 4 / 5;
-  width: 100%;
-  height: auto;
-  min-height: 26rem;
-  max-height: 36rem;
-}
-
-@media (max-width: 900px) {
-  .nl-product-dialog.nl-qv-dialog .nl-dialog-close {
-    top: 1rem;
-    right: 1.15rem;
-  }
-
-  .nl-qv-media {
-    padding: 1rem 1.15rem 1.1rem;
-    gap: 0.75rem;
-  }
-
-  .nl-qv-media-bar {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    padding-right: 0;
-    gap: 0.6rem;
-  }
-
-  .nl-qv-mode-tabs {
-    align-self: flex-start;
-    max-width: calc(100% - 4.75rem);
-  }
-
-  .nl-qv-scan-meta {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .nl-qv-main-photo-wrap,
-  .nl-qv-scan-stage {
-    aspect-ratio: 3 / 4;
-    width: 100%;
-    height: auto;
-    min-height: 24rem;
-    max-height: none;
-    border-radius: 14px;
-  }
-
-  .nl-qv-scan-figure,
-  .nl-qv-scan-figure--female {
-    width: 100%;
-    height: 100%;
-    max-height: none;
-    padding-top: 0.4rem;
-    padding-bottom: 2.8rem;
-    transform: scale(1.12) translateY(-1%);
-  }
-
-  .nl-qv-scan-figure--male {
-    width: 100%;
-    height: 100%;
-    max-height: none;
-    padding-top: 0.45rem;
-    padding-bottom: 2.9rem;
-    transform: scale(1.08) translateY(-1%);
-  }
-
-  .nl-qv-details {
-    padding: 1.15rem 1.15rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
-  }
-
-  .nl-qv-purchase-group {
-    padding-right: 0;
-  }
-}
-
-@media (max-width: 640px) {
-  .nl-product-dialog.nl-qv-dialog .nl-dialog-close {
-    top: 0.9rem;
-    right: 1rem;
-    min-height: 2.1rem;
-    padding: 0.38rem 0.78rem;
-  }
-
-  .nl-qv-media {
-    padding: 0.9rem 1rem 1rem;
-    gap: 0.7rem;
-  }
-
-  .nl-qv-media-bar {
-    padding-right: 0;
-    gap: 0.55rem;
-  }
-
-  .nl-qv-mode-tabs {
-    max-width: calc(100% - 4.5rem);
-  }
-
-  .nl-qv-scan-meta {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .nl-qv-main-photo-wrap,
-  .nl-qv-scan-stage {
-    aspect-ratio: 3 / 4;
-    width: 100%;
-    height: auto;
-    min-height: 22.5rem;
-    max-height: none;
-    border-radius: 14px;
-  }
-
-  .nl-qv-scan-figure,
-  .nl-qv-scan-figure--female {
-    width: 100%;
-    height: 100%;
-    max-height: none;
-    padding-top: 0.35rem;
-    padding-bottom: 2.75rem;
-    transform: scale(1.12) translateY(-1%);
-  }
-
-  .nl-qv-scan-figure--male {
-    width: 100%;
-    height: 100%;
-    max-height: none;
-    padding-top: 0.4rem;
-    padding-bottom: 2.85rem;
-    transform: scale(1.08) translateY(-1%);
-  }
-
-  .nl-qv-scan-hud {
-    left: 0.6rem;
-    right: 0.6rem;
-    bottom: 0.6rem;
-    padding: 0.45rem 0.55rem;
-  }
-
-  .nl-qv-details {
-    padding: 1.1rem 1rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
-  }
-}
-
-/* ── FIX MOBILE FLEX/GRID TRACK SHRINKING & OVERLAP ── */
-
-.nl-qv-main-photo-wrap,
-.nl-qv-scan-stage {
-  flex: 0 0 auto;
-}
-
-.nl-qv-thumbnails,
-.nl-qv-full-link {
-  flex: 0 0 auto;
-  margin-top: 0;
-}
+/* ── MOBILE-ONLY QUICK VIEW OPTIMIZATIONS (PC REVERTED TO ORIGINAL) ── */
 
 @media (max-width: 900px) {
   .nl-qv-layout {
@@ -4971,203 +4815,254 @@
     position: relative;
   }
 
-  .nl-qv-main-photo-wrap,
-  .nl-qv-scan-stage {
-    flex: 0 0 auto;
-    width: 100%;
-    aspect-ratio: 3 / 4;
-    height: auto;
-    min-height: 0;
-    max-height: none;
+  .nl-qv-media {
+    padding: 1rem 1.15rem 1.1rem;
+    gap: 0.7rem;
   }
-}
 
-/* ── FIXED-POSITION STAGE & SPACED TEXT SECTIONS (ZERO SHIFT / ZERO OVERLAP) ── */
+  .nl-qv-media-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 2.35rem;
+    padding-right: 4.6rem;
+    margin: 0;
+  }
 
-.nl-qv-media-bar {
-  display: flex;
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  min-height: 2.35rem;
-  margin: 0;
-}
+  /* Hide top-bar scan meta on mobile so it never wraps or pushes stage down */
+  .nl-qv-scan-meta {
+    display: none !important;
+  }
 
-.nl-qv-scan-top-overlay {
-  position: absolute;
-  top: 0.7rem;
-  left: 0.7rem;
-  right: 0.7rem;
-  z-index: 4;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  pointer-events: none;
-}
+  /* Show angle badge + Auto-Rotate inside top of stage on mobile */
+  .nl-qv-scan-top-overlay {
+    position: absolute;
+    top: 0.65rem;
+    left: 0.65rem;
+    right: 0.65rem;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    pointer-events: none;
+  }
 
-.nl-qv-scan-top-overlay .nl-qv-scan-badge {
-  background: rgba(15, 18, 24, 0.82);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  padding: 0.32rem 0.68rem;
-  font-size: 0.68rem;
-  font-weight: 800;
-}
+  .nl-qv-scan-top-overlay .nl-qv-scan-badge {
+    background: rgba(15, 18, 24, 0.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    padding: 0.3rem 0.65rem;
+    font-size: 0.66rem;
+    font-weight: 800;
+  }
 
-.nl-qv-scan-top-overlay .nl-qv-orbit-btn {
-  pointer-events: auto;
-  background: rgba(15, 18, 24, 0.82);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  padding: 0.34rem 0.75rem;
-  font-size: 0.68rem;
-  font-weight: 800;
-}
+  .nl-qv-scan-top-overlay .nl-qv-orbit-btn {
+    pointer-events: auto;
+    background: rgba(15, 18, 24, 0.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    padding: 0.32rem 0.72rem;
+    font-size: 0.66rem;
+    font-weight: 800;
+  }
 
-.nl-qv-scan-top-overlay .nl-qv-orbit-btn:hover,
-.nl-qv-scan-top-overlay .nl-qv-orbit-btn.is-active {
-  background: #ffffff;
-  color: #0b0d12;
-  border-color: #ffffff;
-}
+  .nl-qv-scan-top-overlay .nl-qv-orbit-btn:hover,
+  .nl-qv-scan-top-overlay .nl-qv-orbit-btn.is-active {
+    background: #ffffff;
+    color: #0b0d12;
+    border-color: #ffffff;
+  }
 
-.nl-qv-main-photo-wrap,
-.nl-qv-scan-stage,
-.nl-qv-photo-stage {
-  position: relative;
-  width: 100%;
-  height: clamp(27rem, 62dvh, 34rem);
-  min-height: 27rem;
-  max-height: 34rem;
-  aspect-ratio: auto;
-  flex: 0 0 auto;
-  border-radius: 16px;
-  overflow: hidden;
-  background: radial-gradient(
-    circle at 50% 42%,
-    #ffffff 0%,
-    #f1efe9 56%,
-    #e2dfd7 100%
-  );
-}
-
-.nl-qv-main-photo,
-.nl-qv-studio-photo,
-.nl-qv-scan-figure {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  max-height: none;
-  object-fit: contain;
-  margin: auto;
-}
-
-.nl-qv-studio-photo {
-  padding: 0.5rem;
-}
-
-.nl-qv-scan-figure,
-.nl-qv-scan-figure--female {
-  padding-top: 2.3rem;
-  padding-bottom: 3.1rem;
-  transform: scale(1.12) translateY(0%);
-  transform-origin: center center;
-}
-
-.nl-qv-scan-figure--male {
-  padding-top: 2.35rem;
-  padding-bottom: 3.2rem;
-  transform: scale(1.08) translateY(0%);
-  transform-origin: center center;
-}
-
-.nl-qv-media-footer {
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-  padding-top: 0.15rem;
-  flex: 0 0 auto;
-}
-
-.nl-qv-title-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  padding: 0.95rem 1.05rem;
-  margin-bottom: 0.9rem;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.nl-qv-title-section .nl-dialog-group {
-  margin: 0;
-  font-size: 0.7rem;
-  letter-spacing: 0.06em;
-  color: rgba(255, 255, 255, 0.58);
-}
-
-.nl-qv-title-heading {
-  margin: 0;
-  font-size: clamp(1.35rem, 2.2vw, 2rem);
-  font-weight: 800;
-  line-height: 1.14;
-  letter-spacing: -0.03em;
-  color: #ffffff;
-}
-
-.nl-qv-title-section .nl-qv-price {
-  margin: 0.1rem 0 0;
-  font-size: 1.15rem;
-  font-weight: 800;
-  color: #ffffff;
-}
-
-.nl-qv-options-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.nl-qv-section-box {
-  margin: 0 !important;
-  padding: 0.8rem 1rem !important;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
-@media (max-width: 900px) {
+  /* Fixed portrait stage box for both 360 Scan View and Product Photos on mobile */
   .nl-qv-main-photo-wrap,
   .nl-qv-scan-stage,
   .nl-qv-photo-stage {
-    height: 25rem;
-    min-height: 25rem;
-    max-height: 25rem;
+    position: relative;
+    width: 100%;
+    height: 24rem;
+    min-height: 24rem;
+    max-height: 24rem;
     aspect-ratio: auto;
+    flex: 0 0 auto;
     border-radius: 14px;
+    overflow: hidden;
+    background: radial-gradient(
+      circle at 50% 42%,
+      #ffffff 0%,
+      #f1efe9 56%,
+      #e2dfd7 100%
+    );
+  }
+
+  .nl-qv-main-photo,
+  .nl-qv-studio-photo,
+  .nl-qv-scan-figure {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    object-fit: contain;
+    margin: auto;
+  }
+
+  .nl-qv-studio-photo {
+    padding: 0.5rem;
+  }
+
+  /* Since drag HUD is now BELOW the stage on mobile, model needs minimal bottom padding */
+  .nl-qv-scan-figure,
+  .nl-qv-scan-figure--female {
+    padding-top: 2.2rem;
+    padding-bottom: 0.55rem;
+    transform: scale(1.11) translateY(0%);
+    transform-origin: center center;
+  }
+
+  .nl-qv-scan-figure--male {
+    padding-top: 2.25rem;
+    padding-bottom: 0.6rem;
+    transform: scale(1.07) translateY(0%);
+    transform-origin: center center;
+  }
+
+  /* Hide in-stage HUD on mobile; show standalone HUD directly under image & 360 scans */
+  .nl-qv-scan-hud--pc {
+    display: none !important;
+  }
+
+  .nl-qv-scan-hud--mobile {
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    z-index: 2;
+    width: 100%;
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.32rem;
+    padding: 0.55rem 0.65rem;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    cursor: ew-resize;
+    touch-action: pan-y;
+    user-select: none;
+  }
+
+  .nl-qv-media-footer {
+    margin-top: 0;
+    padding-top: 0.1rem;
+    flex: 0 0 auto;
+  }
+
+  .nl-qv-thumbnails,
+  .nl-qv-full-link {
+    flex: 0 0 auto;
+    margin-top: 0;
+  }
+
+  /* Mobile-only Spaced Section Cards for Title/Price & Options */
+  .nl-qv-details {
+    padding: 1.1rem 1.15rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
   }
 
   .nl-qv-purchase-group {
     padding-right: 0;
   }
+
+  .nl-qv-purchase-group > .nl-dialog-divider {
+    display: none;
+  }
+
+  .nl-qv-title-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.9rem 1rem;
+    margin-bottom: 0.8rem;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .nl-qv-title-section .nl-dialog-group {
+    margin: 0;
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.58);
+  }
+
+  .nl-qv-title-section .nl-qv-header-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+
+  .nl-qv-title-section .nl-qv-header-row h2 {
+    margin: 0;
+    font-size: 1.32rem;
+    font-weight: 800;
+    line-height: 1.14;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+  }
+
+  .nl-qv-title-section .nl-qv-price {
+    margin: 0;
+    font-size: 1.08rem;
+    font-weight: 800;
+    color: #ffffff;
+  }
+
+  .nl-qv-options-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.68rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .nl-qv-section-box {
+    margin: 0 !important;
+    padding: 0.78rem 0.95rem !important;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
 }
 
 @media (max-width: 640px) {
+  .nl-product-dialog.nl-qv-dialog .nl-dialog-close {
+    top: 0.85rem;
+    right: 0.95rem;
+    min-height: 2.05rem;
+    padding: 0.36rem 0.74rem;
+  }
+
+  .nl-qv-media {
+    padding: 0.85rem 0.95rem 0.95rem;
+    gap: 0.6rem;
+  }
+
+  .nl-qv-media-bar {
+    padding-right: 4.3rem;
+  }
+
   .nl-qv-main-photo-wrap,
   .nl-qv-scan-stage,
   .nl-qv-photo-stage {
-    height: 23rem;
-    min-height: 23rem;
-    max-height: 23rem;
-    aspect-ratio: auto;
+    height: 21.5rem;
+    min-height: 21.5rem;
+    max-height: 21.5rem;
     border-radius: 14px;
   }
 
@@ -5179,36 +5074,24 @@
 
   .nl-qv-scan-figure,
   .nl-qv-scan-figure--female {
-    padding-top: 2.1rem;
-    padding-bottom: 2.9rem;
+    padding-top: 2.05rem;
+    padding-bottom: 0.45rem;
     transform: scale(1.11) translateY(0%);
   }
 
   .nl-qv-scan-figure--male {
-    padding-top: 2.15rem;
-    padding-bottom: 3rem;
+    padding-top: 2.1rem;
+    padding-bottom: 0.5rem;
     transform: scale(1.07) translateY(0%);
   }
 
-  .nl-qv-title-section {
-    padding: 0.85rem 0.95rem;
-    margin-bottom: 0.75rem;
+  .nl-qv-scan-hud--mobile {
+    padding: 0.48rem 0.55rem;
+    gap: 0.25rem;
+    border-radius: 12px;
   }
 
-  .nl-qv-title-heading {
-    font-size: 1.28rem;
-  }
-
-  .nl-qv-title-section .nl-qv-price {
-    font-size: 1.05rem;
-  }
-
-  .nl-qv-options-section {
-    gap: 0.65rem;
-    margin-bottom: 0.85rem;
-  }
-
-  .nl-qv-section-box {
-    padding: 0.75rem 0.9rem !important;
+  .nl-qv-details {
+    padding: 1rem 0.95rem calc(1.4rem + env(safe-area-inset-bottom, 0px));
   }
 }

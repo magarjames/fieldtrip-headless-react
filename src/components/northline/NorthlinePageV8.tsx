@@ -1094,6 +1094,21 @@ export function NorthlinePageV8({
                         Product Photos ({activeProduct.images?.length || 1})
                       </button>
                     </div>
+
+                    {qvMediaMode === "scan" && activeScanLook && (
+                      <div className="nl-qv-scan-meta">
+                        <span className="nl-qv-scan-badge">
+                          {activeScanLook.lookLabel} · {ANGLES[qvScanFrame]}°
+                        </span>
+                        <button
+                          type="button"
+                          className={`nl-qv-orbit-btn ${qvAutoOrbit ? "is-active" : ""}`}
+                          onClick={() => setQvAutoOrbit((prev) => !prev)}
+                        >
+                          {qvAutoOrbit ? "Pause 360°" : "Auto-Rotate"}
+                        </button>
+                      </div>
+                    )}
                   </div>
 
                   {qvMediaMode === "scan" && activeScanLook ? (
@@ -1122,7 +1137,7 @@ export function NorthlinePageV8({
                         qvDragRef.current.active = false;
                       }}
                     >
-                      {/* Top Overlay inside Stage: Angle Badge & Auto-Rotate (never pushes stage down) */}
+                      {/* Mobile-only Top Overlay inside Stage: Angle Badge & Auto-Rotate */}
                       <div className="nl-qv-scan-top-overlay">
                         <span className="nl-qv-scan-badge">
                           {activeScanLook.lookLabel} · {ANGLES[qvScanFrame]}°
@@ -1148,8 +1163,8 @@ export function NorthlinePageV8({
                         draggable={false}
                       />
 
-                      {/* Bottom 360° Scrub & Angle Controls */}
-                      <div className="nl-qv-scan-hud">
+                      {/* PC-only Bottom 360° Scrub & Angle Controls (inside stage) */}
+                      <div className="nl-qv-scan-hud nl-qv-scan-hud--pc">
                         <div className="nl-qv-scan-controls">
                           <button
                             type="button"
@@ -1207,6 +1222,84 @@ export function NorthlinePageV8({
                     </div>
                   )}
 
+                  {/* Mobile-only 360° Drag & Angle Section kept directly UNDER both Product Photos and 360° Scan View */}
+                  {activeScanLook && (
+                    <div
+                      className="nl-qv-scan-hud nl-qv-scan-hud--mobile"
+                      onPointerDown={(e) => {
+                        if ((e.target as HTMLElement).closest("button")) return;
+                        e.currentTarget.setPointerCapture(e.pointerId);
+                        qvDragRef.current = {
+                          active: true,
+                          startX: e.clientX,
+                          startFrame: qvScanFrame,
+                        };
+                        if (qvAutoOrbit) setQvAutoOrbit(false);
+                        if (qvMediaMode !== "scan") setQvMediaMode("scan");
+                      }}
+                      onPointerMove={(e) => {
+                        if (!qvDragRef.current.active) return;
+                        const deltaX = e.clientX - qvDragRef.current.startX;
+                        const step = Math.round(deltaX / 28);
+                        setQvScanFrame(wrapFrame(qvDragRef.current.startFrame + step));
+                      }}
+                      onPointerUp={() => {
+                        qvDragRef.current.active = false;
+                      }}
+                      onPointerCancel={() => {
+                        qvDragRef.current.active = false;
+                      }}
+                    >
+                      <div className="nl-qv-scan-controls">
+                        <button
+                          type="button"
+                          className="nl-qv-scan-step"
+                          aria-label="Previous 360 angle"
+                          onClick={() => {
+                            setQvAutoOrbit(false);
+                            if (qvMediaMode !== "scan") setQvMediaMode("scan");
+                            setQvScanFrame((prev) => wrapFrame(prev - 1));
+                          }}
+                        >
+                          ‹
+                        </button>
+                        <div className="nl-qv-angle-pills" role="group" aria-label="360 degree angles">
+                          {ANGLES.map((deg, idx) => (
+                            <button
+                              key={deg}
+                              type="button"
+                              className={`nl-qv-angle-pill ${
+                                qvMediaMode === "scan" && qvScanFrame === idx ? "is-active" : ""
+                              }`}
+                              onClick={() => {
+                                setQvAutoOrbit(false);
+                                if (qvMediaMode !== "scan") setQvMediaMode("scan");
+                                setQvScanFrame(idx);
+                              }}
+                            >
+                              {deg}°
+                            </button>
+                          ))}
+                        </div>
+                        <button
+                          type="button"
+                          className="nl-qv-scan-step"
+                          aria-label="Next 360 angle"
+                          onClick={() => {
+                            setQvAutoOrbit(false);
+                            if (qvMediaMode !== "scan") setQvMediaMode("scan");
+                            setQvScanFrame((prev) => wrapFrame(prev + 1));
+                          }}
+                        >
+                          ›
+                        </button>
+                      </div>
+                      <span className="nl-qv-scan-hint">
+                        Drag horizontally or select an angle to inspect 360°
+                      </span>
+                    </div>
+                  )}
+
                   <div className="nl-qv-media-footer">
                     <div className="nl-qv-thumbnails" role="list" aria-label="Product views">
                       {activeScanLook && (
@@ -1254,17 +1347,21 @@ export function NorthlinePageV8({
                   </div>
                 </div>
 
-                {/* Right Column: Spaced Sections for Title/Price, Options, CTA & Accordions */}
+                {/* Right Column: Product Info, Options, CTA & Accordions */}
                 <div className="nl-qv-details">
                   <div className="nl-qv-purchase-group">
-                    {/* Dedicated Title & Price Section */}
+                    {/* Title & Price (Unboxed on PC, Spaced Section Card on Mobile) */}
                     <div className="nl-qv-title-section">
                       <p className="nl-dialog-group">{activeProduct.group}</p>
-                      <h2 id="northline-product-title" className="nl-qv-title-heading">
-                        {activeProduct.name}
-                      </h2>
-                      <p className="nl-qv-price">{activeProduct.price}</p>
+                      <div className="nl-qv-header-row">
+                        <h2 id="northline-product-title" className="nl-qv-title-heading">
+                          {activeProduct.name}
+                        </h2>
+                        <p className="nl-qv-price">{activeProduct.price}</p>
+                      </div>
                     </div>
+
+                    <div className="nl-dialog-divider" />
 
                     {/* Dedicated Options Section */}
                     <div className="nl-qv-options-section">
