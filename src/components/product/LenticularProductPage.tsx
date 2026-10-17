@@ -226,86 +226,116 @@ export function getLookForProduct(product: any, productId?: string): ModelScanLo
   const title = (product?.title || product?.name || "").toLowerCase();
   const handle = (product?.handle || "").toLowerCase();
   const desc = (product?.description || "").toLowerCase();
-  const s = `${pId} ${title} ${handle} ${desc}`;
 
-  // 2. Look 01 (f4) — Key To My Heart zip & Washed charcoal carpenter denim
-  if (s.includes("heart") || s.includes("skyline") || s.includes("f4") || s.includes("charcoal") || s.includes("carpenter")) {
-    return MODEL_SCAN_LOOKS[0]; // f4
-  }
+  // Match strictly on product identity (id + title + handle) first so description copy
+  // (e.g. "baggy", "black", "cargo") never causes a false-positive on another look.
+  const idStr = `${pId} ${title} ${handle}`;
 
-  // 3. Look 02 (f1) — Double Mouth / Graphic Lip tee & Olive cargo
+  // Look 07 (m3) — Driftwood leather jacket & Ironwork 15oz raw denim jeans
   if (
-    s.includes("mouth") ||
-    s.includes("lip") ||
-    s.includes("lips") ||
-    s.includes("f1") ||
-    s.includes("olive") ||
-    s.includes("cargo") ||
-    s.includes("drab")
+    idStr.includes("ironwork") ||
+    idStr.includes("15oz") ||
+    idStr.includes("driftwood") ||
+    idStr.includes("leather") ||
+    idStr.includes("suede") ||
+    idStr.includes("blouson") ||
+    idStr.includes("m3")
   ) {
-    return MODEL_SCAN_LOOKS[1]; // f1
+    return MODEL_SCAN_LOOKS[6]; // m3 (Look 07)
   }
 
-  // 4. Look 03 (f2) — Shoreline / Optic white boat neck top & Deep indigo raw jeans
-  if (s.includes("shoreline") || s.includes("boat") || s.includes("second-skin") || s.includes("f2") || s.includes("optic-white")) {
-    return MODEL_SCAN_LOOKS[2]; // f2
-  }
-
-  // 5. Look 04 (f3) — Graphic crew sweatshirt & Longform wide leg jeans
+  // Look 01 (f4) — Key To My Heart zip & Washed charcoal carpenter denim
   if (
-    s.includes("static") ||
-    s.includes("crew-sweatshirt") ||
-    s.includes("graphic-crew") ||
-    s.includes("infatuated") ||
-    s.includes("archive") ||
-    s.includes("f3") ||
-    s.includes("longform") ||
-    (s.includes("deep-blue") && s.includes("jean")) ||
-    (s.includes("deep-blue") && s.includes("wide"))
+    idStr.includes("heart") ||
+    idStr.includes("skyline") ||
+    idStr.includes("f4") ||
+    idStr.includes("charcoal") ||
+    idStr.includes("carpenter")
   ) {
-    return MODEL_SCAN_LOOKS[3]; // f3
+    return MODEL_SCAN_LOOKS[0]; // f4 (Look 01)
   }
 
-  // 6. Look 05 (m1) — Solid black boxy tee & Razorcut ripped wide jeans
+  // Look 02 (f1) — Double Mouth / Graphic Lip tee & Sidestep olive cargo
   if (
-    s.includes("razorcut") ||
-    s.includes("after-hours") ||
-    s.includes("m1") ||
-    s.includes("solid-black") ||
-    (s.includes("black") && s.includes("boxy")) ||
-    (s.includes("black") && s.includes("tee")) ||
-    (s.includes("boxy") && s.includes("tee") && !s.includes("lip") && !s.includes("mouth") && !s.includes("white"))
+    idStr.includes("mouth") ||
+    idStr.includes("lip") ||
+    idStr.includes("lips") ||
+    idStr.includes("sidestep") ||
+    idStr.includes("f1") ||
+    idStr.includes("olive") ||
+    idStr.includes("cargo") ||
+    idStr.includes("drab")
   ) {
-    return MODEL_SCAN_LOOKS[4]; // m1
+    return MODEL_SCAN_LOOKS[1]; // f1 (Look 02)
   }
 
-  // 7. Look 06 (m2) — Grey knitted henley & Classic blue baggy jeans
-  if (s.includes("henley") || s.includes("m2") || s.includes("overset") || s.includes("baggy") || s.includes("classic-blue")) {
-    return MODEL_SCAN_LOOKS[5]; // m2
-  }
-
-  // 8. Look 07 (m3) — Driftwood leather jacket & Ironwork 15oz denim
+  // Look 03 (f2) — Shoreline / Optic white boat neck top
   if (
-    s.includes("driftwood") ||
-    s.includes("leather") ||
-    s.includes("suede") ||
-    s.includes("blouson") ||
-    s.includes("m3") ||
-    s.includes("ironwork") ||
-    s.includes("15oz")
+    idStr.includes("shoreline") ||
+    idStr.includes("boat") ||
+    idStr.includes("second-skin") ||
+    idStr.includes("f2") ||
+    idStr.includes("optic-white")
   ) {
-    return MODEL_SCAN_LOOKS[6]; // m3
+    return MODEL_SCAN_LOOKS[2]; // f2 (Look 03)
   }
 
-  // Category fallback heuristics
+  // Look 04 (f3) — Graphic crew sweatshirt & Longform wide leg jeans
+  if (
+    idStr.includes("static") ||
+    idStr.includes("crew-sweatshirt") ||
+    idStr.includes("graphic-crew") ||
+    idStr.includes("infatuated") ||
+    idStr.includes("archive") ||
+    idStr.includes("f3") ||
+    idStr.includes("longform") ||
+    (idStr.includes("deep-blue") && idStr.includes("jean")) ||
+    (idStr.includes("deep-blue") && idStr.includes("wide"))
+  ) {
+    return MODEL_SCAN_LOOKS[3]; // f3 (Look 04)
+  }
+
+  // Look 05 (m1) — Solid black boxy tee & Razorcut ripped wide jeans
+  if (
+    idStr.includes("razorcut") ||
+    idStr.includes("after-hours") ||
+    idStr.includes("m1") ||
+    idStr.includes("solid-black") ||
+    (idStr.includes("black") && idStr.includes("boxy")) ||
+    (idStr.includes("black") && idStr.includes("tee")) ||
+    (idStr.includes("boxy") &&
+      idStr.includes("tee") &&
+      !idStr.includes("lip") &&
+      !idStr.includes("mouth") &&
+      !idStr.includes("white"))
+  ) {
+    return MODEL_SCAN_LOOKS[4]; // m1 (Look 05)
+  }
+
+  // Look 06 (m2) — Layered grey knitted henley & Overset navy wide-leg jeans
+  if (
+    idStr.includes("henley") ||
+    idStr.includes("m2") ||
+    idStr.includes("overset") ||
+    idStr.includes("classic-blue")
+  ) {
+    return MODEL_SCAN_LOOKS[5]; // m2 (Look 06)
+  }
+
+  // Secondary fallback including description if title/handle was generic
+  const s = `${idStr} ${desc}`;
+  if (s.includes("ironwork") || s.includes("15oz") || s.includes("driftwood") || s.includes("leather") || s.includes("suede")) {
+    return MODEL_SCAN_LOOKS[6]; // m3 (Look 07)
+  }
   if (s.includes("hoodie") || s.includes("fleece")) return MODEL_SCAN_LOOKS[0]; // f4
+  if (s.includes("henley") || s.includes("overset")) return MODEL_SCAN_LOOKS[5]; // m2
   if (s.includes("knit") || s.includes("sweater")) return MODEL_SCAN_LOOKS[3]; // f3
   if (s.includes("cargo")) return MODEL_SCAN_LOOKS[1]; // f1
   if (s.includes("tee") || s.includes("shirt")) {
     return s.includes("black") ? MODEL_SCAN_LOOKS[4] : MODEL_SCAN_LOOKS[1];
   }
   if (s.includes("jacket") || s.includes("coat") || s.includes("outerwear") || s.includes("blouson")) return MODEL_SCAN_LOOKS[6]; // m3
-  if (s.includes("denim") || s.includes("jeans") || s.includes("pant") || s.includes("trouser")) return MODEL_SCAN_LOOKS[0]; // f4
+  if (s.includes("denim") || s.includes("jeans") || s.includes("pant") || s.includes("trouser")) return MODEL_SCAN_LOOKS[6]; // m3
 
   // Deterministic fallback based on id length
   const idx = Math.abs((productId || "p").split("").reduce((acc, c) => acc + c.charCodeAt(0), 0)) % MODEL_SCAN_LOOKS.length;

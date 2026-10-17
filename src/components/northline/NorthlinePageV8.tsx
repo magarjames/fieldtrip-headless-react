@@ -1305,7 +1305,7 @@ export function NorthlinePageV8({
                       {/* Top Overlay inside Stage: Angle Badge & Auto-Rotate (never pushes stage down) */}
                       <div className="nl-qv-scan-top-overlay">
                         <span className="nl-qv-scan-badge">
-                          {activeScanLook.lookLabel} · {ANGLES[qvScanFrame]}°
+                          Look {activeScanLook.lookNumber} · {ANGLES[qvScanFrame]}°
                         </span>
                         <button
                           type="button"
