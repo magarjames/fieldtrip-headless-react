@@ -74,22 +74,6 @@
   max-width: 100%;
 }
 
-.ln-hero-left-header,
-.ln-hero-left-body {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  max-width: 100%;
-}
-
-.ln-hero-jump-links {
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
-  margin-top: 2rem;
-  flex-wrap: wrap;
-}
-
 .ln-product-type-pill {
   display: inline-flex;
   align-items: center;
@@ -498,8 +482,7 @@
 
 @media (max-width: 600px) {
   .ln-angle-pills-grid {
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-    gap: 4px;
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
@@ -1110,178 +1093,6 @@
   }
   .ln-row-meta {
     text-align: left;
-  }
-}
-
-@media (max-width: 768px) {
-  .ln-hero-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  .ln-hero-left {
-    display: contents;
-  }
-  .ln-hero-left-header {
-    order: 1;
-    padding-top: 0.25rem;
-  }
-  .ln-card-container {
-    order: 2;
-    width: 100%;
-  }
-  .ln-hero-left-body {
-    order: 3;
-  }
-  .ln-hero-desc {
-    display: none !important;
-  }
-  .ln-hero-price-row {
-    margin-top: 0;
-  }
-  .ln-hero-look-spec-bar,
-  .ln-hero-companion-box {
-    max-width: 100%;
-  }
-  .ln-hero-companion-box {
-    margin-top: 16px;
-  }
-  .ln-hero-jump-links {
-    margin-top: 16px;
-    gap: 1.15rem;
-  }
-  .ln-hero-right {
-    order: 4;
-    justify-self: start;
-    text-align: left;
-    align-items: flex-start;
-    max-width: 100%;
-    padding-top: 0;
-  }
-}
-
-@media (max-width: 640px) {
-  .ln-hero-section {
-    padding: 0.75rem 0 2.5rem;
-  }
-  .ln-hero-grid {
-    gap: 16px;
-    padding: 0 1rem;
-  }
-  .ln-hero-left-header {
-    padding-top: 0;
-  }
-  .ln-product-type-pill {
-    margin-bottom: 0.75rem;
-    padding: 5px 11px;
-    gap: 0.45rem;
-    flex-wrap: wrap;
-  }
-  .ln-product-type-pill .ln-m {
-    font-size: 9.5px;
-  }
-  .ln-hero-title {
-    font-size: clamp(24px, 6.8vw, 34px);
-    line-height: 0.98;
-  }
-  .ln-hero-look-spec-bar {
-    margin-top: 10px;
-    padding: 9px 12px;
-    border-radius: 11px;
-  }
-  .ln-card-column {
-    max-width: 100%;
-  }
-  .ln-scan-chamber-stage {
-    min-height: 390px;
-    max-height: 460px;
-    aspect-ratio: 3 / 3.85;
-    border-radius: 20px;
-  }
-  .ln-scan-model-frame {
-    width: 92%;
-    height: 92%;
-  }
-  .ln-scan-drag-hint {
-    top: 10px;
-    right: 12px;
-    padding: 3px 9px;
-    font-size: 8.5px;
-  }
-  .ln-angle-controller-bar {
-    margin-top: 12px;
-    padding: 12px 14px;
-    border-radius: 18px;
-    gap: 10px;
-  }
-  .ln-angle-heading-live {
-    font-size: 0.96rem;
-  }
-  .ln-orbit-toggle-btn {
-    padding: 5px 11px;
-    font-size: 9px;
-  }
-  .ln-angle-pill-btn {
-    padding: 7px 2px;
-    border-radius: 10px;
-  }
-  .ln-angle-pill-name {
-    font-size: 9.5px;
-  }
-  .ln-angle-pill-deg {
-    font-size: 8px;
-    margin-top: 2px;
-  }
-  .ln-price-val {
-    font-size: 28px;
-  }
-  .ln-hero-companion-box {
-    margin-top: 12px;
-    padding: 12px 14px;
-    border-radius: 14px;
-  }
-  .ln-hero-jump-links {
-    margin-top: 14px;
-    gap: 1rem;
-  }
-  .ln-side-order-card {
-    padding: 18px 18px;
-    border-radius: 20px;
-    gap: 14px;
-  }
-  .ln-gallery-section {
-    padding: 2rem 1rem 2.5rem;
-  }
-  .ln-gallery-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-top: 24px;
-  }
-  .ln-thumb--print {
-    grid-column: 1 / -1;
-  }
-  .ln-thumb--print .ln-thumb-wrap {
-    aspect-ratio: 16 / 10;
-  }
-  .ln-thumb-caption {
-    margin-top: 8px;
-  }
-  .ln-thumb-caption .ln-m {
-    font-size: 9.5px;
-  }
-  .ln-specs-section {
-    padding: 0 1rem 3rem;
-  }
-  .ln-row {
-    padding: 18px 18px;
-    border-radius: 16px;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-  .ln-row-title {
-    font-size: clamp(20px, 5.5vw, 26px);
-  }
-  .ln-row-line {
-    font-size: 14px;
   }
 }
 

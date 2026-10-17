@@ -885,71 +885,67 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
         <div className="ln-hero-grid">
           {/* Left Column: Product Title & Specs */}
           <div className="ln-hero-left">
-            <div className="ln-hero-left-header">
-              <div className="ln-product-type-pill">
-                <span className="ln-m" style={{ color: "var(--ln-clay)", fontWeight: 700 }}>
-                  ● DROP 001 // RUNWAY HERO
-                </span>
-                <span style={{ opacity: 0.3 }}>/</span>
-                <span className="ln-m">LOOK {activeLook.lookNumber}</span>
-                <span style={{ opacity: 0.3 }}>/</span>
-                <span className="ln-m">{product?.productType || activeLook.defaultCategory}</span>
-              </div>
-
-              <h1 className="ln-hero-title">
-                {product?.title || activeLook.pieces[0]?.name || "Vivre Runway Garment"}
-              </h1>
-
-              <div className="ln-hero-look-spec-bar">
-                <span className="ln-m" style={{ color: "var(--ln-ink)", fontWeight: 700, fontSize: "11px" }}>
-                  RUNWAY SPEC //
-                </span>
-                <span className="ln-m" style={{ color: "var(--ln-ink-muted)", fontSize: "11px" }}>
-                  {activeLook.outfit}
-                </span>
-              </div>
+            <div className="ln-product-type-pill">
+              <span className="ln-m" style={{ color: "var(--ln-clay)", fontWeight: 700 }}>
+                ● DROP 001 // RUNWAY HERO
+              </span>
+              <span style={{ opacity: 0.3 }}>/</span>
+              <span className="ln-m">LOOK {activeLook.lookNumber}</span>
+              <span style={{ opacity: 0.3 }}>/</span>
+              <span className="ln-m">{product?.productType || activeLook.defaultCategory}</span>
             </div>
 
-            <div className="ln-hero-left-body">
-              <div
-                className="ln-hero-desc"
-                dangerouslySetInnerHTML={{ __html: descriptionHtml }}
-              />
+            <h1 className="ln-hero-title">
+              {product?.title || activeLook.pieces[0]?.name || "Vivre Runway Garment"}
+            </h1>
 
-              <div className="ln-hero-price-row">
-                <span className="ln-price-val">{priceFormatted}</span>
-                <span className="ln-m" style={{ opacity: 0.7 }}>Inclusive of duty &amp; taxes</span>
+            <div className="ln-hero-look-spec-bar">
+              <span className="ln-m" style={{ color: "var(--ln-ink)", fontWeight: 700, fontSize: "11px" }}>
+                RUNWAY SPEC //
+              </span>
+              <span className="ln-m" style={{ color: "var(--ln-ink-muted)", fontSize: "11px" }}>
+                {activeLook.outfit}
+              </span>
+            </div>
+
+            <div
+              className="ln-hero-desc"
+              dangerouslySetInnerHTML={{ __html: descriptionHtml }}
+            />
+
+            <div className="ln-hero-price-row">
+              <span className="ln-price-val">{priceFormatted}</span>
+              <span className="ln-m" style={{ opacity: 0.7 }}>Inclusive of duty &amp; taxes</span>
+            </div>
+
+            {/* Complete The Runway Look Pairing Card */}
+            {companionPiece && (
+              <div className="ln-hero-companion-box">
+                <span className="ln-m" style={{ color: "var(--ln-clay)", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em" }}>
+                  RUNWAY OUTFIT PAIRING //
+                </span>
+                <Link to={`/products/${companionPiece.handle}`} className="ln-hero-companion-link">
+                  <div className="ln-companion-swatch" style={{ backgroundColor: companionPiece.hue }} />
+                  <span className="ln-companion-name">{companionPiece.name}</span>
+                  <span className="ln-companion-arrow">→</span>
+                </Link>
               </div>
+            )}
 
-              {/* Complete The Runway Look Pairing Card */}
-              {companionPiece && (
-                <div className="ln-hero-companion-box">
-                  <span className="ln-m" style={{ color: "var(--ln-clay)", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em" }}>
-                    RUNWAY OUTFIT PAIRING //
-                  </span>
-                  <Link to={`/products/${companionPiece.handle}`} className="ln-hero-companion-link">
-                    <div className="ln-companion-swatch" style={{ backgroundColor: companionPiece.hue }} />
-                    <span className="ln-companion-name">{companionPiece.name}</span>
-                    <span className="ln-companion-arrow">→</span>
-                  </Link>
-                </div>
-              )}
-
-              <div className="ln-hero-jump-links">
-                <a href="#ln-views" className="ln-m" style={{ textDecoration: "underline", color: "var(--ln-ink)", fontWeight: 700 }}>
-                  Four views &amp; print ↓
-                </a>
-                <a href="#ln-specs" className="ln-m" style={{ textDecoration: "underline", color: "var(--ln-ink-muted)" }}>
-                  Specifications ↓
-                </a>
-                <button
-                  type="button"
-                  onClick={() => setSizeGuideOpen(true)}
-                  className="ln-m ln-size-guide-inline-btn"
-                >
-                  Size Guide ↗
-                </button>
-              </div>
+            <div style={{ display: "flex", gap: "1.5rem", alignItems: "center", marginTop: "2rem", flexWrap: "wrap" }}>
+              <a href="#ln-views" className="ln-m" style={{ textDecoration: "underline", color: "var(--ln-ink)", fontWeight: 700 }}>
+                Four views &amp; print ↓
+              </a>
+              <a href="#ln-specs" className="ln-m" style={{ textDecoration: "underline", color: "var(--ln-ink-muted)" }}>
+                Specifications ↓
+              </a>
+              <button
+                type="button"
+                onClick={() => setSizeGuideOpen(true)}
+                className="ln-m ln-size-guide-inline-btn"
+              >
+                Size Guide ↗
+              </button>
             </div>
           </div>
 
