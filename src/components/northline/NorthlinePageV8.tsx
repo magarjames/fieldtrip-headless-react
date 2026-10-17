@@ -1147,52 +1147,6 @@ export function NorthlinePageV8({
                         alt={`${activeProduct.name} — 360° scan angle ${ANGLES[qvScanFrame]}°`}
                         draggable={false}
                       />
-
-                      {/* Bottom 360° Scrub & Angle Controls */}
-                      <div className="nl-qv-scan-hud">
-                        <div className="nl-qv-scan-controls">
-                          <button
-                            type="button"
-                            className="nl-qv-scan-step"
-                            aria-label="Previous 360 angle"
-                            onClick={() => {
-                              setQvAutoOrbit(false);
-                              setQvScanFrame((prev) => wrapFrame(prev - 1));
-                            }}
-                          >
-                            ‹
-                          </button>
-                          <div className="nl-qv-angle-pills" role="group" aria-label="360 degree angles">
-                            {ANGLES.map((deg, idx) => (
-                              <button
-                                key={deg}
-                                type="button"
-                                className={`nl-qv-angle-pill ${qvScanFrame === idx ? "is-active" : ""}`}
-                                onClick={() => {
-                                  setQvAutoOrbit(false);
-                                  setQvScanFrame(idx);
-                                }}
-                              >
-                                {deg}°
-                              </button>
-                            ))}
-                          </div>
-                          <button
-                            type="button"
-                            className="nl-qv-scan-step"
-                            aria-label="Next 360 angle"
-                            onClick={() => {
-                              setQvAutoOrbit(false);
-                              setQvScanFrame((prev) => wrapFrame(prev + 1));
-                            }}
-                          >
-                            ›
-                          </button>
-                        </div>
-                        <span className="nl-qv-scan-hint">
-                          Drag horizontally or select an angle to inspect 360°
-                        </span>
-                      </div>
                     </div>
                   ) : (
                     <div className="nl-qv-main-photo-wrap nl-qv-photo-stage">
@@ -1204,6 +1158,84 @@ export function NorthlinePageV8({
                         }
                         alt={`${activeProduct.alt} view ${activeImageIndex + 1}`}
                       />
+                    </div>
+                  )}
+
+                  {/* 360° Drag & Angle Section kept directly UNDER both Product Photos and 360° Scan View */}
+                  {activeScanLook && (
+                    <div
+                      className="nl-qv-scan-hud"
+                      onPointerDown={(e) => {
+                        if ((e.target as HTMLElement).closest("button")) return;
+                        e.currentTarget.setPointerCapture(e.pointerId);
+                        qvDragRef.current = {
+                          active: true,
+                          startX: e.clientX,
+                          startFrame: qvScanFrame,
+                        };
+                        if (qvAutoOrbit) setQvAutoOrbit(false);
+                        if (qvMediaMode !== "scan") setQvMediaMode("scan");
+                      }}
+                      onPointerMove={(e) => {
+                        if (!qvDragRef.current.active) return;
+                        const deltaX = e.clientX - qvDragRef.current.startX;
+                        const step = Math.round(deltaX / 28);
+                        setQvScanFrame(wrapFrame(qvDragRef.current.startFrame + step));
+                      }}
+                      onPointerUp={() => {
+                        qvDragRef.current.active = false;
+                      }}
+                      onPointerCancel={() => {
+                        qvDragRef.current.active = false;
+                      }}
+                    >
+                      <div className="nl-qv-scan-controls">
+                        <button
+                          type="button"
+                          className="nl-qv-scan-step"
+                          aria-label="Previous 360 angle"
+                          onClick={() => {
+                            setQvAutoOrbit(false);
+                            if (qvMediaMode !== "scan") setQvMediaMode("scan");
+                            setQvScanFrame((prev) => wrapFrame(prev - 1));
+                          }}
+                        >
+                          ‹
+                        </button>
+                        <div className="nl-qv-angle-pills" role="group" aria-label="360 degree angles">
+                          {ANGLES.map((deg, idx) => (
+                            <button
+                              key={deg}
+                              type="button"
+                              className={`nl-qv-angle-pill ${
+                                qvMediaMode === "scan" && qvScanFrame === idx ? "is-active" : ""
+                              }`}
+                              onClick={() => {
+                                setQvAutoOrbit(false);
+                                if (qvMediaMode !== "scan") setQvMediaMode("scan");
+                                setQvScanFrame(idx);
+                              }}
+                            >
+                              {deg}°
+                            </button>
+                          ))}
+                        </div>
+                        <button
+                          type="button"
+                          className="nl-qv-scan-step"
+                          aria-label="Next 360 angle"
+                          onClick={() => {
+                            setQvAutoOrbit(false);
+                            if (qvMediaMode !== "scan") setQvMediaMode("scan");
+                            setQvScanFrame((prev) => wrapFrame(prev + 1));
+                          }}
+                        >
+                          ›
+                        </button>
+                      </div>
+                      <span className="nl-qv-scan-hint">
+                        Drag horizontally or select an angle to inspect 360°
+                      </span>
                     </div>
                   )}
 
