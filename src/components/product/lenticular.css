@@ -1096,6 +1096,53 @@
   }
 }
 
+.ln-hero-left-header,
+.ln-hero-left-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .ln-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .ln-hero-left {
+    display: contents;
+  }
+  .ln-hero-left-header {
+    order: 1;
+    padding-top: 0.25rem;
+  }
+  .ln-card-container {
+    order: 2;
+    width: 100%;
+  }
+  .ln-hero-left-body {
+    order: 3;
+  }
+  .ln-hero-price-row {
+    margin-top: 0;
+  }
+  .ln-hero-look-spec-bar,
+  .ln-hero-companion-box {
+    max-width: 100%;
+  }
+  .ln-hero-companion-box {
+    margin-top: 16px;
+  }
+  .ln-hero-right {
+    order: 4;
+    justify-self: start;
+    text-align: left;
+    align-items: flex-start;
+    max-width: 100%;
+    padding-top: 0;
+  }
+}
+
 /* ==========================================================================
    Size Guide Trigger & Modal Styling
    ========================================================================== */
