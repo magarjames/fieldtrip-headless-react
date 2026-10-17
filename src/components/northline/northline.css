@@ -5124,6 +5124,11 @@
 }
 
 .nl-product-dialog.nl-qv-dialog .nl-dialog-close {
+  top: clamp(1.5rem, 2.5vw, 2.25rem);
+  right: clamp(1.5rem, 2.5vw, 2.25rem);
+  min-height: 2.35rem;
+  padding: 0.45rem 1rem;
+  z-index: 10;
   background:
     linear-gradient(
       135deg,
@@ -5135,6 +5140,12 @@
   box-shadow:
     0 8px 24px rgba(0, 0, 0, 0.24),
     inset 0 1px 1px rgba(255, 255, 255, 0.62);
+}
+
+@media (min-width: 901px) {
+  .nl-qv-details {
+    padding-top: calc(clamp(1.5rem, 2.5vw, 2.25rem) + 3.2rem);
+  }
 }
 
 .nl-product-dialog.nl-qv-dialog .nl-dialog-close:hover {
@@ -5263,8 +5274,9 @@
 .nl-qv-kicker-row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.65rem;
-  padding-right: 4.5rem;
+  padding-right: 0;
 }
 
 .nl-qv-title-section .nl-dialog-group {
@@ -5302,7 +5314,7 @@
 
 .nl-qv-title-heading {
   margin: 0;
-  padding-right: 4rem;
+  padding-right: 0;
   font-size: clamp(1.5rem, 2.3vw, 2.15rem);
   font-weight: 800;
   line-height: 1.08;
@@ -5431,6 +5443,13 @@
 }
 
 @media (max-width: 900px) {
+  .nl-product-dialog.nl-qv-dialog .nl-dialog-close {
+    top: 0.9rem;
+    right: 1rem;
+    min-height: 2.15rem;
+    padding: 0.38rem 0.8rem;
+  }
+
   .nl-qv-media {
     border-right: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.18);
