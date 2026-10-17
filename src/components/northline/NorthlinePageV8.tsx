@@ -1047,6 +1047,40 @@ export function NorthlinePageV8({
         typeof document !== "undefined" &&
         createPortal(
           <div className="nl-layer is-immersive">
+            <svg
+              className="nl-qv-glass-svg-defs"
+              width="0"
+              height="0"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <defs>
+                <filter
+                  id="nl-frosted-glass"
+                  x="-20%"
+                  y="-20%"
+                  width="140%"
+                  height="140%"
+                  colorInterpolationFilters="sRGB"
+                >
+                  <feTurbulence
+                    type="fractalNoise"
+                    baseFrequency="0.015"
+                    numOctaves="2"
+                    seed="7"
+                    result="noise"
+                  />
+                  <feDisplacementMap
+                    in="SourceGraphic"
+                    in2="noise"
+                    scale="28"
+                    xChannelSelector="R"
+                    yChannelSelector="B"
+                    result="refracted"
+                  />
+                </filter>
+              </defs>
+            </svg>
             <button
               className="nl-layer-backdrop"
               type="button"
