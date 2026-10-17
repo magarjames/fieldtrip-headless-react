@@ -417,6 +417,17 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
     }
   }, [activeLook, isBottomPiece, product, productId]);
 
+  // Matched piece for the current product in this Runway Hero look
+  const matchedPiece = useMemo(() => {
+    const currentHandle = (product?.handle || productId || "").toLowerCase();
+    const direct = activeLook.pieces?.find((p) => {
+      const h = (p.handle || "").toLowerCase();
+      return h && (h === currentHandle || currentHandle.includes(h) || h.includes(currentHandle));
+    });
+    if (direct) return direct;
+    return isBottomPiece ? activeLook.pieces?.[1] || activeLook.pieces?.[0] : activeLook.pieces?.[0];
+  }, [activeLook, isBottomPiece, product, productId]);
+
   // E-commerce state
   const colors = (product as any)?.options?.find((o: any) => o.name.toLowerCase() === 'color' || o.name.toLowerCase() === 'colour')?.values.map((v: any) => v.value) || ["Black"];
   const sizes = (product as any)?.options?.find((o: any) => o.name.toLowerCase() === 'size')?.values.map((v: any) => v.value) || ["XS", "S", "M", "L", "XL"];
@@ -1289,11 +1300,15 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
 
               {/* Locked Model Scan indicator at bottom of card */}
               <div className="ln-side-model-footer">
-                <span className="ln-m" style={{ color: "var(--ln-ink-muted)", fontSize: "9px" }}>
-                  Model Scan:
-                </span>
-                <span className="ln-m" style={{ color: "var(--ln-ink)", fontSize: "10px", fontWeight: 700 }}>
-                  {activeLook.name}
+                <div className="ln-side-model-info">
+                  <span className="ln-side-model-kicker">MATCHED MODEL SCAN</span>
+                  <span className="ln-side-model-name">
+                    Look {activeLook.lookNumber} · {product?.title || matchedPiece?.name || activeLook.heroName}
+                  </span>
+                </div>
+                <span className="ln-side-model-locked-badge">
+                  <span className="ln-side-model-locked-dot" />
+                  <span>360° LOCKED</span>
                 </span>
               </div>
             </div>

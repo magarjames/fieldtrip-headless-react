@@ -1286,16 +1286,25 @@ export function NorthlinePageV8({
                   </div>
                 </div>
 
-                {/* Right Column: Spaced Sections for Title/Price, Options, CTA & Accordions */}
+                {/* Right Column: Editorial Purchase Panel & Accordions */}
                 <div className="nl-qv-details">
                   <div className="nl-qv-purchase-group">
-                    {/* Dedicated Title & Price Section */}
+                    {/* Dedicated Title & Price Header */}
                     <div className="nl-qv-title-section">
-                      <p className="nl-dialog-group">{activeProduct.group}</p>
+                      <div className="nl-qv-kicker-row">
+                        <p className="nl-dialog-group">{activeProduct.group}</p>
+                        <span className="nl-qv-stock-pill">
+                          <span className="nl-qv-stock-dot" />
+                          In stock
+                        </span>
+                      </div>
                       <h2 id="northline-product-title" className="nl-qv-title-heading">
                         {activeProduct.name}
                       </h2>
-                      <p className="nl-qv-price">{activeProduct.price}</p>
+                      <div className="nl-qv-price-row">
+                        <p className="nl-qv-price">{activeProduct.price}</p>
+                        <span className="nl-qv-tax-note">Tax &amp; duties included</span>
+                      </div>
                     </div>
 
                     {/* Dedicated Options Section */}
@@ -1400,7 +1409,7 @@ export function NorthlinePageV8({
                     >
                       {selectedSize
                         ? `Add to bag — ${activeProduct.price}`
-                        : "Choose your size"}
+                        : `Choose your size — ${activeProduct.price}`}
                     </button>
 
                     {/* Clear Add-to-Bag Confirmation State */}
