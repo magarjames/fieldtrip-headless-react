@@ -1,8 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useSearch } from "@tanstack/react-router";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
 import { shopifyClient } from "@/lib/shopify";
 import "./northline.css";
 import { VivreLayout } from "@/components/northline/VivreLayout";
+
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 // Interface for our mapped local product state
 interface Product {
@@ -24,6 +29,7 @@ interface Product {
 
 export function NorthlineShop() {
   const search = useSearch({ strict: false }) as any;
+  const shopContainerRef = useRef<HTMLDivElement>(null);
   const [shopifyProducts, setShopifyProducts] = useState<any[]>([]);
   const [shopifyLoading, setShopifyLoading] = useState(true);
   
@@ -102,9 +108,43 @@ export function NorthlineShop() {
 
   const displayedProducts = shownProducts.slice(0, visibleCount);
 
+  // GSAP ScrollTrigger.batch for Shop All product grid
+  useGSAP(
+    () => {
+      if (shopifyLoading || !displayedProducts.length) return;
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.set(".nl-product", { autoAlpha: 0, y: 24 });
+
+        ScrollTrigger.batch(".nl-product", {
+          start: "top 92%",
+          once: true,
+          onEnter: (batch) => {
+            gsap.to(batch, {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.56,
+              stagger: 0.06,
+              ease: "power3.out",
+              overwrite: true,
+              clearProps: "transform",
+            });
+          },
+        });
+
+        ScrollTrigger.refresh();
+      });
+    },
+    {
+      scope: shopContainerRef,
+      dependencies: [shopifyLoading, displayedProducts.length, activeFilter, sortOrder],
+    }
+  );
+
   return (
     <VivreLayout>
-      <div className="nl-shop-container" style={{ position: 'relative', zIndex: 10, minHeight: '100vh' }}>
+      <div ref={shopContainerRef} className="nl-shop-container" style={{ position: 'relative', zIndex: 10, minHeight: '100vh' }}>
         
         {/* Top Category Nav (Urban Contrive style) */}
         <nav className="nl-shop-categories-nav">
@@ -234,7 +274,7 @@ export function NorthlineShop() {
                       padding: '1.5rem',
                       display: 'flex',
                       flexDirection: 'column',
-                      transition: 'transform 0.3s ease, background 0.3s ease',
+                      transition: 'background 0.3s ease, box-shadow 0.3s ease',
                     }}
                   >
                     <Link

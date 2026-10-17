@@ -10,6 +10,9 @@ import {
 import { createPortal } from "react-dom";
 import { Link } from "@tanstack/react-router";
 import { ShoppingCart } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
 
 import "@/components/northline/northline.css";
 import {
@@ -33,6 +36,8 @@ import detailBlue from "@/assets/northline/detail-blue.jpg";
 import flatlay from "@/assets/northline/flatlay.jpg";
 import heroDawn from "@/assets/northline/hero-dawn.png";
 import materials from "@/assets/northline/materials.jpg";
+
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 type Product = {
   id: string;
@@ -145,6 +150,9 @@ export function NorthlinePageV8({
   const [shopifyProducts, setShopifyProducts] = useState<ShopifyProduct[]>([]);
   const [collectionDetails, setCollectionDetails] = useState<{title: string, description: string} | null>(null);
 
+  const pageRootRef = useRef<HTMLDivElement>(null);
+  const qvLayerRef = useRef<HTMLDivElement>(null);
+  const bagLayerRef = useRef<HTMLDivElement>(null);
   const productGridRef = useRef<HTMLDivElement>(null);
   const continuationNavRef = useRef<HTMLElement>(null);
   const edgeMotionRef = useRef<NorthlineEdgeMotion>({ progress: 0 });
@@ -293,29 +301,6 @@ export function NorthlinePageV8({
     };
   }, [materialsVideoSrc]);
 
-  useEffect(() => {
-    const copy = materialsCopyRef.current;
-    if (!copy) return;
-
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (reducedMotion.matches || !("IntersectionObserver" in window)) {
-      setMaterialsTypewriterActive(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        setMaterialsTypewriterActive(true);
-        observer.disconnect();
-      },
-      { threshold: 0.28 },
-    );
-
-    observer.observe(copy);
-    return () => observer.disconnect();
-  }, []);
-
   // Handle horizontal scrolling on product grid using vertical mouse wheel
   useEffect(() => {
     const grid = productGridRef.current;
@@ -445,184 +430,344 @@ export function NorthlinePageV8({
     return () => window.removeEventListener("open-northline-bag", handleOpenBag);
   }, [setBagOpen]);
 
-  useEffect(() => {
-    if (!continuation || !splitNavigation) return;
+  // GSAP ScrollTrigger: section reveals, split navigation morph, and rising fabric edges
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      const clamp01 = gsap.utils.clamp(0, 1);
+      const easeOutCubic = gsap.parseEase("power3.out");
 
-    const nav = continuationNavRef.current;
-    const collection = nav?.closest<HTMLElement>(".nl-collection");
-    const intro = collection?.querySelector<HTMLElement>(".nl-collection-intro");
-    const edge = collection?.querySelector<HTMLElement>(".nl-collection-edge");
-    const links = nav ? Array.from(nav.querySelectorAll<HTMLAnchorElement>("a")) : [];
-    if (!nav || !collection || !intro || !links.length) return;
-
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let animationFrame = 0;
-    let cachedLinkWidths: number[] | null = null;
-
-    const clearMotionStyles = () => {
-      nav.classList.remove("is-scroll-motion-ready");
-      nav.classList.remove("is-docked");
-      nav.style.removeProperty("--nl-nav-progress");
-      edge?.style.removeProperty("transform");
-      edgeMotionRef.current.progress = 0;
-      links.forEach((link) => link.style.removeProperty("transform"));
-    };
-
-    const updateNavigation = () => {
-      animationFrame = 0;
-
-      if (window.innerWidth <= 920 || reducedMotion.matches) {
-        clearMotionStyles();
-        return;
-      }
-
-      nav.classList.add("is-scroll-motion-ready");
-
-      const collectionTop = collection.getBoundingClientRect().top;
-      const collectionBottom = collection.getBoundingClientRect().bottom;
-      const motionDistance = Math.min(window.innerHeight * 0.52, 420);
-      const progress = Math.min(1, Math.max(0, (motionDistance - collectionTop) / motionDistance));
-      const easedProgress = 1 - Math.pow(1 - progress, 3);
-      const edgeDistance = Math.min(window.innerHeight * 0.58, 520);
-      const edgeProgress = Math.min(
-        1,
-        Math.max(0, (window.innerHeight - collectionTop) / edgeDistance)
-      );
-      const easedEdgeProgress = 1 - Math.pow(1 - edgeProgress, 3);
-      const edgeLift = Math.min(126, Math.max(82, window.innerWidth * 0.064));
-      if (cachedLinkWidths === null) {
-        cachedLinkWidths = links.map((link) => link.getBoundingClientRect().width);
-      }
-      const linkWidths = cachedLinkWidths;
-      const horizontalGap = Math.min(38, Math.max(22, window.innerWidth * 0.022));
-      const totalWidth =
-        linkWidths.reduce((total, width) => total + width, 0) +
-        horizontalGap * (links.length - 1);
-      const initialLeft = Math.max(20, (window.innerWidth - totalWidth) / 2);
-      const railLeft = Math.min(80, Math.max(20, window.innerWidth * 0.05));
-      const entryTop = Math.min(54, Math.max(42, window.innerHeight * 0.052));
-      const railTop = Math.min(176, Math.max(112, window.innerWidth * 0.11));
-      const railBottom = railTop + links.length * 58;
-      nav.classList.toggle("is-docked", collectionTop <= 0 && collectionBottom > railBottom);
-      edgeMotionRef.current.progress = easedEdgeProgress;
-      edge?.style.setProperty(
-        "transform",
-        `translate3d(0, ${(-edgeLift * easedEdgeProgress).toFixed(2)}px, 0)`
-      );
-
-      let horizontalOffset = 0;
-      links.forEach((link, index) => {
-        const startX = initialLeft + horizontalOffset;
-        const endY = railTop + index * 58;
-        const x = startX + (railLeft - startX) * easedProgress;
-        const y = entryTop + (endY - entryTop) * easedProgress;
-
-        link.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
-        horizontalOffset += linkWidths[index] + horizontalGap;
-      });
-
-      nav.style.setProperty("--nl-nav-progress", progress.toFixed(3));
-    };
-
-    const scheduleNavigationUpdate = () => {
-      if (animationFrame) return;
-      animationFrame = window.requestAnimationFrame(updateNavigation);
-    };
-
-    const handleResize = () => {
-      cachedLinkWidths = null;
-      scheduleNavigationUpdate();
-    };
-
-    updateNavigation();
-    window.addEventListener("scroll", scheduleNavigationUpdate, { passive: true });
-    window.addEventListener("resize", handleResize);
-    reducedMotion.addEventListener("change", scheduleNavigationUpdate);
-
-    return () => {
-      if (animationFrame) window.cancelAnimationFrame(animationFrame);
-      window.removeEventListener("scroll", scheduleNavigationUpdate);
-      window.removeEventListener("resize", handleResize);
-      reducedMotion.removeEventListener("change", scheduleNavigationUpdate);
-      clearMotionStyles();
-    };
-  }, [continuation, risingEdge, splitNavigation]);
-
-  useEffect(() => {
-    if (!risingEdge) return;
-
-    const edges = [
-      { section: materialsRef.current, motion: materialsEdgeMotionRef },
-      { section: systemRef.current, motion: systemEdgeMotionRef },
-    ].filter((entry) => entry.section !== null);
-    if (!edges.length) return;
-
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let animationFrame = 0;
-
-    const updateEdges = () => {
-      animationFrame = 0;
-      const desktop = window.innerWidth > 920;
-      const edgeDistance = Math.min(window.innerHeight * 0.58, 520);
-      const edgeLift = Math.min(126, Math.max(82, window.innerWidth * 0.064));
-
-      edges.forEach(({ section, motion }) => {
-        if (!section) return;
-        const edge = section.querySelector<HTMLElement>(".nl-section-edge");
-        const videoFlow = section.querySelector<HTMLElement>(".nl-material-video");
-        if (!edge && !videoFlow) return;
-
-        if (!desktop) {
-          motion.current.progress = 0;
-          edge?.style.removeProperty("transform");
-          videoFlow?.style.removeProperty("--nl-video-flow-offset");
-          return;
-        }
-
-        if (reducedMotion.matches) {
-          motion.current.progress = 1;
-          if (edge) edge.style.transform = `translate3d(0, ${-edgeLift}px, 0)`;
-          videoFlow?.style.setProperty("--nl-video-flow-offset", `${-edgeLift}px`);
-          return;
-        }
-
-        const sectionTop = section.getBoundingClientRect().top;
-        const progress = Math.min(
-          1,
-          Math.max(0, (window.innerHeight - sectionTop) / edgeDistance)
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        // Collection header + filter pills reveal
+        gsap.fromTo(
+          ".nl-collection-intro > *",
+          { autoAlpha: 0, y: 20 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.65,
+            stagger: 0.08,
+            ease: "power3.out",
+            clearProps: "transform",
+            scrollTrigger: {
+              trigger: ".nl-collection-intro",
+              start: "top 86%",
+              once: true,
+            },
+          }
         );
-        const easedProgress = 1 - Math.pow(1 - progress, 3);
-        const offset = (-edgeLift * easedProgress).toFixed(2);
-        motion.current.progress = easedProgress;
-        if (edge) edge.style.transform = `translate3d(0, ${offset}px, 0)`;
-        videoFlow?.style.setProperty("--nl-video-flow-offset", `${offset}px`);
+
+        // Materials typewriter activation & subtle panel lift
+        if (materialsCopyRef.current) {
+          ScrollTrigger.create({
+            trigger: materialsCopyRef.current,
+            start: "top 76%",
+            once: true,
+            onEnter: () => setMaterialsTypewriterActive(true),
+          });
+
+          gsap.fromTo(
+            materialsCopyRef.current,
+            { y: 22 },
+            {
+              y: 0,
+              duration: 0.75,
+              ease: "power3.out",
+              clearProps: "transform",
+              scrollTrigger: {
+                trigger: materialsCopyRef.current,
+                start: "top 82%",
+                once: true,
+              },
+            }
+          );
+        }
       });
-    };
 
-    const scheduleEdgeUpdate = () => {
-      if (animationFrame) return;
-      animationFrame = window.requestAnimationFrame(updateEdges);
-    };
+      mm.add(
+        "(prefers-reduced-motion: no-preference) and (min-width: 921px)",
+        () => {
+          // 1. Continuation Split Navigation + Collection Rising Edge
+          if (continuation && splitNavigation && continuationNavRef.current) {
+            const nav = continuationNavRef.current;
+            const collection = nav.closest<HTMLElement>(".nl-collection");
+            const edge = collection?.querySelector<HTMLElement>(".nl-collection-edge");
+            const links = Array.from(nav.querySelectorAll<HTMLAnchorElement>("a"));
 
-    updateEdges();
-    window.addEventListener("scroll", scheduleEdgeUpdate, { passive: true });
-    window.addEventListener("resize", scheduleEdgeUpdate, { passive: true });
-    reducedMotion.addEventListener("change", scheduleEdgeUpdate);
+            if (collection && links.length) {
+              let cachedLinkWidths: number[] | null = null;
 
-    return () => {
-      if (animationFrame) window.cancelAnimationFrame(animationFrame);
-      window.removeEventListener("scroll", scheduleEdgeUpdate);
-      window.removeEventListener("resize", scheduleEdgeUpdate);
-      reducedMotion.removeEventListener("change", scheduleEdgeUpdate);
-      edges.forEach(({ section, motion }) => {
-        motion.current.progress = 0;
-        section?.querySelector<HTMLElement>(".nl-section-edge")?.style.removeProperty("transform");
-        section
-          ?.querySelector<HTMLElement>(".nl-material-video")
-          ?.style.removeProperty("--nl-video-flow-offset");
+              const clearMotionStyles = () => {
+                nav.classList.remove("is-scroll-motion-ready", "is-docked");
+                nav.style.removeProperty("--nl-nav-progress");
+                edge?.style.removeProperty("transform");
+                edgeMotionRef.current.progress = 0;
+                links.forEach((link) => link.style.removeProperty("transform"));
+              };
+
+              const syncSplitNav = () => {
+                nav.classList.add("is-scroll-motion-ready");
+                const rect = collection.getBoundingClientRect();
+                const collectionTop = rect.top;
+                const collectionBottom = rect.bottom;
+                const motionDistance = Math.min(window.innerHeight * 0.52, 420);
+                const progress = clamp01((motionDistance - collectionTop) / motionDistance);
+                const easedProgress = easeOutCubic(progress);
+
+                const edgeDistance = Math.min(window.innerHeight * 0.58, 520);
+                const edgeProgress = clamp01((window.innerHeight - collectionTop) / edgeDistance);
+                const easedEdgeProgress = easeOutCubic(edgeProgress);
+                const edgeLift = Math.min(126, Math.max(82, window.innerWidth * 0.064));
+
+                if (cachedLinkWidths === null) {
+                  cachedLinkWidths = links.map((link) => link.getBoundingClientRect().width);
+                }
+                const linkWidths = cachedLinkWidths;
+                const horizontalGap = Math.min(38, Math.max(22, window.innerWidth * 0.022));
+                const totalWidth =
+                  linkWidths.reduce((total, width) => total + width, 0) +
+                  horizontalGap * (links.length - 1);
+                const initialLeft = Math.max(20, (window.innerWidth - totalWidth) / 2);
+                const railLeft = Math.min(80, Math.max(20, window.innerWidth * 0.05));
+                const entryTop = Math.min(54, Math.max(42, window.innerHeight * 0.052));
+                const railTop = Math.min(176, Math.max(112, window.innerWidth * 0.11));
+                const railBottom = railTop + links.length * 58;
+
+                nav.classList.toggle(
+                  "is-docked",
+                  collectionTop <= 0 && collectionBottom > railBottom
+                );
+                edgeMotionRef.current.progress = easedEdgeProgress;
+                edge?.style.setProperty(
+                  "transform",
+                  `translate3d(0, ${(-edgeLift * easedEdgeProgress).toFixed(2)}px, 0)`
+                );
+
+                let horizontalOffset = 0;
+                links.forEach((link, index) => {
+                  const startX = initialLeft + horizontalOffset;
+                  const endY = railTop + index * 58;
+                  const x = startX + (railLeft - startX) * easedProgress;
+                  const y = entryTop + (endY - entryTop) * easedProgress;
+                  link.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
+                  horizontalOffset += linkWidths[index] + horizontalGap;
+                });
+
+                nav.style.setProperty("--nl-nav-progress", progress.toFixed(3));
+              };
+
+              syncSplitNav();
+
+              ScrollTrigger.create({
+                trigger: collection,
+                start: "top bottom",
+                end: "bottom top",
+                onUpdate: syncSplitNav,
+                onRefreshInit: () => {
+                  cachedLinkWidths = null;
+                },
+                onRefresh: syncSplitNav,
+              });
+
+              return () => clearMotionStyles();
+            }
+          }
+
+          // 2. Rising Section Edges (Materials & System)
+          if (risingEdge) {
+            const edges = [
+              { section: materialsRef.current, motion: materialsEdgeMotionRef },
+              { section: systemRef.current, motion: systemEdgeMotionRef },
+            ].filter((entry) => entry.section !== null);
+
+            edges.forEach(({ section, motion }) => {
+              if (!section) return;
+              const edge = section.querySelector<HTMLElement>(".nl-section-edge");
+              const videoFlow = section.querySelector<HTMLElement>(".nl-material-video");
+              if (!edge && !videoFlow) return;
+
+              const syncEdge = () => {
+                const edgeDistance = Math.min(window.innerHeight * 0.58, 520);
+                const edgeLift = Math.min(126, Math.max(82, window.innerWidth * 0.064));
+                const sectionTop = section.getBoundingClientRect().top;
+                const progress = clamp01((window.innerHeight - sectionTop) / edgeDistance);
+                const easedProgress = easeOutCubic(progress);
+                const offset = (-edgeLift * easedProgress).toFixed(2);
+                motion.current.progress = easedProgress;
+                if (edge) edge.style.transform = `translate3d(0, ${offset}px, 0)`;
+                videoFlow?.style.setProperty("--nl-video-flow-offset", `${offset}px`);
+              };
+
+              syncEdge();
+
+              ScrollTrigger.create({
+                trigger: section,
+                start: "top bottom",
+                end: () => `+=${Math.min(window.innerHeight * 0.58, 520)}`,
+                onUpdate: syncEdge,
+                onRefresh: syncEdge,
+              });
+            });
+          }
+        }
+      );
+
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        setMaterialsTypewriterActive(true);
+        if (risingEdge && window.innerWidth > 920) {
+          const edgeLift = Math.min(126, Math.max(82, window.innerWidth * 0.064));
+          [
+            { section: materialsRef.current, motion: materialsEdgeMotionRef },
+            { section: systemRef.current, motion: systemEdgeMotionRef },
+          ].forEach(({ section, motion }) => {
+            if (!section) return;
+            motion.current.progress = 1;
+            const edge = section.querySelector<HTMLElement>(".nl-section-edge");
+            const videoFlow = section.querySelector<HTMLElement>(".nl-material-video");
+            if (edge) edge.style.transform = `translate3d(0, ${-edgeLift}px, 0)`;
+            videoFlow?.style.setProperty("--nl-video-flow-offset", `${-edgeLift}px`);
+          });
+        }
       });
-    };
-  }, [materialsVideoSrc, risingEdge]);
+    },
+    {
+      scope: pageRootRef,
+      dependencies: [continuation, splitNavigation, risingEdge, materialsVideoSrc],
+    }
+  );
+
+  // GSAP ScrollTrigger.batch for staggered product cards
+  useGSAP(
+    () => {
+      if (!shownProducts.length) return;
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.set(".nl-product", { autoAlpha: 0, y: 22 });
+
+        ScrollTrigger.batch(".nl-product", {
+          start: "top 92%",
+          once: true,
+          onEnter: (batch) => {
+            gsap.to(batch, {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.58,
+              stagger: 0.065,
+              ease: "power3.out",
+              overwrite: true,
+              clearProps: "transform",
+            });
+          },
+        });
+
+        ScrollTrigger.refresh();
+      });
+    },
+    { scope: pageRootRef, dependencies: [shownProducts.length, deferredFilter] }
+  );
+
+  // GSAP Timeline for Quick Look View Modal Entrance
+  useGSAP(
+    () => {
+      if (!activeProduct || !qvLayerRef.current) return;
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+        tl.addLabel("open", 0)
+          .fromTo(
+            ".nl-layer-backdrop",
+            { autoAlpha: 0 },
+            { autoAlpha: 1, duration: 0.28, ease: "power2.out" },
+            "open"
+          )
+          .fromTo(
+            ".nl-qv-dialog",
+            { autoAlpha: 0, y: 24, scale: 0.975 },
+            { autoAlpha: 1, y: 0, scale: 1, duration: 0.46, clearProps: "transform" },
+            "open+=0.02"
+          )
+          .fromTo(
+            [
+              ".nl-qv-media-bar",
+              ".nl-qv-main-photo-wrap",
+              ".nl-qv-scan-hud",
+              ".nl-qv-media-footer",
+            ],
+            { autoAlpha: 0, y: 14 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.42,
+              stagger: 0.045,
+              clearProps: "transform",
+            },
+            "open+=0.08"
+          )
+          .fromTo(
+            [
+              ".nl-qv-title-section",
+              ".nl-qv-options-section",
+              ".nl-qv-submit-btn",
+              ".nl-qv-accordions > details",
+            ],
+            { autoAlpha: 0, y: 14 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.42,
+              stagger: 0.04,
+              clearProps: "transform",
+            },
+            "open+=0.1"
+          );
+      });
+    },
+    { scope: qvLayerRef, dependencies: [activeProduct?.id] }
+  );
+
+  // GSAP Timeline for Bag Drawer Entrance
+  useGSAP(
+    () => {
+      if (!bagOpen || !bagLayerRef.current) return;
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+        tl.addLabel("drawer", 0)
+          .fromTo(
+            ".nl-layer-backdrop",
+            { autoAlpha: 0 },
+            { autoAlpha: 1, duration: 0.26, ease: "power2.out" },
+            "drawer"
+          )
+          .fromTo(
+            ".nl-bag-drawer",
+            { xPercent: 100, autoAlpha: 0.6 },
+            { xPercent: 0, autoAlpha: 1, duration: 0.44, clearProps: "transform" },
+            "drawer"
+          );
+
+        const items = bagLayerRef.current?.querySelectorAll(".nl-bag-list li");
+        if (items && items.length > 0) {
+          tl.fromTo(
+            items,
+            { autoAlpha: 0, x: 18 },
+            {
+              autoAlpha: 1,
+              x: 0,
+              duration: 0.36,
+              stagger: 0.045,
+              clearProps: "transform",
+            },
+            "drawer+=0.14"
+          );
+        }
+      });
+    },
+    { scope: bagLayerRef, dependencies: [bagOpen] }
+  );
 
   useEffect(() => {
     if (!activeScanLook) return;
@@ -731,6 +876,7 @@ export function NorthlinePageV8({
 
   return (
     <div
+      ref={pageRootRef}
       className={`northline northline--v8${continuation ? " northline--continuation" : ""}${splitNavigation ? " northline--split-navigation" : ""}${risingEdge ? " northline--rising-edge" : ""}`}
       data-direction-contract="THESIS: an editorial utility store that treats clothing as an answer to city movement, not a status display. OWN-WORLD: a pale dawn sky, deep ink typography, white canvas, one clay ember feature block, and precise pill controls. STORY: discover a concise collection, inspect an item, and add it to a bag. FIRST VIEWPORT: a large Northline wordmark, a clean fashion silhouette, and a right-aligned statement. FORM: original luxury utility storefront with alternating light and dark bands. FINISH: documented, responsive, and reviewed."
     >
@@ -1046,7 +1192,7 @@ export function NorthlinePageV8({
       {activeProduct &&
         typeof document !== "undefined" &&
         createPortal(
-          <div className="nl-layer is-immersive">
+          <div ref={qvLayerRef} className="nl-layer is-immersive">
             <svg
               className="nl-qv-glass-svg-defs"
               width="0"
@@ -1532,7 +1678,7 @@ export function NorthlinePageV8({
       {bagOpen &&
         typeof document !== "undefined" &&
         createPortal(
-          <div className="nl-layer">
+          <div ref={bagLayerRef} className="nl-layer">
             <button
               className="nl-layer-backdrop"
               type="button"

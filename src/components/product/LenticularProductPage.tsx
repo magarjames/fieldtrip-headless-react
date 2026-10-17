@@ -2,8 +2,13 @@ import React, { useEffect, useRef, useState, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "@tanstack/react-router";
 import { Check, Play, Pause, X, Ruler } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
 import { useVivre } from "@/components/northline/VivreContext";
 import "@/components/product/lenticular.css";
+
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 export const TOP_MEASUREMENTS = {
   in: [
@@ -315,8 +320,7 @@ export const SCAN_ASSET_VERSION = "hair-edge-3";
 export const frameUrl = (lookId: string, frame: number) =>
   `/fieldtrip/scan-${lookId}/${FRAME_NAMES[frame]}.webp?v=${SCAN_ASSET_VERSION}`;
 
-export const wrapFrame = (frame: number) =>
-  ((frame % FRAME_NAMES.length) + FRAME_NAMES.length) % FRAME_NAMES.length;
+export const wrapFrame = gsap.utils.wrap(0, FRAME_NAMES.length);
 
 // 4 Orthogonal Views mapping for Section 02: Front (0), 3/4 (1), Profile (2), Back (4)
 export const FOUR_VIEWS = [
@@ -341,6 +345,8 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
   const dragRef = useRef({ active: false, startX: 0, startFrame: 0 });
   const [autoOrbit, setAutoOrbit] = useState(false);
 
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const sizeModalRef = useRef<HTMLDivElement | null>(null);
   const stageRef = useRef<HTMLDivElement | null>(null);
   const scrubTrackRef = useRef<HTMLDivElement | null>(null);
 
@@ -887,8 +893,152 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
   const rightFrame = wrapFrame(frameIndex + 2);
   const currentAngleName = frameIndex === 0 ? "Front" : frameIndex === 1 ? "Three-quarter" : frameIndex === 2 ? "Profile" : frameIndex === 3 ? "Rear Three-quarter" : frameIndex === 4 ? "Back" : frameIndex === 5 ? "Opposite Three-quarter" : "Complete Turn";
 
+  // GSAP Hero Stage Timeline + ScrollTrigger.batch for Gallery & Spec Rows
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        // 1. Choreographed 3-column hero entrance timeline
+        const heroTl = gsap.timeline({ defaults: { ease: "power3.out" } });
+        heroTl
+          .addLabel("hero", 0)
+          .fromTo(
+            ".ln-hero-left-header > *",
+            { autoAlpha: 0, y: 18 },
+            { autoAlpha: 1, y: 0, duration: 0.56, stagger: 0.06, clearProps: "transform" },
+            "hero"
+          )
+          .fromTo(
+            ".ln-hero-left-body > *",
+            { autoAlpha: 0, y: 16 },
+            { autoAlpha: 1, y: 0, duration: 0.52, stagger: 0.055, clearProps: "transform" },
+            "hero+=0.1"
+          )
+          .fromTo(
+            ".ln-scan-chamber-stage",
+            { autoAlpha: 0, y: 20, scale: 0.985 },
+            { autoAlpha: 1, y: 0, scale: 1, duration: 0.65, clearProps: "transform" },
+            "hero+=0.04"
+          )
+          .fromTo(
+            ".ln-angle-controller-bar",
+            { autoAlpha: 0, y: 16 },
+            { autoAlpha: 1, y: 0, duration: 0.52, clearProps: "transform" },
+            "hero+=0.14"
+          )
+          .fromTo(
+            ".ln-side-order-card",
+            { autoAlpha: 0, y: 20 },
+            { autoAlpha: 1, y: 0, duration: 0.58, clearProps: "transform" },
+            "hero+=0.08"
+          );
+
+        // 2. Section 02: Gallery title & 5 orthogonal/print cards batch reveal
+        gsap.fromTo(
+          ".ln-gallery-title",
+          { autoAlpha: 0, y: 22 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.6,
+            ease: "power3.out",
+            clearProps: "transform",
+            scrollTrigger: {
+              trigger: ".ln-gallery-section",
+              start: "top 86%",
+              once: true,
+            },
+          }
+        );
+
+        gsap.set(".ln-gallery-grid .ln-thumb", {
+          autoAlpha: 0,
+          y: 26,
+          transition: "none",
+        });
+
+        ScrollTrigger.batch(".ln-gallery-grid .ln-thumb", {
+          start: "top 88%",
+          once: true,
+          onEnter: (batch) => {
+            gsap.to(batch, {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.6,
+              stagger: 0.07,
+              ease: "power3.out",
+              overwrite: true,
+              clearProps: "transform,transition",
+            });
+          },
+        });
+
+        // 3. Section 03: Garment specification rows batch reveal
+        gsap.set(".ln-specs-section .ln-row", { autoAlpha: 0, y: 24 });
+
+        ScrollTrigger.batch(".ln-specs-section .ln-row", {
+          start: "top 88%",
+          once: true,
+          onEnter: (batch) => {
+            gsap.to(batch, {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.58,
+              stagger: 0.075,
+              ease: "power3.out",
+              overwrite: true,
+              clearProps: "transform",
+            });
+          },
+        });
+
+        ScrollTrigger.refresh();
+      });
+    },
+    { scope: rootRef, dependencies: [product?.id, productId] }
+  );
+
+  // GSAP Timeline for Size & Fit Guide Modal
+  useGSAP(
+    () => {
+      if (!sizeGuideOpen || !sizeModalRef.current) return;
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+        tl.addLabel("modal", 0)
+          .fromTo(
+            sizeModalRef.current,
+            { autoAlpha: 0 },
+            { autoAlpha: 1, duration: 0.24, ease: "power2.out" },
+            "modal"
+          )
+          .fromTo(
+            ".ln-size-modal-panel",
+            { autoAlpha: 0, y: 22, scale: 0.975 },
+            { autoAlpha: 1, y: 0, scale: 1, duration: 0.42, clearProps: "transform" },
+            "modal+=0.02"
+          )
+          .fromTo(
+            [".ln-size-modal-header", ".ln-size-modal-controls", ".ln-size-modal-body > *"],
+            { autoAlpha: 0, y: 12 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.36,
+              stagger: 0.04,
+              clearProps: "transform",
+            },
+            "modal+=0.08"
+          );
+      });
+    },
+    { scope: sizeModalRef, dependencies: [sizeGuideOpen] }
+  );
+
   return (
-    <div className="ln-root">
+    <div ref={rootRef} className="ln-root">
       {/* Hero Section: 3-Column Asymmetric Lenticular Stage */}
       <section className="ln-hero-section">
         <div className="ln-hero-grid">
@@ -1417,6 +1567,7 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
       {/* Interactive Size & Fit Guide Modal */}
       {sizeGuideOpen && typeof document !== "undefined" && createPortal(
         <div
+          ref={sizeModalRef}
           className="ln-size-modal-backdrop"
           onClick={() => setSizeGuideOpen(false)}
           role="dialog"

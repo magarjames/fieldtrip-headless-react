@@ -6,10 +6,15 @@ import {
   type KeyboardEvent,
   type PointerEvent,
 } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
 import { ShoppingCart } from "lucide-react";
 import { shopifyClient } from "@/lib/shopify";
 import { Link } from "@tanstack/react-router";
 import "./scan-runway-hero.css";
+
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 const FRAME_NAMES = ["a", "b", "c", "d", "e", "f", "g"] as const;
 const ANGLES = ["000", "045", "090", "135", "180", "225", "360"];
@@ -85,11 +90,10 @@ const LOOKS = [
 const frameUrl = (lookId: string, frame: number) =>
   `/fieldtrip/scan-${lookId}/${FRAME_NAMES[frame]}.webp?v=${SCAN_ASSET_VERSION}`;
 
-const wrapFrame = (frame: number) => (frame + FRAME_NAMES.length) % FRAME_NAMES.length;
-const clamp = (value: number, minimum = 0, maximum = 1) =>
-  Math.min(maximum, Math.max(minimum, value));
+const wrapFrame = gsap.utils.wrap(0, FRAME_NAMES.length);
+const clamp01 = gsap.utils.clamp(0, 1);
 const smoothstep = (value: number) => {
-  const clamped = clamp(value);
+  const clamped = clamp01(value);
   return clamped * clamped * (3 - 2 * clamped);
 };
 
@@ -175,153 +179,205 @@ export function ScanRunwayHero({
       });
   }, []);
 
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
+  useGSAP(
+    () => {
+      const section = sectionRef.current;
+      if (!section) return;
 
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    reduceMotionRef.current = reduceMotion;
-    let sectionTop = 0;
-    let scrollDistance = 1;
-    let targetProgress = 0;
-    let renderedProgress = 0;
-    let animationFrame = 0;
-    let lastScrollY = window.scrollY;
+      const renderProgress = (progress: number) => {
+        const sequenceProgress = clamp01(progress / SEQUENCE_END);
+        const rawLookProgress = sequenceProgress * LOOKS.length;
+        const activeLookIndex = Math.min(Math.floor(rawLookProgress), LOOKS.length - 1);
+        const lookProgress = clamp01(rawLookProgress - activeLookIndex);
+        const swapProgress =
+          activeLookIndex < LOOKS.length - 1 ? smoothstep((lookProgress - 0.92) / 0.08) : 0;
+        const travel = smoothstep(progress);
+        const approach = smoothstep(progress / 0.08);
+        const depart =
+          SEQUENCE_END >= 1 ? 0 : smoothstep((progress - SEQUENCE_END) / (1 - SEQUENCE_END));
+        const handoff = smoothstep((progress - 0.94) / 0.06);
+        const copyExit = smoothstep((progress - 0.025) / 0.13);
+        const echoSpread = smoothstep(progress / 0.18);
+        const worldScale = 1.004 + travel * 0.105;
+        const modelScale = 0.98 + approach * 0.095 - depart * 0.455;
+        const swapBlur = Math.sin(swapProgress * Math.PI) * 2.4;
+        const echoSwapVisibility = 1 - swapProgress * 0.84;
+        const uiTone = 242;
+        const commandTone = 247;
+        const commandInkTone = 20;
 
-    const renderProgress = (progress: number) => {
-      const sequenceProgress = clamp(progress / SEQUENCE_END);
-      const rawLookProgress = sequenceProgress * LOOKS.length;
-      const activeLookIndex = Math.min(Math.floor(rawLookProgress), LOOKS.length - 1);
-      const lookProgress = clamp(rawLookProgress - activeLookIndex);
-      const swapProgress =
-        activeLookIndex < LOOKS.length - 1 ? smoothstep((lookProgress - 0.92) / 0.08) : 0;
-      const travel = smoothstep(progress);
-      const approach = smoothstep(progress / 0.08);
-      const depart = SEQUENCE_END >= 1 ? 0 : smoothstep((progress - SEQUENCE_END) / (1 - SEQUENCE_END));
-      const handoff = smoothstep((progress - 0.94) / 0.06);
-      const copyExit = smoothstep((progress - 0.025) / 0.13);
-      const echoSpread = smoothstep(progress / 0.18);
-      const worldScale = 1.004 + travel * 0.105;
-      const modelScale = 0.98 + approach * 0.095 - depart * 0.455;
-      const swapBlur = Math.sin(swapProgress * Math.PI) * 2.4;
-      const echoSwapVisibility = 1 - swapProgress * 0.84;
-      const uiTone = 242;
-      const commandTone = 247;
-      const commandInkTone = 20;
+        section.style.setProperty("--scan-progress", progress.toFixed(4));
+        section.style.setProperty("--scan-world-scale", worldScale.toFixed(4));
+        section.style.setProperty("--scan-world-y", `${(-travel * 2.4).toFixed(3)}%`);
+        section.style.setProperty("--scan-world-contrast", (1.035 + travel * 0.025).toFixed(4));
+        section.style.setProperty("--scan-world-saturation", (0.72 - travel * 0.08).toFixed(4));
+        section.style.setProperty("--scan-world-brightness", (0.94 + travel * 0.1).toFixed(4));
+        section.style.setProperty("--scan-model-scale", modelScale.toFixed(4));
+        section.style.setProperty("--scan-model-y", `${(-depart * 6.5).toFixed(3)}vh`);
+        section.style.setProperty("--scan-primary-opacity", (1 - swapProgress).toFixed(4));
+        section.style.setProperty("--scan-incoming-opacity", swapProgress.toFixed(4));
+        section.style.setProperty("--scan-swap-blur", `${swapBlur.toFixed(3)}px`);
+        section.style.setProperty(
+          "--scan-echo-left-opacity",
+          (0.31 * (1 - depart) * echoSwapVisibility).toFixed(4),
+        );
+        section.style.setProperty(
+          "--scan-echo-rear-opacity",
+          (0.46 * (1 - depart) * echoSwapVisibility).toFixed(4),
+        );
+        section.style.setProperty(
+          "--scan-echo-right-opacity",
+          (0.31 * (1 - depart) * echoSwapVisibility).toFixed(4),
+        );
+        section.style.setProperty("--scan-echo-spread", `${(echoSpread * 11).toFixed(3)}vw`);
+        section.style.setProperty(
+          "--scan-echo-inner-spread",
+          `${(echoSpread * 3.85).toFixed(3)}vw`,
+        );
+        section.style.setProperty("--scan-echo-blur", `${(depart * 8).toFixed(3)}px`);
+        section.style.setProperty("--scan-copy-visibility", (1 - copyExit).toFixed(4));
+        section.style.setProperty("--scan-copy-left-x", `${(-copyExit * 25).toFixed(3)}vw`);
+        section.style.setProperty("--scan-copy-right-x", `${(copyExit * 25).toFixed(3)}vw`);
+        section.style.setProperty(
+          "--scan-light-x",
+          `${(50 + Math.sin(travel * Math.PI) * 4).toFixed(3)}%`,
+        );
+        section.style.setProperty("--scan-light-y", `${(58 - approach * 9).toFixed(3)}%`);
+        section.style.setProperty("--scan-light-opacity", (0.018 + approach * 0.072).toFixed(4));
+        section.style.setProperty("--scan-vignette-opacity", (0.2 - approach * 0.07).toFixed(4));
+        section.style.setProperty("--scan-handoff-y", `${((1 - handoff) * 102).toFixed(3)}%`);
+        section.style.setProperty("--scan-ui-color", `rgb(${uiTone} ${uiTone} ${uiTone})`);
+        section.style.setProperty("--scan-ui-muted", `rgb(${uiTone} ${uiTone} ${uiTone} / 0.58)`);
+        section.style.setProperty("--scan-ui-shadow", "0.64");
+        section.style.setProperty(
+          "--scan-command-bg",
+          `rgb(${commandTone} ${commandTone} ${commandTone} / 0.9)`,
+        );
+        section.style.setProperty(
+          "--scan-command-ink",
+          `rgb(${commandInkTone} ${commandInkTone} ${commandInkTone})`,
+        );
 
-      section.style.setProperty("--scan-progress", progress.toFixed(4));
-      section.style.setProperty("--scan-world-scale", worldScale.toFixed(4));
-      section.style.setProperty("--scan-world-y", `${(-travel * 2.4).toFixed(3)}%`);
-      section.style.setProperty("--scan-world-contrast", (1.035 + travel * 0.025).toFixed(4));
-      section.style.setProperty("--scan-world-saturation", (0.72 - travel * 0.08).toFixed(4));
-      section.style.setProperty("--scan-world-brightness", (0.94 + travel * 0.1).toFixed(4));
-      section.style.setProperty("--scan-model-scale", modelScale.toFixed(4));
-      section.style.setProperty("--scan-model-y", `${(-depart * 6.5).toFixed(3)}vh`);
-      section.style.setProperty("--scan-primary-opacity", (1 - swapProgress).toFixed(4));
-      section.style.setProperty("--scan-incoming-opacity", swapProgress.toFixed(4));
-      section.style.setProperty("--scan-swap-blur", `${swapBlur.toFixed(3)}px`);
-      section.style.setProperty(
-        "--scan-echo-left-opacity",
-        (0.31 * (1 - depart) * echoSwapVisibility).toFixed(4),
-      );
-      section.style.setProperty(
-        "--scan-echo-rear-opacity",
-        (0.46 * (1 - depart) * echoSwapVisibility).toFixed(4),
-      );
-      section.style.setProperty(
-        "--scan-echo-right-opacity",
-        (0.31 * (1 - depart) * echoSwapVisibility).toFixed(4),
-      );
-      section.style.setProperty("--scan-echo-spread", `${(echoSpread * 11).toFixed(3)}vw`);
-      section.style.setProperty("--scan-echo-inner-spread", `${(echoSpread * 3.85).toFixed(3)}vw`);
-      section.style.setProperty("--scan-echo-blur", `${(depart * 8).toFixed(3)}px`);
-      section.style.setProperty("--scan-copy-visibility", (1 - copyExit).toFixed(4));
-      section.style.setProperty("--scan-copy-left-x", `${(-copyExit * 25).toFixed(3)}vw`);
-      section.style.setProperty("--scan-copy-right-x", `${(copyExit * 25).toFixed(3)}vw`);
-      section.style.setProperty(
-        "--scan-light-x",
-        `${(50 + Math.sin(travel * Math.PI) * 4).toFixed(3)}%`,
-      );
-      section.style.setProperty("--scan-light-y", `${(58 - approach * 9).toFixed(3)}%`);
-      section.style.setProperty("--scan-light-opacity", (0.018 + approach * 0.072).toFixed(4));
-      section.style.setProperty("--scan-vignette-opacity", (0.2 - approach * 0.07).toFixed(4));
-      section.style.setProperty("--scan-handoff-y", `${((1 - handoff) * 102).toFixed(3)}%`);
-      section.style.setProperty("--scan-ui-color", `rgb(${uiTone} ${uiTone} ${uiTone})`);
-      section.style.setProperty("--scan-ui-muted", `rgb(${uiTone} ${uiTone} ${uiTone} / 0.58)`);
-      section.style.setProperty("--scan-ui-shadow", "0.64");
-      section.style.setProperty(
-        "--scan-command-bg",
-        `rgb(${commandTone} ${commandTone} ${commandTone} / 0.9)`,
-      );
-      section.style.setProperty(
-        "--scan-command-ink",
-        `rgb(${commandInkTone} ${commandInkTone} ${commandInkTone})`,
-      );
+        const phase = progress < 0.08 ? "chamber" : progress < SEQUENCE_END ? "scan" : "runway";
+        if (section.dataset.phase !== phase) section.dataset.phase = phase;
+        section.dataset.look = String(activeLookIndex + 1);
 
-      const phase = progress < 0.08 ? "chamber" : progress < SEQUENCE_END ? "scan" : "runway";
-      if (section.dataset.phase !== phase) section.dataset.phase = phase;
-      section.dataset.look = String(activeLookIndex + 1);
-
-      if (activeLookIndex !== lookIndexRef.current) {
-        lookIndexRef.current = activeLookIndex;
-        manualFrameOffsetRef.current = 0;
-        setLookIndex(activeLookIndex);
-      }
-
-      const scrollFrame = Math.round(lookProgress * (FRAME_NAMES.length - 1));
-      scrollFrameRef.current = scrollFrame;
-      if (!drag.current.active) {
-        const nextFrame = wrapFrame(scrollFrame + manualFrameOffsetRef.current);
-        if (nextFrame !== frameIndexRef.current) {
-          frameIndexRef.current = nextFrame;
-          setFrameIndex(nextFrame);
+        if (activeLookIndex !== lookIndexRef.current) {
+          lookIndexRef.current = activeLookIndex;
+          manualFrameOffsetRef.current = 0;
+          setLookIndex(activeLookIndex);
         }
-      }
-    };
 
-    const animate = () => {
-      animationFrame = 0;
-      const delta = targetProgress - renderedProgress;
-      if (Math.abs(delta) < 0.0005) {
-        renderedProgress = targetProgress;
-      } else {
-        renderedProgress += delta * 0.16;
-      }
-      renderProgress(renderedProgress);
-      if (renderedProgress !== targetProgress)
-        animationFrame = window.requestAnimationFrame(animate);
-    };
+        const scrollFrame = Math.round(lookProgress * (FRAME_NAMES.length - 1));
+        scrollFrameRef.current = scrollFrame;
+        if (!drag.current.active) {
+          const nextFrame = wrapFrame(scrollFrame + manualFrameOffsetRef.current);
+          if (nextFrame !== frameIndexRef.current) {
+            frameIndexRef.current = nextFrame;
+            setFrameIndex(nextFrame);
+          }
+        }
+      };
 
-    const requestRender = () => {
-      if (!animationFrame) animationFrame = window.requestAnimationFrame(animate);
-    };
+      const mm = gsap.matchMedia();
 
-    const readScroll = () => {
-      if (Math.abs(window.scrollY - lastScrollY) > 1) manualFrameOffsetRef.current = 0;
-      lastScrollY = window.scrollY;
-      targetProgress = clamp((window.scrollY - sectionTop) / scrollDistance);
-      requestRender();
-    };
+      mm.add(
+        {
+          reduceMotion: "(prefers-reduced-motion: reduce)",
+          standardMotion: "(prefers-reduced-motion: no-preference)",
+        },
+        (context) => {
+          const reduceMotion = Boolean(context.conditions?.reduceMotion);
+          reduceMotionRef.current = reduceMotion;
 
-    const measure = () => {
-      sectionTop = window.scrollY + section.getBoundingClientRect().top;
-      scrollDistance = Math.max(1, section.offsetHeight - window.innerHeight);
-      scrollMetricsRef.current = { top: sectionTop, distance: scrollDistance };
-      targetProgress = reduceMotion ? 0 : clamp((window.scrollY - sectionTop) / scrollDistance);
-      renderedProgress = targetProgress;
-      renderProgress(renderedProgress);
-    };
+          if (reduceMotion) {
+            renderProgress(0);
+            return;
+          }
 
-    measure();
-    if (!reduceMotion) window.addEventListener("scroll", readScroll, { passive: true });
-    window.addEventListener("resize", measure);
+          const introTl = gsap.timeline({
+            defaults: { duration: 0.68, ease: "power3.out" },
+          });
+          introTl
+            .addLabel("intro", 0)
+            .from(
+              ".scan-runway__nav",
+              { y: -16, autoAlpha: 0, clearProps: "transform,opacity,visibility" },
+              "intro",
+            )
+            .from(
+              ".scan-runway__look-rail button",
+              {
+                x: -14,
+                autoAlpha: 0,
+                stagger: 0.045,
+                duration: 0.52,
+                clearProps: "transform,opacity,visibility",
+              },
+              "intro+=0.08",
+            )
+            .from(
+              [
+                ".scan-runway__meta",
+                ".scan-runway__scan-hint",
+                ".scan-runway__journey",
+                ".scan-runway__command-bar",
+                ".scan-runway__runway-link",
+              ],
+              {
+                y: 16,
+                autoAlpha: 0,
+                stagger: 0.06,
+                duration: 0.56,
+                clearProps: "transform,opacity,visibility",
+              },
+              "intro+=0.14",
+            );
 
-    return () => {
-      if (!reduceMotion) window.removeEventListener("scroll", readScroll);
-      window.removeEventListener("resize", measure);
-      if (animationFrame) window.cancelAnimationFrame(animationFrame);
-    };
-  }, []);
+          ScrollTrigger.create({
+            trigger: section,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 0.45,
+            onRefresh: (self) => {
+              scrollMetricsRef.current = {
+                top: self.start,
+                distance: Math.max(1, self.end - self.start),
+              };
+              renderProgress(clamp01(self.progress));
+            },
+            onUpdate: (self) => {
+              manualFrameOffsetRef.current = 0;
+              renderProgress(clamp01(self.progress));
+            },
+          });
+        },
+      );
+
+      return () => mm.revert();
+    },
+    { scope: sectionRef },
+  );
+
+  useGSAP(
+    () => {
+      if (reduceMotionRef.current) return;
+      gsap.fromTo(
+        ".scan-runway__meta-inner > *",
+        { y: 10, autoAlpha: 0 },
+        {
+          y: 0,
+          autoAlpha: 1,
+          duration: 0.38,
+          stagger: 0.045,
+          ease: "power3.out",
+          overwrite: "auto",
+          clearProps: "transform",
+        },
+      );
+    },
+    { dependencies: [lookIndex], scope: sectionRef },
+  );
 
   const changeFrame = (next: number) => {
     const wrapped = wrapFrame(next);
