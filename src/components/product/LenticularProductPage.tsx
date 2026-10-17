@@ -334,9 +334,8 @@ export interface LenticularProductProps {
 export function LenticularProductPage({ product, productId }: LenticularProductProps) {
   const { addToBag, bag, bagCount, setBagOpen } = useVivre();
 
-  // Accurately determine Runway Hero look model based on product
-  const initialLook = useMemo(() => getLookForProduct(product, productId), [product, productId]);
-  const [activeLook, setActiveLook] = useState<ModelScanLook>(initialLook);
+  // Accurately determine and lock Runway Hero look model based on matched product
+  const activeLook = useMemo(() => getLookForProduct(product, productId), [product, productId]);
   const [frameIndex, setFrameIndex] = useState(0);
   const frameIndexRef = useRef(0);
   const dragRef = useRef({ active: false, startX: 0, startFrame: 0 });
@@ -345,9 +344,8 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
   const stageRef = useRef<HTMLDivElement | null>(null);
   const scrubTrackRef = useRef<HTMLDivElement | null>(null);
 
-  // Synchronize active look whenever product or route param updates
+  // Reset scan angle whenever product or route param updates
   useEffect(() => {
-    setActiveLook(getLookForProduct(product, productId));
     frameIndexRef.current = 0;
     setFrameIndex(0);
   }, [product, productId]);
@@ -1289,25 +1287,14 @@ export function LenticularProductPage({ product, productId }: LenticularProductP
                 </div>
               </div>
 
-              {/* Compact Model Scan Switcher at bottom of card */}
+              {/* Locked Model Scan indicator at bottom of card */}
               <div className="ln-side-model-footer">
                 <span className="ln-m" style={{ color: "var(--ln-ink-muted)", fontSize: "9px" }}>
                   Model Scan:
                 </span>
-                <select
-                  value={activeLook.id}
-                  onChange={(e) => {
-                    const found = MODEL_SCAN_LOOKS.find((l) => l.id === e.target.value);
-                    if (found) setActiveLook(found);
-                  }}
-                  className="ln-side-model-select"
-                >
-                  {MODEL_SCAN_LOOKS.map((look) => (
-                    <option key={look.id} value={look.id}>
-                      {look.name}
-                    </option>
-                  ))}
-                </select>
+                <span className="ln-m" style={{ color: "var(--ln-ink)", fontSize: "10px", fontWeight: 700 }}>
+                  {activeLook.name}
+                </span>
               </div>
             </div>
           </div>
