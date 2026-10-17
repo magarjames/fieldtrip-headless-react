@@ -1094,21 +1094,6 @@ export function NorthlinePageV8({
                         Product Photos ({activeProduct.images?.length || 1})
                       </button>
                     </div>
-
-                    {qvMediaMode === "scan" && activeScanLook && (
-                      <div className="nl-qv-scan-meta">
-                        <span className="nl-qv-scan-badge">
-                          {activeScanLook.lookLabel} · {ANGLES[qvScanFrame]}°
-                        </span>
-                        <button
-                          type="button"
-                          className={`nl-qv-orbit-btn ${qvAutoOrbit ? "is-active" : ""}`}
-                          onClick={() => setQvAutoOrbit((prev) => !prev)}
-                        >
-                          {qvAutoOrbit ? "Pause 360°" : "Auto-Rotate"}
-                        </button>
-                      </div>
-                    )}
                   </div>
 
                   {qvMediaMode === "scan" && activeScanLook ? (
@@ -1137,6 +1122,20 @@ export function NorthlinePageV8({
                         qvDragRef.current.active = false;
                       }}
                     >
+                      {/* Top Overlay inside Stage: Angle Badge & Auto-Rotate (never pushes stage down) */}
+                      <div className="nl-qv-scan-top-overlay">
+                        <span className="nl-qv-scan-badge">
+                          {activeScanLook.lookLabel} · {ANGLES[qvScanFrame]}°
+                        </span>
+                        <button
+                          type="button"
+                          className={`nl-qv-orbit-btn ${qvAutoOrbit ? "is-active" : ""}`}
+                          onClick={() => setQvAutoOrbit((prev) => !prev)}
+                        >
+                          {qvAutoOrbit ? "Pause 360°" : "Auto-Rotate"}
+                        </button>
+                      </div>
+
                       {/* Active 360° Scan Frame */}
                       <img
                         className={`nl-qv-main-photo nl-qv-scan-figure ${
@@ -1196,9 +1195,9 @@ export function NorthlinePageV8({
                       </div>
                     </div>
                   ) : (
-                    <div className="nl-qv-main-photo-wrap">
+                    <div className="nl-qv-main-photo-wrap nl-qv-photo-stage">
                       <img
-                        className="nl-qv-main-photo"
+                        className="nl-qv-main-photo nl-qv-studio-photo"
                         src={
                           activeProduct.images?.[activeImageIndex] ||
                           activeProduct.image
@@ -1208,150 +1207,156 @@ export function NorthlinePageV8({
                     </div>
                   )}
 
-                  <div className="nl-qv-thumbnails" role="list" aria-label="Product views">
-                    {activeScanLook && (
-                      <button
-                        type="button"
-                        className={`nl-qv-thumb-btn nl-qv-thumb-btn--scan ${
-                          qvMediaMode === "scan" ? "is-active" : ""
-                        }`}
-                        onClick={() => setQvMediaMode("scan")}
-                        aria-label="Switch to 360 degree scan view"
-                      >
-                        <img src={frameUrl(activeScanLook.id, 0)} alt="" loading="lazy" />
-                        <span className="nl-qv-thumb-badge">360°</span>
-                      </button>
-                    )}
-                    {(activeProduct.images && activeProduct.images.length > 0
-                      ? activeProduct.images
-                      : [activeProduct.image]
-                    ).map((img, i) => (
-                      <button
-                        key={i}
-                        type="button"
-                        className={`nl-qv-thumb-btn ${
-                          qvMediaMode === "photos" && activeImageIndex === i ? "is-active" : ""
-                        }`}
-                        onClick={() => {
-                          setQvAutoOrbit(false);
-                          setQvMediaMode("photos");
-                          setActiveImageIndex(i);
-                        }}
-                        aria-label={`View photo ${i + 1}`}
-                      >
-                        <img src={img} alt="" loading="lazy" />
-                      </button>
-                    ))}
-                  </div>
-
-                  <Link
-                    to={`/products/${activeProduct.handle || activeProduct.id.split("/").pop()}`}
-                    onClick={() => setActiveProduct(null)}
-                    className="nl-qv-full-link"
-                  >
-                    Open full product page →
-                  </Link>
-                </div>
-
-                {/* Right Column: Grouped Name, Price, Size & High-Contrast Add to Bag + Expandable Sections */}
-                <div className="nl-qv-details">
-                  <div className="nl-qv-purchase-group">
-                    <p className="nl-dialog-group">{activeProduct.group}</p>
-                    <div className="nl-qv-header-row">
-                      <h2 id="northline-product-title">{activeProduct.name}</h2>
-                      <span className="nl-qv-price">{activeProduct.price}</span>
+                  <div className="nl-qv-media-footer">
+                    <div className="nl-qv-thumbnails" role="list" aria-label="Product views">
+                      {activeScanLook && (
+                        <button
+                          type="button"
+                          className={`nl-qv-thumb-btn nl-qv-thumb-btn--scan ${
+                            qvMediaMode === "scan" ? "is-active" : ""
+                          }`}
+                          onClick={() => setQvMediaMode("scan")}
+                          aria-label="Switch to 360 degree scan view"
+                        >
+                          <img src={frameUrl(activeScanLook.id, 0)} alt="" loading="lazy" />
+                          <span className="nl-qv-thumb-badge">360°</span>
+                        </button>
+                      )}
+                      {(activeProduct.images && activeProduct.images.length > 0
+                        ? activeProduct.images
+                        : [activeProduct.image]
+                      ).map((img, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          className={`nl-qv-thumb-btn ${
+                            qvMediaMode === "photos" && activeImageIndex === i ? "is-active" : ""
+                          }`}
+                          onClick={() => {
+                            setQvAutoOrbit(false);
+                            setQvMediaMode("photos");
+                            setActiveImageIndex(i);
+                          }}
+                          aria-label={`View photo ${i + 1}`}
+                        >
+                          <img src={img} alt="" loading="lazy" />
+                        </button>
+                      ))}
                     </div>
 
-                    <div className="nl-dialog-divider" />
+                    <Link
+                      to={`/products/${activeProduct.handle || activeProduct.id.split("/").pop()}`}
+                      onClick={() => setActiveProduct(null)}
+                      className="nl-qv-full-link"
+                    >
+                      Open full product page →
+                    </Link>
+                  </div>
+                </div>
 
-                    {/* Color Selector */}
-                    {activeProduct.colors.length > 0 &&
-                      activeProduct.colors[0] !== "Default" &&
-                      activeProduct.colors[0] !== "Default Title" && (
-                        <fieldset className="nl-dialog-option-fieldset">
-                          <div className="nl-qv-option-head">
-                            <legend className="nl-dialog-option-label">COLOR</legend>
-                            <span className="nl-qv-option-current">{selectedColor}</span>
-                          </div>
-                          <div className="nl-option-row">
-                            {activeProduct.colors.map((color) => (
-                              <button
-                                key={color}
-                                type="button"
-                                className={selectedColor === color ? "is-selected" : ""}
-                                onClick={() => {
-                                  setSelectedColor(color);
-                                  setAddedConfirmation(null);
-                                }}
-                              >
-                                {color}
-                              </button>
-                            ))}
-                          </div>
-                        </fieldset>
-                      )}
+                {/* Right Column: Spaced Sections for Title/Price, Options, CTA & Accordions */}
+                <div className="nl-qv-details">
+                  <div className="nl-qv-purchase-group">
+                    {/* Dedicated Title & Price Section */}
+                    <div className="nl-qv-title-section">
+                      <p className="nl-dialog-group">{activeProduct.group}</p>
+                      <h2 id="northline-product-title" className="nl-qv-title-heading">
+                        {activeProduct.name}
+                      </h2>
+                      <p className="nl-qv-price">{activeProduct.price}</p>
+                    </div>
 
-                    {/* Fit Selector */}
-                    {activeProduct.fits &&
-                      activeProduct.fits.length > 0 &&
-                      activeProduct.fits[0] !== "Default Title" && (
-                        <fieldset className="nl-dialog-option-fieldset">
-                          <div className="nl-qv-option-head">
-                            <legend className="nl-dialog-option-label">FIT</legend>
-                            <span className="nl-qv-option-current">{selectedFit}</span>
-                          </div>
-                          <div className="nl-option-row">
-                            {activeProduct.fits.map((fit) => (
-                              <button
-                                key={fit}
-                                type="button"
-                                className={selectedFit === fit ? "is-selected" : ""}
-                                onClick={() => {
-                                  setSelectedFit(fit);
-                                  setAddedConfirmation(null);
-                                }}
-                              >
-                                {fit}
-                              </button>
-                            ))}
-                          </div>
-                        </fieldset>
-                      )}
+                    {/* Dedicated Options Section */}
+                    <div className="nl-qv-options-section">
+                      {/* Color Selector */}
+                      {activeProduct.colors.length > 0 &&
+                        activeProduct.colors[0] !== "Default" &&
+                        activeProduct.colors[0] !== "Default Title" && (
+                          <fieldset className="nl-dialog-option-fieldset nl-qv-section-box">
+                            <div className="nl-qv-option-head">
+                              <legend className="nl-dialog-option-label">COLOR</legend>
+                              <span className="nl-qv-option-current">{selectedColor}</span>
+                            </div>
+                            <div className="nl-option-row">
+                              {activeProduct.colors.map((color) => (
+                                <button
+                                  key={color}
+                                  type="button"
+                                  className={selectedColor === color ? "is-selected" : ""}
+                                  onClick={() => {
+                                    setSelectedColor(color);
+                                    setAddedConfirmation(null);
+                                  }}
+                                >
+                                  {color}
+                                </button>
+                              ))}
+                            </div>
+                          </fieldset>
+                        )}
 
-                    {/* Intentional Size Selector */}
-                    <fieldset className="nl-dialog-option-fieldset">
-                      <div className="nl-qv-option-head">
-                        <legend className="nl-dialog-option-label">SIZE</legend>
-                        <span
-                          className={`nl-qv-size-status ${
-                            selectedSize ? "is-picked" : "is-unpicked"
-                          }`}
-                        >
-                          {selectedSize ? `Selected: ${selectedSize}` : "Choose your size"}
-                        </span>
-                      </div>
-                      <div className="nl-option-row">
-                        {activeProduct.sizes.map((size) => (
-                          <button
-                            key={size}
-                            type="button"
-                            className={selectedSize === size ? "is-selected" : ""}
-                            onClick={() => {
-                              setSelectedSize(size);
-                              setSizeError(false);
-                              setAddedConfirmation(null);
-                            }}
+                      {/* Fit Selector */}
+                      {activeProduct.fits &&
+                        activeProduct.fits.length > 0 &&
+                        activeProduct.fits[0] !== "Default Title" && (
+                          <fieldset className="nl-dialog-option-fieldset nl-qv-section-box">
+                            <div className="nl-qv-option-head">
+                              <legend className="nl-dialog-option-label">FIT</legend>
+                              <span className="nl-qv-option-current">{selectedFit}</span>
+                            </div>
+                            <div className="nl-option-row">
+                              {activeProduct.fits.map((fit) => (
+                                <button
+                                  key={fit}
+                                  type="button"
+                                  className={selectedFit === fit ? "is-selected" : ""}
+                                  onClick={() => {
+                                    setSelectedFit(fit);
+                                    setAddedConfirmation(null);
+                                  }}
+                                >
+                                  {fit}
+                                </button>
+                              ))}
+                            </div>
+                          </fieldset>
+                        )}
+
+                      {/* Intentional Size Selector */}
+                      <fieldset className="nl-dialog-option-fieldset nl-qv-section-box">
+                        <div className="nl-qv-option-head">
+                          <legend className="nl-dialog-option-label">SIZE</legend>
+                          <span
+                            className={`nl-qv-size-status ${
+                              selectedSize ? "is-picked" : "is-unpicked"
+                            }`}
                           >
-                            {size}
-                          </button>
-                        ))}
-                      </div>
-                      {sizeError && !selectedSize && (
-                        <p className="nl-qv-size-error" role="alert">
-                          Choose your size above before adding to bag.
-                        </p>
-                      )}
-                    </fieldset>
+                            {selectedSize ? `Selected: ${selectedSize}` : "Choose your size"}
+                          </span>
+                        </div>
+                        <div className="nl-option-row">
+                          {activeProduct.sizes.map((size) => (
+                            <button
+                              key={size}
+                              type="button"
+                              className={selectedSize === size ? "is-selected" : ""}
+                              onClick={() => {
+                                setSelectedSize(size);
+                                setSizeError(false);
+                                setAddedConfirmation(null);
+                              }}
+                            >
+                              {size}
+                            </button>
+                          ))}
+                        </div>
+                        {sizeError && !selectedSize && (
+                          <p className="nl-qv-size-error" role="alert">
+                            Choose your size above before adding to bag.
+                          </p>
+                        )}
+                      </fieldset>
+                    </div>
 
                     {/* High-Contrast Add to Bag Button */}
                     <button
